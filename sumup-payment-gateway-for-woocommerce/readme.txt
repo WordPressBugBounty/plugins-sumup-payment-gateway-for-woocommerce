@@ -4,9 +4,11 @@ Tags: sumup, payment gateway, woocommerce, payments, ecommerce
 Requires at least: 5.0
 Tested up to: 6.6.2
 Requires PHP: 7.2
-Stable tag: 2.6.2
+Stable tag: 2.6.3
 License: GPL2
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
+
+The SumUp plugin for WooCommerce allows businesses to securely process payments online. Accept payments from customers using a range of payment methods.
 
 == Description ==
 
@@ -95,6 +97,10 @@ If you have any questions, please get in contact with us through our [contact fo
 Yes. If you need a testing environment, please contact us through our [contact form](https://cloud.crm.sumup.com/sumup-developers-contact-form).
 
 == Changelog ==
+
+= 2.6.3 =
+* Fixed: Script loading outside of checkout.
+* Improved: Error messages.
 
 = 2.6.2 =
 * Fixed: Error when using Apple pay in the Woocommerce blocks checkout.
@@ -195,5 +201,6 @@ Yes. If you need a testing environment, please contact us through our [contact f
 
 == Upgrade Notice ==
 
-= 2.6.2 =
-* Fixed: Error when using Apple pay in the Woocommerce blocks checkout.
+= 2.6.3 =
+* Fixed: Script loading outside of checkout.
+* Improved: Error messages.

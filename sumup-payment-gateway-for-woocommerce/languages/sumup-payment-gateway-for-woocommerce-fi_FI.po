@@ -1,19 +1,16 @@
-# Copyright (C) 2024 SumUp
-# This file is distributed under the GPL-2.0+.
 msgid ""
 msgstr ""
 "Project-Id-Version: SumUp Payment Gateway For WooCommerce 2.5.5\n"
-"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/sumup-plugin-for-"
-"woocommerce\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/sumup-plugin-for-woocommerce\n"
 "POT-Creation-Date: 2024-07-09T02:16:27+00:00\n"
-"PO-Revision-Date: 2024-07-09 15:00-0300\n"
+"PO-Revision-Date: 2024-10-21 16:53-0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: fi_FI\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 3.4.3\n"
+"X-Generator: Poedit 3.5\n"
 "X-Domain: sumup-payment-gateway-for-woocommerce\n"
 
 #. Plugin Name of the plugin
@@ -38,41 +35,25 @@ msgid "https://sumup.com"
 msgstr "https://sumup.com"
 
 #: includes/api/handlers/class-sumup-create-checkout.php:57
-msgid ""
-"Merchant account settings are incorrectly configured. Check the plugin "
-"settings page."
-msgstr ""
-"Kauppiastilin asetukset on määritetty väärin. Tarkista laajennuksen "
-"asetussivu."
+msgid "Merchant account settings are incorrectly configured. Check the plugin settings page."
+msgstr "Kauppiastilin asetukset on määritetty väärin. Tarkista laajennuksen asetussivu."
 
 #: includes/api/handlers/class-sumup-create-checkout.php:67
-msgid ""
-"Sumup is temporarily unavailable. Please contact site admin for more "
-"information."
-msgstr ""
-"Sumup ei ole tilapäisesti käytettävissä. Ota yhteyttä sivuston ylläpitäjään "
-"saadaksesi lisätietoja."
+msgid "Sumup is temporarily unavailable. Please contact site admin for more information."
+msgstr "Sumup ei ole tilapäisesti käytettävissä. Ota yhteyttä sivuston ylläpitäjään saadaksesi lisätietoja."
 
 #: includes/api/handlers/class-sumup-create-checkout.php:107
-#: includes/class-wc-sumup-gateway.php:533
-msgid ""
-"Order ID is not available to make the payment. Try again soon or contact the "
-"website support."
-msgstr ""
-"Tilaus-ID ei ole käytettävissä maksun suorittamiseen. Yritä myöhemmin "
-"uudelleen tai ota yhteyttä verkkosivuston tukeen."
+#: includes/class-wc-sumup-gateway.php:538
+msgid "Order ID is not available to make the payment. Try again soon or contact the website support."
+msgstr "Tilaus-ID ei ole käytettävissä maksun suorittamiseen. Yritä myöhemmin uudelleen tai ota yhteyttä verkkosivuston tukeen."
 
-#: includes/class-wc-sumup-block-gateway.php:138
-#: includes/class-wc-sumup-gateway.php:740
-msgid ""
-"Transaction was unsuccessful. Please check the minimum amount or use another "
-"valid card."
-msgstr ""
-"Tapahtuma epäonnistui. Tarkista vähimmäismäärä tai käytä toista voimassa "
-"olevaa korttia."
+#: includes/class-wc-sumup-block-gateway.php:146
+#: includes/class-wc-sumup-gateway.php:747
+msgid "Transaction was unsuccessful. Please check the minimum amount or use another valid card."
+msgstr "Tapahtuma epäonnistui. Tarkista vähimmäismäärä tai käytä toista voimassa olevaa korttia."
 
-#: includes/class-wc-sumup-block-gateway.php:139
-#: includes/class-wc-sumup-gateway.php:741
+#: includes/class-wc-sumup-block-gateway.php:147
+#: includes/class-wc-sumup-gateway.php:748
 msgid "Fill in all required details."
 msgstr "Täytä kaikki vaaditut tiedot."
 
@@ -86,9 +67,7 @@ msgstr "Puuttuva laajuus: maksut. Ota yhteyttä tukitiimiin."
 
 #: includes/class-wc-sumup-credentials.php:77
 msgid "Credentials are not valid. Please check the plugin log and try again."
-msgstr ""
-"Tunnistetiedot eivät ole voimassa. Tarkista laajennuksen loki ja yritä "
-"uudelleen."
+msgstr "Tunnistetiedot eivät ole voimassa. Tarkista laajennuksen loki ja yritä uudelleen."
 
 #: includes/class-wc-sumup-credentials.php:92
 msgid "Credentials are not valid. Please check and try again."
@@ -100,68 +79,52 @@ msgstr "Tunnistetietosi ovat voimassa ja olet valmis käyttämään laajennusta.
 
 #. translators: %1$s = https://me.sumup.com/, %2$s = https://me.sumup.com/developers
 #: includes/class-wc-sumup-gateway.php:117
-msgid ""
-"SumUp works by adding payment fields on the checkout and then sending the "
-"details to SumUp for verification. <a href=\"%1$s\" target=\"_blank\">Sign "
-"up</a> for a SumUp account. After logging in, <a href=\"%2$s\" target="
-"\"_blank\">get your SumUp account keys</a>."
-msgstr ""
-"SumUp toimii lisäämällä maksukentät kassalle ja lähettämällä tiedot "
-"SumUpille tarkistettavaksi. <a href=\"%1$s\" target=\"_blank\">Rekisteröidy</"
-"a> SumUp-tiliin. Kirjautumisen jälkeen <a href=\"%2$s\" target=\"_blank"
-"\">hanki SumUp-tiliavaimesi</a>."
+msgid "SumUp works by adding payment fields on the checkout and then sending the details to SumUp for verification. <a href=\"%1$s\" target=\"_blank\">Sign up</a> for a SumUp account. After logging in, <a href=\"%2$s\" target=\"_blank\">get your SumUp account keys</a>."
+msgstr "SumUp toimii lisäämällä maksukentät kassalle ja lähettämällä tiedot SumUpille tarkistettavaksi. <a href=\"%1$s\" target=\"_blank\">Rekisteröidy</a> SumUp-tiliin. Kirjautumisen jälkeen <a href=\"%2$s\" target=\"_blank\">hanki SumUp-tiliavaimesi</a>."
 
-#: includes/class-wc-sumup-gateway.php:222
+#: includes/class-wc-sumup-gateway.php:227
 msgid "SumUp charge complete. Transaction Code: %s"
 msgstr "SumUp-maksu suoritettu. Tapahtumakoodi: %s"
 
-#: includes/class-wc-sumup-gateway.php:235
+#: includes/class-wc-sumup-gateway.php:240
 msgid "SumUp payment failed."
 msgstr "SumUp-maksu epäonnistui."
 
-#: includes/class-wc-sumup-gateway.php:314
+#: includes/class-wc-sumup-gateway.php:319
 msgid "Payment failed, please try again."
 msgstr "Maksu epäonnistui, yritä uudelleen."
 
-#: includes/class-wc-sumup-gateway.php:469
-msgid ""
-"Error: Merchant account settings are incorrectly configured. Check the "
-"plugin settings page."
-msgstr ""
-"Virhe: Kauppiastilin asetukset on määritetty väärin. Tarkista laajennuksen "
-"asetussivu."
+#: includes/class-wc-sumup-gateway.php:474
+msgid "Error: Merchant account settings are incorrectly configured. Check the plugin settings page."
+msgstr "Virhe: Kauppiastilin asetukset on määritetty väärin. Tarkista laajennuksen asetussivu."
 
-#: includes/class-wc-sumup-gateway.php:511
-msgid ""
-"Sum up is temporarily unavailable. Please contact site admin for more "
-"information."
-msgstr ""
-"Sumup ei ole tilapäisesti käytettävissä. Ota yhteyttä sivuston ylläpitäjään "
-"saadaksesi lisätietoja."
+#: includes/class-wc-sumup-gateway.php:516
+msgid "Sum up is temporarily unavailable. Please contact site admin for more information."
+msgstr "Sumup ei ole tilapäisesti käytettävissä. Ota yhteyttä sivuston ylläpitäjään saadaksesi lisätietoja."
 
-#: includes/class-wc-sumup-gateway.php:825
+#: includes/class-wc-sumup-gateway.php:832
 msgid "Payment Status: "
 msgstr "Maksun tila: "
 
-#: includes/class-wc-sumup-gateway.php:849
-#: includes/class-wc-sumup-gateway.php:865
-#: includes/class-wc-sumup-gateway.php:890
-#: includes/class-wc-sumup-gateway.php:902
+#: includes/class-wc-sumup-gateway.php:856
+#: includes/class-wc-sumup-gateway.php:872
+#: includes/class-wc-sumup-gateway.php:897
+#: includes/class-wc-sumup-gateway.php:909
 msgid "Payment instructions"
 msgstr "Maksuohjeet"
 
-#: includes/class-wc-sumup-gateway.php:850
-#: includes/class-wc-sumup-gateway.php:891
+#: includes/class-wc-sumup-gateway.php:857
+#: includes/class-wc-sumup-gateway.php:898
 msgid "PIX code: "
 msgstr "PIX code: "
 
-#: includes/class-wc-sumup-gateway.php:867
-#: includes/class-wc-sumup-gateway.php:904
+#: includes/class-wc-sumup-gateway.php:874
+#: includes/class-wc-sumup-gateway.php:911
 msgid "Download Boleto"
 msgstr "Download Boleto"
 
-#: includes/class-wc-sumup-gateway.php:871
-#: includes/class-wc-sumup-gateway.php:903
+#: includes/class-wc-sumup-gateway.php:878
+#: includes/class-wc-sumup-gateway.php:910
 msgid "Code to pay: "
 msgstr "Koodi maksamiseen: "
 
@@ -304,44 +267,22 @@ msgid "Docs"
 msgstr "Dokumentit"
 
 #: sumup-payment-gateway-for-woocommerce.php:77
-msgid ""
-"SumUp requires WooCommerce to be installed and active. You can download %s "
-"here."
-msgstr ""
-"SumUp vaatii WooCommercen asentamisen ja aktiivisen käytön. Voit ladata %s "
-"täältä."
+msgid "SumUp requires WooCommerce to be installed and active. You can download %s here."
+msgstr "SumUp vaatii WooCommercen asentamisen ja aktiivisen käytön. Voit ladata %s täältä."
 
 #. translators: %s = admin.php?page=wc-settings&tab=checkout&section=sumup
 #: sumup-payment-gateway-for-woocommerce.php:109
-msgid ""
-"SumUp Gateway is almost ready. To get started, <a href=\"%s\">set your SumUp "
-"account keys</a>."
-msgstr ""
-"SumUp-yhdyskäytävä on melkein valmis. Aloittaaksesi <a href=\"%s\">määritä "
-"SumUp-tiliavaimesi</a>."
+msgid "SumUp Gateway is almost ready. To get started, <a href=\"%s\">set your SumUp account keys</a>."
+msgstr "SumUp-yhdyskäytävä on melkein valmis. Aloittaaksesi <a href=\"%s\">määritä SumUp-tiliavaimesi</a>."
 
 #. translators: %s = admin.php?page=wc-settings&tab=checkout&section=sumup
 #: sumup-payment-gateway-for-woocommerce.php:116
-msgid ""
-"SumUp Gateway is not configured properly. You can fix this from <a href=\"%s"
-"\">here</a>."
-msgstr ""
-"SumUp-yhdyskäytävää ei ole määritetty oikein. Voit korjata tämän <a href=\"%s"
-"\">tästä</a>."
+msgid "SumUp Gateway is not configured properly. You can fix this from <a href=\"%s\">here</a>."
+msgstr "SumUp-yhdyskäytävää ei ole määritetty oikein. Voit korjata tämän <a href=\"%s\">tästä</a>."
 
 #: sumup-payment-gateway-for-woocommerce.php:120
-msgid ""
-"SumUp Gateway needs your attention. Currency is different from WooCommerce "
-"currency (WooCommerce->Settings->General->Currency)."
-msgstr ""
-"SumUp-yhdyskäytävä tarvitsee huomiotasi. Valuutta on eri kuin WooCommercen "
-"valuutta (WooCommerce->Asetukset->Yleiset->Valuutta)."
-
-#: sumup-payment-gateway-for-woocommerce.php:126
-msgid ""
-"SumUp Gateway is not configured properly. Please fill the field Merchant ID."
-msgstr ""
-"SumUp-yhdyskäytävää ei ole määritetty oikein. Täytä kenttä Kauppiastunnus."
+msgid "SumUp Gateway needs your attention. Currency is different from WooCommerce currency (WooCommerce->Settings->General->Currency)."
+msgstr "SumUp-yhdyskäytävä tarvitsee huomiotasi. Valuutta on eri kuin WooCommercen valuutta (WooCommerce->Asetukset->Yleiset->Valuutta)."
 
 #: sumup-payment-gateway-for-woocommerce.php:145
 msgid "Settings"
@@ -372,12 +313,8 @@ msgid "WooCommerce can now accept payments via SumUp"
 msgstr "WooCommerce voi nyt hyväksyä maksuja SumUpin kautta"
 
 #: templates/onboarding.php:28
-msgid ""
-"Accept payments through your SumUp account in WooCommerce. Take all payments "
-"in your online store with an easy and quick integration. No coding required."
-msgstr ""
-"Hyväksy maksuja SumUp-tilisi kautta WooCommercessa. Hyväksy kaikki suuret "
-"pankki- ja luottokortit, käteinen, laskutus ja paljon muuta eri valuutoissa."
+msgid "Accept payments through your SumUp account in WooCommerce. Take all payments in your online store with an easy and quick integration. No coding required."
+msgstr "Hyväksy maksuja SumUp-tilisi kautta WooCommercessa. Hyväksy kaikki suuret pankki- ja luottokortit, käteinen, laskutus ja paljon muuta eri valuutoissa."
 
 #: templates/onboarding.php:32
 msgid "Connect in 4 steps:"
@@ -406,3 +343,7 @@ msgstr "Kehittynyt versio"
 #: templates/onboarding.php:55 templates/onboarding.php:56
 msgid "Connect Account"
 msgstr "Yhdistä tili"
+
+#: sumup-payment-gateway-for-woocommerce.php:126
+msgid "Please use the “Connect Account” button to start the configuration."
+msgstr "Käytäthän \"Yhdistä tili\" -painiketta aloittaaksesi määrityksen."

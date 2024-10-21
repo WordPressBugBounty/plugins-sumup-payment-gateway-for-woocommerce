@@ -121,25 +121,29 @@ final class WC_Sumup_Blocks_Support extends AbstractPaymentMethodType
 			$number_of_installments = isset($this->settings["number_of_installments"]) && $this->settings["number_of_installments"] !== false && $this->settings["number_of_installments"] !== 'select' ? $this->settings["number_of_installments"] : null;
 		}
 
-		/*
-		 * Use the SumUp's SDK for accepting card payments.
-		 * Documentation can be found at https://developer.sumup.com/docs/widgets-card
-		 */
-		wp_enqueue_script( 'sumup_gateway_card_sdk', 'https://gateway.sumup.com/gateway/ecom/card/v2/sdk.js', array(), WC_SUMUP_VERSION, false );
-		wp_register_script(
-			'wc-sumup-blocks-integration',
-			plugin_dir_url(__DIR__) . 'build/index.js',
-			array(
-				'wc-blocks-registry',
-				'wc-settings',
-				'wp-element',
-				'wp-html-entities',
-				'sumup_gateway_card_sdk'
-			),
-			null, // or time() or filemtime( ... ) to skip caching
-			true
-		);
+		if (is_checkout()) {
 
+			/*
+			 * Use the SumUp's SDK for accepting card payments.
+			 * Documentation can be found at https://developer.sumup.com/docs/widgets-card
+			 */
+			wp_enqueue_script('sumup_gateway_card_sdk', 'https://gateway.sumup.com/gateway/ecom/card/v2/sdk.js', array(), WC_SUMUP_VERSION, false);
+			wp_register_script(
+				'wc-sumup-blocks-integration',
+				plugin_dir_url(__DIR__) . 'build/index.js',
+				array(
+					'wc-blocks-registry',
+					'wc-settings',
+					'wp-element',
+					'wp-html-entities',
+					'sumup_gateway_card_sdk'
+				),
+				null, // or time() or filemtime( ... ) to skip caching
+				true
+			);
+
+			wp_register_style("wc_sumup_checkout", plugin_dir_url(__DIR__) . 'build/index.css', array(), WC_SUMUP_VERSION);
+		}
 		/**
 		 * Translators: the following error messages are shown to the end user
 		 */
@@ -171,7 +175,6 @@ final class WC_Sumup_Blocks_Support extends AbstractPaymentMethodType
 			'redirectUrl' => '',
 		));
 
-		wp_register_style("wc_sumup_checkout", plugin_dir_url(__DIR__) . 'build/index.css', array(), WC_SUMUP_VERSION);
 
 		return array('wc-sumup-blocks-integration');
 

@@ -5,7 +5,7 @@
  * Description: Take credit card payments on your store using SumUp.
  * Author: SumUp
  * Author URI: https://sumup.com
- * Version: 2.6.2
+ * Version: 2.6.3
  * Requires at least: 5.0
  * Requires PHP: 7.2
  * Text Domain: sumup-payment-gateway-for-woocommerce
@@ -21,7 +21,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 define( 'WC_SUMUP_MAIN_FILE', __FILE__ );
 define( 'WC_SUMUP_PLUGIN_PATH', untrailingslashit( plugin_dir_path( __FILE__ ) ) );
 define( 'WC_SUMUP_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
-define( 'WC_SUMUP_VERSION', '2.6.2' );
+define( 'WC_SUMUP_VERSION', '2.6.3' );
 define( 'WC_SUMUP_MINIMUM_PHP_VERSION', '7.2' );
 define( 'WC_SUMUP_MINIMUM_WP_VERSION', '5.0' );
 define( 'WC_SUMUP_PLUGIN_SLUG', 'sumup-payment-gateway-for-woocommerce' );
@@ -123,7 +123,7 @@ function sumup_payment_gateway_for_woocommerce_init() {
 		if ( isset( $plugin_options['merchant_id'] ) && empty( $plugin_options['merchant_id'] ) ) {
 			$message = sprintf(
 				'<div class="notice notice-error"><p>%1$s</p></div>',
-				__( 'SumUp Gateway is not configured properly. Please fill the field Merchant ID.', 'sumup-payment-gateway-for-woocommerce' )
+				__( 'Please use the “Connect Account” button to start the configuration.', 'sumup-payment-gateway-for-woocommerce' )
 			);
 
 			echo wp_kses_post( $message );
