@@ -57,7 +57,10 @@ class WC_Sumup_Onboarding {
 			exit( 'Sorry, request not authorized' );
 		}
 
-		echo $this->request_connection();
+		$response = $this->request_connection();
+		$connection_id = json_decode( $response, true )[ 'id' ];
+		set_transient( 'sumup-connection-id-' . $connection_id, $connection_id, 7200 );
+		echo $response;
 		die();
 	}
 

@@ -16,10 +16,18 @@ add_action('rest_api_init', function () {
 });
 
 /**
- * Connect enpoint
+ * Connect endpoint
  */
 function sumup_connect( $request ) {
 	$post_data = json_decode( $request->get_body(), true );
+
+	if ( ! isset( $post_data['id'] ) || $post_data['id'] != get_transient( 'sumup-connection-id-' . $post_data['id'] ) ) {
+		$reponse_body = array( 'status' => 'error', 'message' => 'Invalid connection ID' );
+		$response = new WP_REST_Response( $reponse_body );
+		$response->set_status( 400 );
+		return $response;
+	}
+
 	if ( ! isset( $post_data['merchant']['email'] ) ) {
 		$reponse_body = array( 'status' => 'error', 'message' => 'Invalid merchant email' );
 		$response = new WP_REST_Response( $reponse_body );
@@ -46,6 +54,8 @@ function sumup_connect( $request ) {
 	$settings['api_key'] = $post_data['merchant']['api_key'];
 	$settings['merchant_id'] = $post_data['merchant']['merchant_code'];
 	update_option( 'woocommerce_sumup_settings', $settings );
+
+	delete_transient('sumup-connection-id-' . $post_data['id']);
 
 	$reponse_body = array( 'status' => 'connected' );
 	$response = new WP_REST_Response( $reponse_body );

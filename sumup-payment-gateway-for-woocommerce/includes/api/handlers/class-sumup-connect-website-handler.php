@@ -37,7 +37,11 @@ class Sumup_API_Connection_Website_Handler extends Sumup_Api_Handler
 		$json_data = file_get_contents('php://input');
 		$post_data = json_decode($json_data, true);
 
-		$post_data = json_decode($json_data, true);
+		if (!isset($post_data['id']) || $post_data['id'] != get_transient('sumup-connection-id-' . $post_data['id'])) {
+			$reponse_body = array('status' => 'error', 'message' => 'Invalid connection ID');
+			$this->send_response($reponse_body['status'],$reponse_body['message'],array() ,400);
+		}
+
 		if (!isset($post_data['merchant']['email'])) {
 			$reponse_body = array('status' => 'error', 'message' => 'Invalid merchant email');
 			$this->send_response($reponse_body['status'],$reponse_body['message'],array() ,400);
@@ -58,6 +62,8 @@ class Sumup_API_Connection_Website_Handler extends Sumup_Api_Handler
 		$settings['api_key'] = $post_data['merchant']['api_key'];
 		$settings['merchant_id'] = $post_data['merchant']['merchant_code'];
 		update_option('woocommerce_sumup_settings', $settings);
+
+		delete_transient('sumup-connection-id-' . $post_data['id']);
 
 		$reponse_body = array('status' => 'connected');
 		$this->send_response($reponse_body);
