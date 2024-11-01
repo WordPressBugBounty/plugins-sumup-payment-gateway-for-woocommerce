@@ -121,7 +121,7 @@ final class WC_Sumup_Blocks_Support extends AbstractPaymentMethodType
 			$number_of_installments = isset($this->settings["number_of_installments"]) && $this->settings["number_of_installments"] !== false && $this->settings["number_of_installments"] !== 'select' ? $this->settings["number_of_installments"] : null;
 		}
 
-		if (is_checkout()) {
+		if (is_cart() || is_checkout()) {
 
 			/*
 			 * Use the SumUp's SDK for accepting card payments.
