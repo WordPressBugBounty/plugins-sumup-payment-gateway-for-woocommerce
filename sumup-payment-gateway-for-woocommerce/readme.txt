@@ -4,7 +4,7 @@ Tags: sumup, payment gateway, woocommerce, payments, ecommerce
 Requires at least: 5.0
 Tested up to: 6.6.2
 Requires PHP: 7.2
-Stable tag: 2.6.6
+Stable tag: 2.6.8
 License: GPL2
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -23,15 +23,15 @@ The SumUp plugin for WooCommerce offers consumers a seamless payment experience 
 
 = SUPPORTED PAYMENT METHODS =
 * Accept different debit and credit cards: Visa, VPay, Mastercard, American Express, Diners Club, Discover
-* Accept alternative payment methods: Bancontact, Boleto, iDeal, Sofort
-* [Request access to Alternative Payment Methods here](https://cloud.crm.sumup.com/sumup-developers-contact-form)
+* Accept alternative payment methods: Apple Pay, Bancontact, Boleto, iDeal, PayPal & Sofort
+* [Request access to Alternative Payment Methods here](https://developer.sumup.com/contact)
 
 = STAY SECURE =
 SumUp is authorised as a Payment Institution by the Financial Conduct Authority and is Europay, Mastercard and Visa (EMV) and PCI-DSS certified.
 This ensures that payments are processed in accordance with the highest security standards.
 
 = BE FLEXIBLE =
-* SumUp processes in [11 currencies](https://developer.sumup.com/rest-api/#tag/Checkouts/paths/~1checkouts/post)
+* SumUp processes in 16 currencies: Australian Dollar (AUD), Brazilian Real (BRL), Bulgarian Lev (BGN), Chilean Peso (CLP), Colombian Peso (COP), Czech Koruna (CZK), Danish Krone (DKK), Euro (EUR), Forint (HUF), Norwegian Krone (NOK), Pound Sterling (GBP), Romanian Leu (RON), Swedish Krona (SEK), Swiss Franc (CHF), US Dollar (USD), Zloty (PLZ)
 * SumUp supports 22 languages: Bulgarian, Czech, Danish, Dutch, English, Estonian, Finnish, French, German, Greek, Hungarian, Italian, Latvian, Lithuanian, Norwegian, Polish, Portuguese, Romanian, Slovak, Slovenian, Spanish and Swedish
 
 **Want to try it?**
@@ -39,15 +39,16 @@ This ensures that payments are processed in accordance with the highest security
 = GET STARTED =
 * Download the plugin
 * Create a [free account](https://buy.sumup.com/en-gb/signup/create-account) or use [your existing one](https://me.sumup.com/)
-* Verify your account and connect the plugin by adding the requested information
-* [Contact our support team](https://cloud.crm.sumup.com/sumup-developers-contact-form) for a test account or to enable necessary scopes when you are ready to accept payments
+* Verify your account and connect the plugin by using the “Connect Account” button
+* [Contact our support team](https://developer.sumup.com/contact) for a test account or to enable necessary scopes when you are ready to accept payments
 
 You're ready to go.
 
 == Screenshots ==
 
 1. The settings panel used to configure the gateway
-2. A checkout with SumUp
+2. The new simplified connection workflow with "Connect Account"
+3. A checkout with SumUp
 
 == Installation ==
 
@@ -60,7 +61,7 @@ Note: Ensure the [WooCommerce plugin](https://wordpress.org/plugins/woocommerce/
 1.1. Click on "Add new" and search for "SumUp Payment Gateway for WooCommerce"
 1.2. Then click on the "Install Now" button
 1.3. Click "Activate" to active the plugin
-2. Enter your Credentials from your SumUp account (client ID, client secret and email) and configure any settings needed
+2. Follow the instructions on the SumUp pop-up window appearing in the plugin setting screen and use the “Connect Account” button to initiate the connection with your SumUp account
 
 = Manual Installation =
 
@@ -74,29 +75,35 @@ Yes. You'll be able to accept Visa, VPay, Mastercard, American Express, Diners C
 
 = What currencies does the plugin support? =
 
-We support 11 currencies with more being added. See all the currencies [here](https://developer.sumup.com/rest-api/#tag/Checkouts/paths/~1checkouts/post).
+We support 16 currencies with more being added.
 
 = Which Alternative Payment Methods (APMs) are supported? =
 
-At SumUp you can process online payments with Boleto, Bancontact, iDeal & Sofort. Read more about our APMs in our [official developer documentation](https://developer.sumup.com/docs/apms/).
+At SumUp you can process online payments with Apple Pay, Bancontact, Boleto, iDeal, PayPal & Sofort. Read more about our APMs in our [official developer documentation](https://developer.sumup.com/online-payments/apm/introduction).
 
 = How can I enable Alternative Payment Methods (APMs)? =
 
-Our Support team will enable the APMs that are relevant to your business location. Reach out to us through [our contact form](https://cloud.crm.sumup.com/sumup-developers-contact-form) for assistance.
+Our Support team will enable the APMs that are relevant to your business location. Reach out to us through [our contact form](https://developer.sumup.com/contact) for assistance.
 
 = Where can I find documentation? =
 
-You can find all the information you'll need on how to set up your plugin [here](https://developer.sumup.com/docs/sumup-woocommerce-plugin/).
+You can find all the information you'll need on how to set up your plugin [here](https://developer.sumup.com/online-payments/plugins/woocommerce/).
 
 = Where can I get support if needed? =
 
-If you have any questions, please get in contact with us through our [contact form](https://cloud.crm.sumup.com/sumup-developers-contact-form).
+If you have any questions, please get in contact with us through our [contact form](https://developer.sumup.com/contact).
 
 = Does this support both production mode and sandbox mode for testing? =
 
-Yes. If you need a testing environment, please contact us through our [contact form](https://cloud.crm.sumup.com/sumup-developers-contact-form).
+Yes. If you need a testing environment, please contact us through our [contact form](https://developer.sumup.com/contact).
 
 == Changelog ==
+
+= 2.6.8 =
+* Fixed: Show the updated images on the plugin page information.
+
+= 2.6.7 =
+* Improvements: Updated plugin page information.
 
 = 2.6.6 =
 * Improvements: Removed deprecated hooks from code.
@@ -211,6 +218,5 @@ Yes. If you need a testing environment, please contact us through our [contact f
 
 == Upgrade Notice ==
 
-= 2.6.6 =
-* Improvements: Removed deprecated hooks from code.
-* Fixed: Automatic redirect on checkout payment.
+= 2.6.8 =
+* Fixed: Show the updated images on the plugin page information.
