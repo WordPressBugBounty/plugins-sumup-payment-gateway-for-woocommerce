@@ -91,7 +91,7 @@ class WC_Sumup_Onboarding {
 				CURLOPT_POST => true,
 				CURLOPT_POSTFIELDS => $data,
 				CURLOPT_HTTPHEADER => array(
-					'Idempotency-Key: ' . time(),
+					'Idempotency-Key: ' . $this->uuidv4(),
 					'Content-Type: application/json',
 				),
 			)
@@ -141,5 +141,19 @@ class WC_Sumup_Onboarding {
 		}
 
 		include_once WC_SUMUP_PLUGIN_PATH . '/templates/onboarding.php';
+	}
+
+	/**
+	 * Generate random Version 4 UUID for connection usage
+	 *
+	 * @return string
+	 */
+	private function uuidv4() {
+		$data = random_bytes(16);
+
+		$data[6] = chr(ord($data[6]) & 0x0f | 0x40); // set version to 0100
+		$data[8] = chr(ord($data[8]) & 0x3f | 0x80); // set bits 6-7 to 10
+
+		return vsprintf('%s%s-%s-%s-%s-%s%s%s', str_split(bin2hex($data), 4));
 	}
 }
