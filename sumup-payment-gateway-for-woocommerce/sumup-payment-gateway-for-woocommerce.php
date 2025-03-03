@@ -5,7 +5,7 @@
  * Description: Take credit card payments on your store using SumUp.
  * Author: SumUp
  * Author URI: https://sumup.com
- * Version: 2.6.9
+ * Version: 2.7.0
  * Requires at least: 5.0
  * Requires PHP: 7.2
  * Text Domain: sumup-payment-gateway-for-woocommerce
@@ -21,7 +21,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 define( 'WC_SUMUP_MAIN_FILE', __FILE__ );
 define( 'WC_SUMUP_PLUGIN_PATH', untrailingslashit( plugin_dir_path( __FILE__ ) ) );
 define( 'WC_SUMUP_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
-define( 'WC_SUMUP_VERSION', '2.6.8' );
+define( 'WC_SUMUP_VERSION', '2.7.0' );
 define( 'WC_SUMUP_MINIMUM_PHP_VERSION', '7.2' );
 define( 'WC_SUMUP_MINIMUM_WP_VERSION', '5.0' );
 define( 'WC_SUMUP_PLUGIN_SLUG', 'sumup-payment-gateway-for-woocommerce' );
@@ -87,7 +87,7 @@ function sumup_payment_gateway_for_woocommerce_init() {
 	 * @version  1.0.0
 	 */
 	function get_sumup_gateway_setup_link() {
-		return admin_url( 'admin.php?page=wc-settings&tab=checkout&section=sumup' );
+		return admin_url( 'admin.php?page=wc-settings&tab=checkout&section=sumup&validate_settings="false"' );
 	}
 
 	/**
@@ -157,6 +157,7 @@ function sumup_payment_gateway_for_woocommerce_init() {
 
 	include_once WC_SUMUP_PLUGIN_PATH . '/includes/api/class-sumup-validate.php';
 	include_once WC_SUMUP_PLUGIN_PATH . '/includes/api/class-sumup-connect.php';
+	include_once WC_SUMUP_PLUGIN_PATH . '/includes/api/class-sumup-disconnect.php';
 	include_once WC_SUMUP_PLUGIN_PATH . '/includes/class-wc-sumup-onboarding.php';
 	include_once WC_SUMUP_PLUGIN_PATH . '/includes/api/class-sumup-api-handler.php';
 
@@ -222,6 +223,7 @@ function sumup_enqueue_admin_scripts() {
 		array(
 			'ajax_url' => admin_url( 'admin-ajax.php' ),
 			'nonce' => wp_create_nonce( 'sumup-settings-nonce' ),
+			'rest_api_url_disconnect' => home_url( "wp-json/sumup_disconnection/v1/disconnect")
 		)
 	);
 
@@ -274,5 +276,6 @@ function sumup_cart_checkout_blocks_compatibility() {
 function sumup_gateway_load_textdomain() {
     load_plugin_textdomain( 'sumup-payment-gateway-for-woocommerce', false, dirname( plugin_basename( __FILE__ ) ) . '/languages/' );
 }
+
 add_action( 'plugins_loaded', 'sumup_gateway_load_textdomain' );
 

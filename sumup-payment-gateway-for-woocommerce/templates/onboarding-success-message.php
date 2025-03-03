@@ -20,4 +20,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 			<?php esc_html_e( 'WooCommerce can now accept payments via SumUp', 'sumup-payment-gateway-for-woocommerce' ); ?>
 		</p>
 	</div>
+	<div class="sumup-onboarding-disconnect__content">
+	<a id="sumup-payment-settings-disconnect" class="sumup_modal-button sumup_modal-button--danger sumup__button sumup__button--disconnect" href="#" data-text="<?php esc_attr_e('Disconnect Account', 'sumup-payment-gateway-for-woocommerce'); ?>">
+				<?php esc_html_e('Disconnect Account', 'sumup-payment-gateway-for-woocommerce'); ?>
+			</a>
+	</div>
 </div>

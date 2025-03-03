@@ -122,6 +122,7 @@ class WC_Sumup_Onboarding {
 		 */
 		if ( ! empty( $_GET[ 'validate_settings' ] ) && $_GET[ 'validate_settings' ] === 'true' ) {
 			$is_valid_onboarding_settings = Wc_Sumup_Credentials::validate();
+
 			if ( $is_valid_onboarding_settings ) {
 				include_once WC_SUMUP_PLUGIN_PATH . '/templates/onboarding-success-message.php';
 			} else {

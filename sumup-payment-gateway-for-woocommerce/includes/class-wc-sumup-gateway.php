@@ -149,6 +149,51 @@ class WC_Gateway_SumUp extends \WC_Payment_Gateway {
 		add_action( 'woocommerce_before_thankyou', array( $this, 'add_payment_instructions_thankyou_page' ) );
 		add_action( 'woocommerce_api_wc_gateway_sumup', array( $this, 'webhook' ) );
 		add_action( 'template_redirect', array( $this, 'check_redirect_flow' ), 99 );
+		add_action('admin_init', array($this,'admin_custom_url'));
+	  add_action('process_webhook_order', array($this,'handle_webhook_order'));
+	}
+
+	/**
+	 * Add params in the url admin page.
+	 * @return void
+	 */
+	public function admin_custom_url()
+	{
+		if (
+			isset($_GET['page']) && $_GET['page'] === 'wc-settings' &&
+			isset($_GET['tab']) && $_GET['tab'] === 'checkout' &&
+			isset($_GET['section']) && $_GET['section'] === 'sumup'
+		) {
+
+			$is_valid_onboarding_settings = Wc_Sumup_Credentials::validate();
+			// If the params already exist, will don't add again.
+			if (!isset($_GET['validate_settings'])) {
+				$new_url = add_query_arg([
+					'validate_settings' => $is_valid_onboarding_settings ? "true" : "false",
+				], admin_url('admin.php?page=wc-settings&tab=checkout&section=sumup'));
+
+				//redirect to new url.
+				wp_safe_redirect($new_url);
+				exit;
+			}
+		}
+	
+	}
+
+	public function webhook() {
+
+		$request_body = file_get_contents('php://input');
+		$data = json_decode($request_body, true);
+
+		if (!$data || !isset($data['event_type'])) {
+			wp_send_json_error(['message' => 'Dados inválidos'], 400);
+			return;
+		}
+
+		// Adds the webhook to the asynchronous processing queue
+		as_enqueue_async_action('process_webhook_order', [$data]);
+
+		wp_send_json_success(['message' => 'Webhook adicionado à fila']);
 	}
 
 	/**
@@ -156,19 +201,18 @@ class WC_Gateway_SumUp extends \WC_Payment_Gateway {
 	 *
 	 * @return void
 	 */
-	public function webhook() {
-		$raw_content = json_decode( file_get_contents( 'php://input' ), true );
+	public function handle_webhook_order($data) {
 
-		if ( ! isset( $raw_content['id'] ) ||
-			empty( $raw_content['id'] ) ||
-			! isset( $raw_content['event_type'] ) ||
-			empty( $raw_content['event_type'] )
+		if ( ! isset( $data['id'] ) ||
+			empty( $data['id'] ) ||
+			! isset( $data['event_type'] ) ||
+			empty( $data['event_type'] )
 			) {
 			return;
 		}
 
-		$checkout_id = sanitize_text_field( $raw_content['id'] );
-		$event_type = sanitize_text_field( $raw_content['event_type'] );
+		$checkout_id = sanitize_text_field( $data['id'] );
+		$event_type = sanitize_text_field( $data['event_type'] );
 
 		if ( $event_type !== 'CHECKOUT_STATUS_CHANGED' ) {
 			WC_SUMUP_LOGGER::log( 'Invalid event type on Webhook. Event: ' . $event_type . '. Merchant Id: ' . $this->merchant_id . '. Checkout ID: ' . $checkout_id );

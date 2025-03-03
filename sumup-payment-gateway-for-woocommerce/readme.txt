@@ -2,9 +2,9 @@
 Contributors: sumup
 Tags: sumup, payment gateway, woocommerce, payments, ecommerce
 Requires at least: 5.0
-Tested up to: 6.6.2
+Tested up to: 6.7.2
 Requires PHP: 7.2
-Stable tag: 2.6.9
+Stable tag: 2.7.0
 License: GPL2
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -98,6 +98,10 @@ If you have any questions, please get in contact with us through our [contact fo
 Yes. If you need a testing environment, please contact us through our [contact form](https://developer.sumup.com/contact).
 
 == Changelog ==
+
+= 2.7.0 =
+* Improvements: Updated onboarding flow.
+* Fixed: Duplicate in the notes of orders.
 
 = 2.6.9 =
 * Improvements: Security for plugin integration with Sumup.
@@ -221,5 +225,6 @@ Yes. If you need a testing environment, please contact us through our [contact f
 
 == Upgrade Notice ==
 
-= 2.6.9 =
-* Improvements: Security for plugin integration with Sumup.
+= 2.7.0 =
+* Improvements: Updated onboarding flow.
+* Fixed: Duplicate in the notes of orders.

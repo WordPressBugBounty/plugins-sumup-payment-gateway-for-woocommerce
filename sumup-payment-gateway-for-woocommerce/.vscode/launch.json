@@ -1,0 +1,30 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Listen for Xdebug",
+      "type": "php",
+      "request": "launch",
+      "port": 9003,
+      "pathMappings": {
+        "/var/www/html/wp-content/plugins/sumup-plugin-for-woocommerce": "${workspaceFolder}",
+        "/var/www/html/wp-content/plugins/woocommerce": "${workspaceFolder}/woocommerce"
+      },
+      "log": true,
+      "externalConsole": false,
+      "xdebugSettings": {
+        "max_children": 512,
+        "max_data": 1024,
+        "max_depth": 3
+      },
+      "runtimeArgs": [
+        "-dxdebug.mode=debug",         // Garante que o modo "debug" está ativado
+        "-dxdebug.start_with_request=yes" // Inicia o depurador com cada requisição
+      ],
+      "env": {
+        "XDEBUG_MODE": "debug",         // Configura o modo de depuração via variável de ambiente
+        "XDEBUG_CONFIG": "client_port=9003" // Garante a configuração do cliente
+      }
+    }
+  ]
+}
