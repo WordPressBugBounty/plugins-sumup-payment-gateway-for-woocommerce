@@ -49,7 +49,7 @@ class Wc_Sumup_Credentials {
 		if ( ! isset( $access_token['access_token'] ) ) {
 			WC_SUMUP_LOGGER::log( 'Error on settings to create access token. Merchant Id: ' . $settings['merchant_id'] );
 			update_option( 'sumup_valid_credentials', 0, false );
-			echo '<div class="notice notice-error"><p>' . esc_html__( 'Invalid Client ID, Client Secret or API Key.', 'sumup-payment-gateway-for-woocommerce' ) . '</p></div>';
+
 			return false;
 		}
 
@@ -95,7 +95,8 @@ class Wc_Sumup_Credentials {
 
 		update_option( 'sumup_valid_credentials', 1, false );
 		update_option( 'sumup_valid_currency', 1, true );
-		echo '<div class="notice notice-success"><p>' . esc_html__( 'Your credentials are valid and you are ready to use the plugin.', 'sumup-payment-gateway-for-woocommerce' ) . '</p></div>';
+
 		return true;
 	}
+
 }

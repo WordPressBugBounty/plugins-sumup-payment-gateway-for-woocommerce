@@ -32,13 +32,6 @@ $fields = array(
 		'default'     => __( "You can choose how you'd like to pay after you place your order.", 'sumup-payment-gateway-for-woocommerce' ),
 		'desc_tip'    => true,
 	),
-	'api_key' => array(
-		'title'       => __( 'API Key', 'sumup-payment-gateway-for-woocommerce' ),
-		'type'        => 'text',
-		'description' => __( 'Create and get your API Key:', 'sumup-payment-gateway-for-woocommerce' ) . ' ' . '<a href="https://developer.sumup.com/protected/oauth-apps/" target="blank">' . __( 'developer settings', 'sumup-payment-gateway-for-woocommerce' ) . '</a>',
-		'default'     => '',
-		'desc_tip'    => false,
-	),
 	'logging' => array(
 		'title'       => __( 'Logging', 'sumup-payment-gateway-for-woocommerce' ),
 		'label'       => __( 'Log debug messages', 'sumup-payment-gateway-for-woocommerce' ),

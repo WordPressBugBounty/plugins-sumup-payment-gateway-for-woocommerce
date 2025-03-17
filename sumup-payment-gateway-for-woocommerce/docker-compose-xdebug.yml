@@ -22,7 +22,7 @@ services:
       - db
 
     volumes:
-      - /opt/projects/wpd/www:/var/www/html
+      - /opt/projects/wpd-sumup/www:/var/www/html
       - ./:/var/www/html/wp-content/plugins/sumup-plugin-for-woocommerce
       - ./apache-config.conf:/etc/apache2/conf-enabled/apache-cors.conf
     extra_hosts:
@@ -50,7 +50,7 @@ services:
       -  "3306:3306"
 
     volumes:
-      - /opt/projects/wpd/mysql:/var/lib/mysql
+      - /opt/projects/wpd-sumup/mysql:/var/lib/mysql
 
     networks:
       backend-sumup:
