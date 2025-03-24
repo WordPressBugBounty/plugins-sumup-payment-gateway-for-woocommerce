@@ -54,7 +54,7 @@ class Wc_Sumup_Credentials {
 		}
 
 		$checkout_data = array(
-			'checkout_reference' => 'WC_SUMUP_SETTINGS_VALIDATE_' . time(),
+			'checkout_reference' => 'WC_SUMUP_SETTINGS_VALIDATE_' . time() . wp_generate_uuid4(),
 			'amount' => 1.00,
 			'currency' => get_woocommerce_currency(),
 			'description' => 'WooCommerce settings validate ' . time(),
@@ -81,15 +81,19 @@ class Wc_Sumup_Credentials {
 
 				if (isset($sumup_checkout['message']) && $sumup_checkout['error_code'] == "INVALID" && $sumup_checkout['param'] == "currency") {
 					update_option( 'sumup_valid_currency', 0, true );
+					update_option( 'sumup_valid_credentials', 1, false );
+					return true;
+				}
+
+				if ($sumup_checkout['error_code'] == "DUPLICATED_CHECKOUT" ) {
+					update_option( 'sumup_valid_currency', 1, true );
+					update_option( 'sumup_valid_credentials', 1, false );
 					return true;
 				}
 
 				return false;
 			}
 
-			WC_SUMUP_LOGGER::log( 'Error on your credentials to create the test checkout. Merchant Id: ' . $settings['merchant_id'] . '. Response: ' . $sumup_checkout );
-			update_option( 'sumup_valid_credentials', 0, false );
-			echo '<div class="notice notice-error"><p>' . esc_html__( 'Credentials are not valid. Please check and try again.', 'sumup-payment-gateway-for-woocommerce' ) . '</p></div>';
 			return false;
 		}
 

@@ -22,7 +22,7 @@ class WC_SUMUP_LOGGER {
 		}
 
 		$options     = get_option( 'woocommerce_sumup_settings' );
-		$client_id   = $options['client_id'];
+		$merchant_id   = $options['merchant_id'];
 
 		if ( empty( $options ) || ( isset( $options['logging'] ) && 'yes' !== $options['logging'] ) ) {
 			return;
@@ -32,7 +32,7 @@ class WC_SUMUP_LOGGER {
 		$context = array( 'source' => WC_SUMUP_PLUGIN_SLUG );
 
 		$log_message  = PHP_EOL . '==== SumUp Version: ' . WC_SUMUP_VERSION . ' ====' . PHP_EOL;
-		$log_message .= 'Client ID: ' . $client_id . PHP_EOL;
+		$log_message .= 'Merchant ID: ' . $merchant_id . PHP_EOL;
 		$log_message .= PHP_EOL;
 		$log_message .= '=== Start Log ===' . PHP_EOL;
 		$log_message .= $message . PHP_EOL;

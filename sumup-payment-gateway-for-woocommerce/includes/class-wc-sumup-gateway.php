@@ -154,6 +154,7 @@ class WC_Gateway_SumUp extends \WC_Payment_Gateway
 		add_action('woocommerce_api_wc_gateway_sumup', array($this, 'webhook'));
 		add_action('template_redirect', array($this, 'check_redirect_flow'), 99);
 		add_action('process_webhook_order', array($this, 'handle_webhook_order'));
+		$this->admin_custom_url();
 	}
 
 	/**
@@ -165,7 +166,8 @@ class WC_Gateway_SumUp extends \WC_Payment_Gateway
 		if (
 			isset($_GET['page']) && $_GET['page'] === 'wc-settings' &&
 			isset($_GET['tab']) && $_GET['tab'] === 'checkout' &&
-			isset($_GET['section']) && $_GET['section'] === 'sumup'
+			isset($_GET['section']) && $_GET['section'] === 'sumup' &&
+			!isset($_GET['validate_settings'])
 		) {
 
 			$is_valid_onboarding_settings = Wc_Sumup_Credentials::validate();
@@ -414,7 +416,6 @@ class WC_Gateway_SumUp extends \WC_Payment_Gateway
 	 */
 	public function process_payment($order_id)
 	{
-
 		$order = wc_get_order($order_id);
 		$sumup_checkout = $order->get_meta('_sumup_checkout_data');
 
@@ -422,104 +423,106 @@ class WC_Gateway_SumUp extends \WC_Payment_Gateway
 		if (!isset($access_token['access_token'])) {
 			WC_SUMUP_LOGGER::log('Error on request (cURL) to get access token. Merchant Id: ' . $this->merchant_id);
 			$message = current_user_can('manage_options') ? 'Error to generate SumUp access token.' : 'Sorry, SumUp is not available. Try again soon.';
-			if ($sumup_checkout['isCheckoutBlocks']) {
-				throw new Exception($message);
-			} else {
-				return array(
-					'result' => 'failure',
-					'redirect' => false,
-					'openModal' => false,
-					'messages' => $message,
-				);
+
+			if (!get_option('sumup_valid_credentials')) {
+				if (!empty($sumup_checkout) && isset($sumup_checkout['isCheckoutBlocks']) && $sumup_checkout['isCheckoutBlocks']) {
+					throw new Exception($message);
+				} else {
+					return [
+						'result' => 'failure',
+						'redirect' => false,
+						'openModal' => false,
+						'messages' => $message,
+					];
+				}
 			}
+			return false; // Evita continuar a execução se não houver token
 		}
 
-		$sumup_settings = get_option('woocommerce_sumup_settings', false);
+		$sumup_settings = get_option('woocommerce_sumup_settings', []);
 		$sumup_settings['sumup_access_token'] = $access_token['access_token'];
 		$sumup_settings['sumup_token_fetched_date'] = date('Y/m/d H:i:s');
 		update_option('woocommerce_sumup_settings', $sumup_settings);
 
-
 		if (empty($sumup_checkout) || !isset($sumup_checkout['id'])) {
-			$checkout_data = array(
+			$checkout_data = [
 				'checkout_reference' => 'WC_SUMUP_' . $order_id,
 				'amount' => $order->get_total(),
 				'currency' => get_woocommerce_currency(),
 				'description' => 'WooCommerce #' . $order_id,
 				'redirect_url' => wc_get_checkout_url() . '?sumup-validate-order=' . $order_id,
 				'return_url' => WC()->api_request_url('wc_gateway_sumup'),
-			);
+			];
 
 			if (!empty($this->merchant_id)) {
 				$checkout_data['merchant_code'] = $this->merchant_id;
-			}
-
-			if (!empty($this->pay_to_email) && empty($this->merchant_id)) {
+			} elseif (!empty($this->pay_to_email)) {
 				$checkout_data['pay_to_email'] = $this->pay_to_email;
 			}
 
 			$sumup_checkout = Wc_Sumup_Checkout::create($sumup_settings['sumup_access_token'], $checkout_data);
 			if (empty($sumup_checkout) || !isset($sumup_checkout['id'])) {
-				if (isset($sumup_checkout['error_code'])) {
-					WC_SUMUP_LOGGER::log($sumup_checkout['error_code'] . ' :' . $sumup_checkout['message']);
-				} else {
-					WC_SUMUP_LOGGER::log('Error on request (cURL) to create SumUp checkout ID during request to SumUp. Merchant Id: ' . $this->merchant_id);
-				}
+				$error_message = isset($sumup_checkout['error_code']) ?
+					"{$sumup_checkout['error_code']} : {$sumup_checkout['message']}" :
+					'Error on request (cURL) to create SumUp checkout ID during request to SumUp.';
 
-				$message = current_user_can('manage_options') ? 'Error to generate SumUp checkout id.' : 'Sorry, SumUp is not available. Try again soon.';
-				if ($sumup_checkout['isCheckoutBlocks']) {
+				WC_SUMUP_LOGGER::log($error_message);
+
+				$message = current_user_can('manage_options') ? 'Error to generate SumUp checkout ID.' : 'Sorry, SumUp is not available. Try again soon.';
+				if (!empty($sumup_checkout) && isset($sumup_checkout['isCheckoutBlocks']) && $sumup_checkout['isCheckoutBlocks']) {
 					throw new Exception($message);
 				} else {
-					return array(
+					return [
 						'result' => 'failure',
 						'redirect' => false,
 						'openModal' => false,
 						'messages' => $message,
-					);
+					];
 				}
-
 			}
 
-			$order->add_order_note('SumUp checkout id: ' . $sumup_checkout['id']);
+			$order->add_order_note('SumUp checkout ID: ' . $sumup_checkout['id']);
 			$order->update_meta_data('_sumup_checkout_data', $sumup_checkout);
 			$order->save();
 		}
 
 		/**
-		 * Fallback to fill merchant code to "old" users. Temporary solution while SumUp team check other ways to enable request to get merchant_code.
+		 * Fallback to fill merchant code to "old" users.
+		 * Temporary solution while SumUp team check other ways to enable request to get merchant_code.
 		 */
 		if (empty($this->merchant_id) && isset($sumup_checkout['merchant_code'])) {
 			$this->update_option('merchant_id', $sumup_checkout['merchant_code']);
 		}
 
 		if (isset($sumup_checkout['id'])) {
-			return array(
+			return [
 				'result' => 'success',
 				'redirect' => $this->get_return_url($order),
 				'openModal' => true,
 				'checkoutId' => $sumup_checkout['id'],
 				'redirectUrl' => $this->get_return_url($order),
 				'country' => $order->get_billing_country(),
-			);
-		} else {
-			if ($sumup_checkout['isCheckoutBlocks']) {
-				throw new Exception('Error to get checkout ID. Check plugin logs.');
-			} else {
-				return array(
-					'result' => 'failure',
-					'redirect' => false,
-					'openModal' => false,
-					'messages' => 'Error to get checkout ID. Check plugin logs.',
-				);
-			}
+			];
 		}
+
+		$message = 'Error to get checkout ID. Check plugin logs.';
+		if (!empty($sumup_checkout) && isset($sumup_checkout['isCheckoutBlocks']) && $sumup_checkout['isCheckoutBlocks']) {
+			throw new Exception($message);
+		}
+
+		return [
+			'result' => 'failure',
+			'redirect' => false,
+			'openModal' => false,
+			'messages' => $message,
+		];
 	}
 
 	/**
 	 * Builds our payment fields area. Initializes the SumUp's Card Widget.
 	 *
-	 * @since    1.0.0
-	 * @version  1.0.0
+	 * @since    1.0.0;
+	 * @version  1.0.0;
 	 */
 	public function payment_fields()
 	{

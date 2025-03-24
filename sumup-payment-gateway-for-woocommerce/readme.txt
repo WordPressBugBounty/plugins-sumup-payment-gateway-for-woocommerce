@@ -4,7 +4,7 @@ Tags: sumup, payment gateway, woocommerce, payments, ecommerce
 Requires at least: 5.0
 Tested up to: 6.7.2
 Requires PHP: 7.2
-Stable tag: 2.7.1
+Stable tag: 2.7.2
 License: GPL2
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -98,6 +98,11 @@ If you have any questions, please get in contact with us through our [contact fo
 Yes. If you need a testing environment, please contact us through our [contact form](https://developer.sumup.com/contact).
 
 == Changelog ==
+
+= 2.7.2 =
+* Fixed: Fixed an issue where the onboarding displayed an incorrect credential error message even when saving valid credentials.
+* Fixed: Resolved a problem where clicking "Place Order" with invalid credentials would incorrectly complete the order.
+* Fixed: Adjusted behavior that, in some cases, prevented the disconnection and onboarding buttons from being displayed.
 
 = 2.7.1 =
 * Fixed: Record settings on onboarding flow.
@@ -228,5 +233,9 @@ Yes. If you need a testing environment, please contact us through our [contact f
 
 == Upgrade Notice ==
 
-= 2.7.1 =
-* Fixed: Record settings on onboarding flow.
+= 2.7.2 =
+* Fixed: Fixed an issue where the onboarding displayed an incorrect credential error message even when saving valid credentials.
+* Fixed: Resolved a problem where clicking "Place Order" with invalid credentials would incorrectly complete the order.
+* Fixed: Adjusted behavior that, in some cases, prevented the disconnection and onboarding buttons from being displayed.
+
+

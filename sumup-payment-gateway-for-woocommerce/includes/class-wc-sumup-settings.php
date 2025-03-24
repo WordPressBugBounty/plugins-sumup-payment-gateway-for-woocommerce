@@ -43,16 +43,6 @@ $fields = array(
 );
 
 /**
- * Compatibility with old versions that's use Client Secret and CLiend Id
- */
-if ( empty( $this->api_key ) ) {
-	unset( $fields['api_key'] );
-} else {
-	unset( $fields['client_id'] );
-	unset( $fields['client_secret'] );
-}
-
-/**
  * Just add it if store is based on BR
  *
  * @since 2.0

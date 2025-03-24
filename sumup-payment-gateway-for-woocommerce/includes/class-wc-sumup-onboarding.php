@@ -112,7 +112,7 @@ class WC_Sumup_Onboarding {
 			return;
 		}
 
-		$is_valid_onboarding_settings = true;
+		$is_valid_onboarding_settings = Wc_Sumup_Credentials::validate();
 
 		wp_enqueue_script( 'sumup-settings' );
 		wp_enqueue_style( 'sumup-settings' );
@@ -121,7 +121,6 @@ class WC_Sumup_Onboarding {
 		 * Validate sumup account/connection after redirect from SumUp integrations page
 		 */
 		if ( ! empty( $_GET[ 'validate_settings' ] ) && $_GET[ 'validate_settings' ] === 'true' ) {
-			$is_valid_onboarding_settings = Wc_Sumup_Credentials::validate();
 
 			if ( $is_valid_onboarding_settings ) {
 				include_once WC_SUMUP_PLUGIN_PATH . '/templates/onboarding-success-message.php';

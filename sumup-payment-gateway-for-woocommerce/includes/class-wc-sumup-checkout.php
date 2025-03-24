@@ -53,7 +53,7 @@ class Wc_Sumup_Checkout {
 			return $response['message'];
 		}
 
-		if ($response != false && (isset($response['message']) && $response_http_code === 400)) {
+		if ($response != false && (isset($response['message']) && ($response_http_code === 400 || $response_http_code === 409))) {
 			return array(
 				"message" => $response["message"],
 				"param" => isset($response["param"]) ? $response["param"] : '',

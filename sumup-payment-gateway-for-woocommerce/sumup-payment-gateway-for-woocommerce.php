@@ -5,7 +5,7 @@
  * Description: Take credit card payments on your store using SumUp.
  * Author: SumUp
  * Author URI: https://sumup.com
- * Version: 2.7.1
+ * Version: 2.7.2
  * Requires at least: 5.0
  * Requires PHP: 7.2
  * Text Domain: sumup-payment-gateway-for-woocommerce
@@ -21,7 +21,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 define( 'WC_SUMUP_MAIN_FILE', __FILE__ );
 define( 'WC_SUMUP_PLUGIN_PATH', untrailingslashit( plugin_dir_path( __FILE__ ) ) );
 define( 'WC_SUMUP_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
-define( 'WC_SUMUP_VERSION', '2.7.1' );
+define( 'WC_SUMUP_VERSION', '2.7.2' );
 define( 'WC_SUMUP_MINIMUM_PHP_VERSION', '7.2' );
 define( 'WC_SUMUP_MINIMUM_WP_VERSION', '5.0' );
 define( 'WC_SUMUP_PLUGIN_SLUG', 'sumup-payment-gateway-for-woocommerce' );
