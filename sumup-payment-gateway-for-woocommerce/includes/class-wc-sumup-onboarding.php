@@ -58,6 +58,7 @@ class WC_Sumup_Onboarding {
 		}
 
 		$response = $this->request_connection();
+
 		$connection_id = json_decode( $response, true )[ 'id' ];
 		set_transient( 'sumup-connection-id-' . $connection_id, $connection_id, 7200 );
 		echo $response;
@@ -82,6 +83,8 @@ class WC_Sumup_Onboarding {
 
 		$data = json_encode($data, JSON_UNESCAPED_SLASHES);
 
+		WC_SUMUP_LOGGER::log( "Onboarding - function request_connection - request: " . $data);
+
 		$ch = curl_init();
 		curl_setopt_array(
 			$ch,
@@ -98,7 +101,28 @@ class WC_Sumup_Onboarding {
 		);
 
 		$response = curl_exec($ch);
+		$response_http_code = curl_getinfo($ch,CURLINFO_HTTP_CODE);
 		curl_close($ch);
+
+		if (isset($response_http_code) && !in_array($response_http_code, [200, 201])) {
+
+			$responseFiltered = json_decode( $response, true );
+
+			if (!is_array($responseFiltered)) {
+				$responseFiltered = [];
+			}
+
+			$encondedResponse = array(
+				"title" => isset($responseFiltered['title']) ? $responseFiltered['title'] : "",
+				"status" => isset($responseFiltered['status']) ? $responseFiltered['status'] : "",
+				"detail" => isset($responseFiltered['detail']) ? $responseFiltered['detail'] : "",
+			);
+
+			$encondedResponse = json_encode($encondedResponse, JSON_UNESCAPED_SLASHES);
+
+			WC_SUMUP_LOGGER::log( "Onboarding function request_connection - response: " . $encondedResponse);
+		}
+
 		return $response;
 	}
 

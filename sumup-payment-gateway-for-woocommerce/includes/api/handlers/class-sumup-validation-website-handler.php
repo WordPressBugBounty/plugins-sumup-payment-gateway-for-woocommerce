@@ -4,6 +4,7 @@ if (!defined('ABSPATH')) {
 	exit;
 }
 
+//TODO - Adicionar timeout na requisição.
 class Sumup_API_Validation_Website_Handler extends Sumup_Api_Handler
 {
 
@@ -34,7 +35,7 @@ class Sumup_API_Validation_Website_Handler extends Sumup_Api_Handler
 	 */
 	public function handle()
 	{
-
+		WC_SUMUP_LOGGER::log( "Sending validate website handler");
 		$this->send_response(array('status' => 'valid website'));
 
 	}

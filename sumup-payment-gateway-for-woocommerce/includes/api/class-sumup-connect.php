@@ -21,6 +21,8 @@ add_action('rest_api_init', function () {
 function sumup_connect( $request ) {
 	$post_data = json_decode( $request->get_body(), true );
 
+	WC_SUMUP_LOGGER::log( "Receive connect data");
+
 	if ( ! isset( $post_data['id'] ) || $post_data['id'] !== get_transient( 'sumup-connection-id-' . $post_data['id'] ) ) {
 		$reponse_body = array( 'status' => 'error', 'message' => 'Invalid connection ID' );
 		$response = new WP_REST_Response( $reponse_body );
