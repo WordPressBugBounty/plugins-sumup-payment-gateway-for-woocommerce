@@ -39,7 +39,9 @@ class Sumup_API_Connection_Website_Handler extends Sumup_Api_Handler
 
 		WC_SUMUP_LOGGER::log( "Receive connect data handler");
 
-		if (!isset($post_data['id']) || $post_data['id'] !== get_transient('sumup-connection-id-' . $post_data['id'])) {
+		$transient = get_transient('sumup-connection-id-' . sanitize_text_field($post_data['id']));
+
+		if ( empty( $post_data['id'] ) || empty( $transient ) || $post_data['id'] !== $transient ) {
 			$reponse_body = array('status' => 'error', 'message' => 'Invalid connection ID');
 			$this->send_response($reponse_body['status'],$reponse_body['message'],array() ,400);
 		}

@@ -23,7 +23,9 @@ function sumup_connect( $request ) {
 
 	WC_SUMUP_LOGGER::log( "Receive connect data");
 
-	if ( ! isset( $post_data['id'] ) || $post_data['id'] !== get_transient( 'sumup-connection-id-' . $post_data['id'] ) ) {
+	$transient = get_transient('sumup-connection-id-' . sanitize_text_field($post_data['id']));
+
+	if ( empty( $post_data['id'] ) || empty( $transient ) || $post_data['id'] !== $transient ) {
 		$reponse_body = array( 'status' => 'error', 'message' => 'Invalid connection ID' );
 		$response = new WP_REST_Response( $reponse_body );
 		$response->set_status( 400 );

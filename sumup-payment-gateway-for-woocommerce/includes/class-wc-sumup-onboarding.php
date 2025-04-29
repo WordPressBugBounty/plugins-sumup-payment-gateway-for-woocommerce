@@ -72,6 +72,7 @@ class WC_Sumup_Onboarding {
 	 */
 	public function request_connection()
 	{
+
 		$data = array(
 			'plugin_type' => 'WOOCOMMERCE_V1',
 			'plugin_version' => WC_SUMUP_VERSION,
@@ -83,47 +84,64 @@ class WC_Sumup_Onboarding {
 
 		$data = json_encode($data, JSON_UNESCAPED_SLASHES);
 
-		WC_SUMUP_LOGGER::log( "Onboarding - function request_connection - request: " . $data);
+		WC_SUMUP_LOGGER::log("Onboarding - function request_connection - request: " . $data);
 
-		$ch = curl_init();
-		curl_setopt_array(
-			$ch,
-			array(
-				CURLOPT_URL => 'https://op-plugin-onboarding.op-live-eks-eu-west-1.sam-app.ro/v1/connections', //https://op-plugin-onboarding.op-dev-eks-eu-west-1.sam-app.ro/v1/connections
-				CURLOPT_RETURNTRANSFER => true,
-				CURLOPT_POST => true,
-				CURLOPT_POSTFIELDS => $data,
-				CURLOPT_HTTPHEADER => array(
-					'Idempotency-Key: ' . $this->uuidv4(),
-					'Content-Type: application/json',
-				),
-			)
-		);
+		try {
+			$ch = curl_init();
+			curl_setopt_array(
+				$ch,
+				array(
+					CURLOPT_URL => 'https://op-plugin-onboarding.op-live-eks-eu-west-1.sam-app.ro/v1/connections', //https://op-plugin-onboarding.op-dev-eks-eu-west-1.sam-app.ro/v1/connections
+					CURLOPT_RETURNTRANSFER => true,
+					CURLOPT_POST => true,
+					CURLOPT_POSTFIELDS => $data,
+					CURLOPT_HTTPHEADER => array(
+						'Idempotency-Key: ' . $this->uuidv4(),
+						'Content-Type: application/json',
+					),
+				)
+			);
+			$response = curl_exec($ch);
+			$response_http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+			curl_close($ch);
 
-		$response = curl_exec($ch);
-		$response_http_code = curl_getinfo($ch,CURLINFO_HTTP_CODE);
-		curl_close($ch);
-
-		if (isset($response_http_code) && !in_array($response_http_code, [200, 201])) {
-
-			$responseFiltered = json_decode( $response, true );
+			$responseFiltered = json_decode($response, true);
 
 			if (!is_array($responseFiltered)) {
 				$responseFiltered = [];
 			}
 
-			$encondedResponse = array(
-				"title" => isset($responseFiltered['title']) ? $responseFiltered['title'] : "",
-				"status" => isset($responseFiltered['status']) ? $responseFiltered['status'] : "",
-				"detail" => isset($responseFiltered['detail']) ? $responseFiltered['detail'] : "",
+			if (in_array($response_http_code, [200, 201])) {
+
+
+				$encondedResponse = json_encode($this->maskuuidForLogs($responseFiltered), JSON_UNESCAPED_SLASHES);
+
+				WC_SUMUP_LOGGER::log("Onboarding function request_connection - response: " . $encondedResponse);
+
+			} else {
+				$encondedResponse = array(
+					"http_response_code" => $response_http_code,
+					"title" => isset($responseFiltered['title']) ? $responseFiltered['title'] : "",
+					"status" => isset($responseFiltered['status']) ? $responseFiltered['status'] : "",
+					"detail" => isset($responseFiltered['detail']) ? $responseFiltered['detail'] : "",
+				);
+
+				$encondedResponse = json_encode($encondedResponse, JSON_UNESCAPED_SLASHES);
+
+				WC_SUMUP_LOGGER::log("Onboarding function request_connection - response: " . $encondedResponse);
+			}
+
+			return $response;
+		} catch (Exception $e) {
+			WC_SUMUP_LOGGER::log("An error occurred during onboarding - message: " . $e->getMessage());
+
+			return wp_send_json_error(
+				array(
+					'detail' => 'An error occurred during onboarding.',
+				),
+				422
 			);
-
-			$encondedResponse = json_encode($encondedResponse, JSON_UNESCAPED_SLASHES);
-
-			WC_SUMUP_LOGGER::log( "Onboarding function request_connection - response: " . $encondedResponse);
 		}
-
-		return $response;
 	}
 
 	/**
@@ -179,5 +197,26 @@ class WC_Sumup_Onboarding {
 		$data[8] = chr(ord($data[8]) & 0x3f | 0x80); // set bits 6-7 to 10
 
 		return vsprintf('%s%s-%s-%s-%s-%s%s%s', str_split(bin2hex($data), 4));
+	}
+
+	private function maskuuidForLogs($responseFiltered){
+		if (isset($responseFiltered['id'])) {
+			$parts = explode('-', $responseFiltered['id']);
+			if (!empty($parts[0])) {
+				$masked_id = $parts[0] . '-****-****-****-************';
+				$responseFiltered['id'] = $masked_id;
+			}
+		}
+
+		if (isset($responseFiltered['redirect_url'])) {
+			$responseFiltered['redirect_url'] = preg_replace(
+				'/connection_id=([a-f0-9\-]+)/i',
+				'connection_id=' . $masked_id,
+				$responseFiltered['redirect_url']
+			);
+		}
+
+		return $responseFiltered;
+
 	}
 }
