@@ -62,10 +62,16 @@ class Sumup_API_Connection_Website_Handler extends Sumup_Api_Handler
 		}
 
 		$settings = get_option('woocommerce_sumup_settings');
-		$settings['pay_to_email'] = $post_data['merchant']['email'];
-		$settings['api_key'] = $post_data['merchant']['api_key'];
-		$settings['merchant_id'] = $post_data['merchant']['merchant_code'];
-		update_option('woocommerce_sumup_settings', $settings);
+		if (!isset($settings)) {
+			set_transient('pay_to_email', $post_data['merchant']['email']);
+			set_transient('api_key', $post_data['merchant']['api_key']);
+			set_transient('merchant_id', $post_data['merchant']['merchant_code']);
+		}else{
+			$settings['pay_to_email'] = $post_data['merchant']['email'];
+			$settings['api_key'] = $post_data['merchant']['api_key'];
+			$settings['merchant_id'] = $post_data['merchant']['merchant_code'];
+			update_option('woocommerce_sumup_settings', $settings);
+		}
 
 		delete_transient('sumup-connection-id-' . $post_data['id']);
 

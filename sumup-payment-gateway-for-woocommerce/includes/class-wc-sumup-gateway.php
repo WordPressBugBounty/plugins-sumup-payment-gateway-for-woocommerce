@@ -148,6 +148,7 @@ class WC_Gateway_SumUp extends \WC_Payment_Gateway
 	public function init_actions()
 	{
 		add_action('woocommerce_update_options_payment_gateways_' . $this->id, array($this, 'process_admin_options'));
+		add_action('woocommerce_update_options_payment_gateways_' . $this->id, array($this, 'verify_credential_options'));
 		add_action('woocommerce_update_options_payment_gateways_' . $this->id, array($this, 'verify_credentials'));
 		add_action('wp_enqueue_scripts', array($this, 'payment_scripts'));
 		add_action('woocommerce_before_thankyou', array($this, 'add_payment_instructions_thankyou_page'));
@@ -1003,6 +1004,21 @@ class WC_Gateway_SumUp extends \WC_Payment_Gateway
 	public function verify_credentials()
 	{
 		Wc_Sumup_Credentials::validate();
+	}
+
+	public function verify_credential_options()
+	{
+		$pay_to_email = get_transient( 'pay_to_email' );
+		$api_key = get_transient( 'api_key' );
+		$merchant_id = get_transient( 'merchant_id' );
+
+		if ($pay_to_email && $api_key && $merchant_id) {
+			$settings = get_option('woocommerce_sumup_settings');
+			$settings['pay_to_email'] = $pay_to_email;
+			$settings['api_key'] = $api_key ;
+			$settings['merchant_id'] = $merchant_id;
+			update_option('woocommerce_sumup_settings', $settings);
+		}
 	}
 
 	/**

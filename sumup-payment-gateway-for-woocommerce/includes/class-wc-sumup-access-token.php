@@ -30,6 +30,11 @@ class Wc_Sumup_Access_Token {
 			);
 		}
 
+		if (empty($client_id)) {
+			WC_SUMUP_LOGGER::log( 'Error on get access token. Missing client_id');
+			return array();
+		}
+
 		// Try to get the transient for access token.
 		$access_token = get_transient('sumup_access_token');
 		if($access_token && !$force){
