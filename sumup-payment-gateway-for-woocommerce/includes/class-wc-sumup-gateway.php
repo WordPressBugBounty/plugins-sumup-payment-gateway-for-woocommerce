@@ -137,6 +137,12 @@ class WC_Gateway_SumUp extends \WC_Payment_Gateway
 		$this->currency = get_woocommerce_currency();
 		$this->return_url = WC()->api_request_url('wc_gateway_sumup');
 		$this->open_payment_in_modal = $this->get_option('open_payment_modal');
+
+		// Advanced webhook settings
+		$this->enable_webhook_priority = "yes";
+		$this->webhook_retry_attempts = 5;
+		$this->enable_webhook_notifications = 'no';
+		$this->webhook_timeout = 30;
 	}
 
 	/**
@@ -155,6 +161,7 @@ class WC_Gateway_SumUp extends \WC_Payment_Gateway
 		add_action('woocommerce_api_wc_gateway_sumup', array($this, 'webhook'));
 		add_action('template_redirect', array($this, 'check_redirect_flow'), 99);
 		add_action('process_webhook_order', array($this, 'handle_webhook_order'));
+		add_action('process_webhook_order_priority', array($this, 'handle_webhook_order_with_retry'));
 		$this->admin_custom_url();
 	}
 
@@ -194,14 +201,73 @@ class WC_Gateway_SumUp extends \WC_Payment_Gateway
 		$data = json_decode($request_body, true);
 
 		if (!$data || !isset($data['event_type'])) {
-			wp_send_json_error(['message' => 'Dados inválidos'], 400);
+			wp_send_json_error(['message' => 'Invalid data'], 400);
 			return;
 		}
 
-		// Adds the webhook to the asynchronous processing queue
-		as_enqueue_async_action('process_webhook_order', [$data]);
+		// Log to received webhook
+		WC_SUMUP_LOGGER::log('Webhook received: ' . json_encode($data, JSON_UNESCAPED_UNICODE));
 
-		wp_send_json_success(['message' => 'Webhook adicionado à fila']);
+		$this->enqueue_webhook_with_priority($data);
+
+		wp_send_json_success(['message' => 'Webhook added to queue']);
+	}
+
+	/**
+	 * Enqueue webhook with high priority and retry logic
+	 *
+	 * @param array $data Webhook data
+	 * @return void
+	 */
+	private function enqueue_webhook_with_priority($data)
+	{
+		$checkout_id = $data['id'] ?? '';
+		$unique_id = $this->generate_unique_webhook_id($checkout_id);
+
+		$this->schedule_webhook_action($data, $unique_id);
+		$this->log_webhook_scheduled($unique_id, $checkout_id);
+	}
+
+	/**
+	 * Generate unique webhook identifier
+	 *
+	 * @param string $checkout_id
+	 * @return string
+	 */
+	private function generate_unique_webhook_id($checkout_id)
+	{
+		return 'sumup_webhook_' . $checkout_id . '_' . microtime(true);
+	}
+
+	/**
+	 * Schedule webhook action in ActionScheduler
+	 *
+	 * @param array $data Webhook data
+	 * @param string $unique_id Unique identifier
+	 * @return void
+	 */
+	private function schedule_webhook_action($data, $unique_id)
+	{
+		as_schedule_single_action(
+			time() + 60, // Execute in up to 1 minute
+			'process_webhook_order_priority',
+			[$data, 1, $unique_id], // data + attempt count + unique_id
+			'sumup-webhooks-priority', // high priority group
+			false, // Allow multiple webhooks - FIX for simultaneous webhooks
+			10 // high priority (lower number = max priority)
+		);
+	}
+
+	/**
+	 * Log webhook scheduled event
+	 *
+	 * @param string $unique_id
+	 * @param string $checkout_id
+	 * @return void
+	 */
+	private function log_webhook_scheduled($unique_id, $checkout_id)
+	{
+		WC_SUMUP_LOGGER::log('Webhook scheduled with high priority. ID: ' . $unique_id . ', Checkout: ' . $checkout_id);
 	}
 
 	/**
@@ -211,92 +277,605 @@ class WC_Gateway_SumUp extends \WC_Payment_Gateway
 	 */
 	public function handle_webhook_order($data)
 	{
-
-		if (
-			!isset($data['id']) ||
-			empty($data['id']) ||
-			!isset($data['event_type']) ||
-			empty($data['event_type'])
-		) {
+		if (!$this->validate_webhook_data($data)) {
 			return;
 		}
 
 		$checkout_id = sanitize_text_field($data['id']);
 		$event_type = sanitize_text_field($data['event_type']);
 
-		if ($event_type !== 'CHECKOUT_STATUS_CHANGED') {
-			WC_SUMUP_LOGGER::log('Invalid event type on Webhook. Event: ' . $event_type . '. Merchant Id: ' . $this->merchant_id . '. Checkout ID: ' . $checkout_id);
+		if (!$this->validate_event_type($event_type)) {
+			$this->log_invalid_event_type($event_type, $checkout_id);
 			return;
 		}
 
-		WC_SUMUP_LOGGER::log('Handling Webhook. Event: ' . $event_type . '. Merchant Id: ' . $this->merchant_id . '. Checkout ID: ' . $checkout_id);
+		$this->log_webhook_processing($event_type, $checkout_id);
 
-		$access_token = Wc_Sumup_Access_Token::get($this->client_id, $this->client_secret, $this->api_key, true);
-		$access_token = $access_token['access_token'] ?? '';
+		$access_token = $this->get_access_token();
 		if (empty($access_token)) {
-			WC_SUMUP_LOGGER::log('Error to try get access token on Webhook. Merchant Id: ' . $this->merchant_id . '. Checkout ID: ' . $checkout_id);
+			$this->log_access_token_error($checkout_id);
 			return;
 		}
 
-		$checkout_data = Wc_Sumup_Checkout::get($checkout_id, $access_token);
+		$checkout_data = $this->fetch_checkout_data($checkout_id, $access_token);
 		if (empty($checkout_data)) {
-			WC_SUMUP_LOGGER::log('Error to try get checkout on Webhook. Checkout: ' . $checkout_data . '. Merchant Id: ' . $this->merchant_id . '. Checkout ID: ' . $checkout_id);
+			$this->log_checkout_data_error($checkout_id);
 			return;
 		}
 
-		$checkout_reference = $checkout_data['checkout_reference'] ?? '';
-		$order_id = str_replace('WC_SUMUP_', '', $checkout_reference);
-		$order_id = intval($order_id);
-		$order = wc_get_order($order_id);
+		$order = $this->find_order_by_checkout($checkout_data, $checkout_id);
 		if ($order === false) {
-			WC_SUMUP_LOGGER::log('Order not found on Webhook request from SumUp. Merchant Id: ' . $this->merchant_id . '. Checkout ID: ' . $checkout_id);
 			return;
 		}
 
 		$transaction_code = $checkout_data['transaction_code'] ?? '';
 		if (empty($transaction_code)) {
-			WC_SUMUP_LOGGER::log('Missing transaction code on Webhook request from SumUp. Checkout data: ' . $checkout_data . '. Merchant Id: ' . $this->merchant_id . '. Checkout ID: ' . $checkout_id);
+			$this->log_missing_transaction_code($checkout_id);
 			return;
 		}
 
-		$payment_status = $checkout_data['status'] ?? '';
-		// Check if the current status isn't processing or completed.
-		if (
-			!in_array($order->get_status(), array(
-				'processing',
-				'completed',
-				'refunded',
-				'cancelled'
-			), true)
-		) {
-			if ($payment_status === 'PAID') {
-				$order->update_meta_data('_sumup_transaction_code', $transaction_code);
+		$this->update_order_status($order, $checkout_data, $transaction_code);
+	}
 
-				// Updates current status unless it's a Virtual AND Downloadable product.
-				if ($order->needs_processing()) {
-					$order->update_status('processing');
-				}
+	/**
+	 * Validate webhook data structure
+	 *
+	 * @param array $data
+	 * @return bool
+	 */
+	private function validate_webhook_data($data)
+	{
+		return isset($data['id']) &&
+			   !empty($data['id']) &&
+			   isset($data['event_type']) &&
+			   !empty($data['event_type']);
+	}
 
-				$message = sprintf(
-					__('SumUp charge complete. Transaction Code: %s', 'sumup-payment-gateway-for-woocommerce'),
-					$transaction_code
-				);
-				$order->add_order_note($message);
-				$order->payment_complete($transaction_code);
-				do_action('sumup_gateway_payment_complete_from_hook', $order);
-				do_action('sumup_gateway_payment_complete', $order);
-				$order->save();
-				return;
-			}
+	/**
+	 * Validate event type
+	 *
+	 * @param string $event_type
+	 * @return bool
+	 */
+	private function validate_event_type($event_type)
+	{
+		return $event_type === 'CHECKOUT_STATUS_CHANGED';
+	}
 
-			if ($payment_status === 'FAILED') {
-				$order->update_status('failed');
-				$message = __('SumUp payment failed.', 'sumup-payment-gateway-for-woocommerce');
-				$order->add_order_note($message);
-				$order->save();
-				return;
-			}
+	/**
+	 * Get access token for SumUp API
+	 *
+	 * @return string
+	 */
+	private function get_access_token()
+	{
+		$access_token = Wc_Sumup_Access_Token::get($this->client_id, $this->client_secret, $this->api_key, true);
+		return $access_token['access_token'] ?? '';
+	}
+
+	/**
+	 * Fetch checkout data from SumUp API
+	 *
+	 * @param string $checkout_id
+	 * @param string $access_token
+	 * @return array
+	 */
+	private function fetch_checkout_data($checkout_id, $access_token)
+	{
+		return Wc_Sumup_Checkout::get($checkout_id, $access_token);
+	}
+
+	/**
+	 * Find WooCommerce order by checkout data
+	 *
+	 * @param array $checkout_data
+	 * @param string $checkout_id
+	 * @return WC_Order|false
+	 */
+	private function find_order_by_checkout($checkout_data, $checkout_id)
+	{
+		$checkout_reference = $checkout_data['checkout_reference'] ?? '';
+		$order_id = str_replace('WC_SUMUP_', '', $checkout_reference);
+		$order_id = intval($order_id);
+		$order = wc_get_order($order_id);
+
+		if ($order === false) {
+			$this->log_order_not_found($checkout_id);
 		}
+
+		return $order;
+	}
+
+	/**
+	 * Update order status based on payment status
+	 *
+	 * @param WC_Order $order
+	 * @param array $checkout_data
+	 * @param string $transaction_code
+	 * @return void
+	 */
+	private function update_order_status($order, $checkout_data, $transaction_code)
+	{
+		$payment_status = $checkout_data['status'] ?? '';
+
+		// Check if the current status isn't processing or completed.
+		if (!$this->should_update_order_status($order)) {
+			return;
+		}
+
+		if ($payment_status === 'PAID') {
+			$this->process_paid_order($order, $transaction_code);
+		} elseif ($payment_status === 'FAILED') {
+			$this->process_failed_order($order);
+		}
+	}
+
+	/**
+	 * Check if order status should be updated
+	 *
+	 * @param WC_Order $order
+	 * @return bool
+	 */
+	private function should_update_order_status($order)
+	{
+		return !in_array($order->get_status(), [
+			'processing',
+			'completed',
+			'refunded',
+			'cancelled'
+		], true);
+	}
+
+	/**
+	 * Process paid order
+	 *
+	 * @param WC_Order $order
+	 * @param string $transaction_code
+	 * @return void
+	 */
+	private function process_paid_order($order, $transaction_code)
+	{
+		$order->update_meta_data('_sumup_transaction_code', $transaction_code);
+
+		// Updates current status unless it's a Virtual AND Downloadable product.
+		if ($order->needs_processing()) {
+			$order->update_status('processing');
+		}
+
+		$this->add_order_note($order, $transaction_code);
+		$order->payment_complete($transaction_code);
+		$this->execute_payment_complete_hooks($order);
+		$order->save();
+	}
+
+	/**
+	 * Process failed order
+	 *
+	 * @param WC_Order $order
+	 * @return void
+	 */
+	private function process_failed_order($order)
+	{
+		$order->update_status('failed');
+		$message = __('SumUp payment failed.', 'sumup-payment-gateway-for-woocommerce');
+		$order->add_order_note($message);
+		$order->save();
+	}
+
+	/**
+	 * Add order note for successful payment
+	 *
+	 * @param WC_Order $order
+	 * @param string $transaction_code
+	 * @return void
+	 */
+	private function add_order_note($order, $transaction_code)
+	{
+		$message = sprintf(
+			__('SumUp charge complete. Transaction Code: %s', 'sumup-payment-gateway-for-woocommerce'),
+			$transaction_code
+		);
+		$order->add_order_note($message);
+	}
+
+	/**
+	 * Execute payment complete hooks
+	 *
+	 * @param WC_Order $order
+	 * @return void
+	 */
+	private function execute_payment_complete_hooks($order)
+	{
+		do_action('sumup_gateway_payment_complete_from_hook', $order);
+		do_action('sumup_gateway_payment_complete', $order);
+	}
+
+	// Logging methods
+	private function log_invalid_event_type($event_type, $checkout_id)
+	{
+		WC_SUMUP_LOGGER::log('Invalid event type on Webhook. Event: ' . $event_type . '. Merchant Id: ' . $this->merchant_id . '. Checkout ID: ' . $checkout_id);
+	}
+
+	private function log_webhook_processing($event_type, $checkout_id)
+	{
+		WC_SUMUP_LOGGER::log('Handling Webhook. Event: ' . $event_type . '. Merchant Id: ' . $this->merchant_id . '. Checkout ID: ' . $checkout_id);
+	}
+
+	private function log_access_token_error($checkout_id)
+	{
+		WC_SUMUP_LOGGER::log('Error to try get access token on Webhook. Merchant Id: ' . $this->merchant_id . '. Checkout ID: ' . $checkout_id);
+	}
+
+	private function log_checkout_data_error($checkout_id)
+	{
+		WC_SUMUP_LOGGER::log('Error to try get checkout on Webhook. Merchant Id: ' . $this->merchant_id . '. Checkout ID: ' . $checkout_id);
+	}
+
+	private function log_order_not_found($checkout_id)
+	{
+		WC_SUMUP_LOGGER::log('Order not found on Webhook request from SumUp. Merchant Id: ' . $this->merchant_id . '. Checkout ID: ' . $checkout_id);
+	}
+
+	private function log_missing_transaction_code($checkout_id)
+	{
+		WC_SUMUP_LOGGER::log('Missing transaction code on Webhook request from SumUp. Merchant Id: ' . $this->merchant_id . '. Checkout ID: ' . $checkout_id);
+	}
+
+	/**
+	 * Handle webhook with retry logic and exponential backoff
+	 *
+	 * @param array $data Webhook data
+	 * @param int $attempt Current attempt number
+	 * @return void
+	 */
+	public function handle_webhook_order_with_retry($data, $attempt = 1)
+	{
+		$max_attempts = $this->webhook_retry_attempts;
+		$checkout_id = $data['id'] ?? '';
+		$performance_tracker = $this->start_performance_tracking();
+
+		$this->log_webhook_attempt($attempt, $max_attempts, $checkout_id, $performance_tracker);
+
+		try {
+			$result = $this->process_webhook_data($data);
+
+			if ($result['success']) {
+				$this->log_webhook_success($checkout_id, $attempt, $performance_tracker);
+				return;
+			}
+
+			$this->handle_webhook_failure($data, $attempt, $max_attempts, $result);
+
+		} catch (Exception $e) {
+			$this->handle_webhook_exception($data, $attempt, $max_attempts, $e, $checkout_id);
+		}
+	}
+
+	/**
+	 * Start performance tracking
+	 *
+	 * @return string
+	 */
+	private function start_performance_tracking()
+	{
+		return date('Y-m-d H:i:s');
+	}
+
+	/**
+	 * Calculate execution time
+	 *
+	 * @param string $start_time
+	 * @return int
+	 */
+	private function calculate_execution_time($start_time)
+	{
+		$end_time = date('Y-m-d H:i:s');
+		$start = new DateTime($start_time);
+		$end = new DateTime($end_time);
+		$interval = $end->diff($start);
+		return $interval->s + ($interval->i * 60) + ($interval->h * 3600) + ($interval->days * 86400);
+	}
+
+	/**
+	 * Handle webhook processing failure
+	 *
+	 * @param array $data
+	 * @param int $attempt
+	 * @param int $max_attempts
+	 * @param array $result
+	 * @return void
+	 */
+	private function handle_webhook_failure($data, $attempt, $max_attempts, $result)
+	{
+		$checkout_id = $data['id'] ?? '';
+
+		// Retry logic for non-critical errors
+		if ($this->should_retry_webhook($attempt, $max_attempts, $result['critical_error'])) {
+			$this->schedule_webhook_retry($data, $attempt + 1);
+			return;
+		}
+
+		// Maximum attempts reached or critical error occurred
+		$this->log_webhook_final_failure($checkout_id, $attempt, $result['error']);
+		$this->handle_webhook_final_failure($data, $result['error']);
+	}
+
+	/**
+	 * Handle webhook processing exception
+	 *
+	 * @param array $data
+	 * @param int $attempt
+	 * @param int $max_attempts
+	 * @param Exception $e
+	 * @param string $checkout_id
+	 * @return void
+	 */
+	private function handle_webhook_exception($data, $attempt, $max_attempts, $e, $checkout_id)
+	{
+		$this->log_webhook_exception($attempt, $checkout_id, $e->getMessage());
+
+		if ($this->should_retry_webhook($attempt, $max_attempts, false)) {
+			$this->schedule_webhook_retry($data, $attempt + 1);
+		} else {
+			$this->handle_webhook_final_failure($data, $e->getMessage());
+		}
+	}
+
+	/**
+	 * Check if webhook should be retried
+	 *
+	 * @param int $attempt
+	 * @param int $max_attempts
+	 * @param bool $is_critical_error
+	 * @return bool
+	 */
+	private function should_retry_webhook($attempt, $max_attempts, $is_critical_error)
+	{
+		return $attempt < $max_attempts && !$is_critical_error;
+	}
+
+	// Performance and retry logging methods
+	private function log_webhook_attempt($attempt, $max_attempts, $checkout_id, $start_time)
+	{
+		WC_SUMUP_LOGGER::log("Processing webhook (attempt {$attempt}/{$max_attempts}). Checkout ID: {$checkout_id} - Initial time: " . $start_time);
+	}
+
+	private function log_webhook_success($checkout_id, $attempt, $start_time)
+	{
+		$execution_time = $this->calculate_execution_time($start_time);
+		$end_time = date('Y-m-d H:i:s');
+		WC_SUMUP_LOGGER::log("Webhook processed with success on attempt {$attempt}. Checkout ID: {$checkout_id} - End time: " . $end_time . " Total time: " . $execution_time . " seconds");
+	}
+
+	private function log_webhook_final_failure($checkout_id, $attempt, $error)
+	{
+		WC_SUMUP_LOGGER::log("Webhook failed after {$attempt} attempts. Checkout ID: {$checkout_id}. Error: " . $error);
+	}
+
+	private function log_webhook_exception($attempt, $checkout_id, $error)
+	{
+		WC_SUMUP_LOGGER::log("Exception during webhook processing (attempt {$attempt}). Checkout ID: {$checkout_id}. Error: " . $error);
+	}
+
+	/**
+	 * Process webhook data and return result
+	 *
+	 * @param array $data Webhook data
+	 * @return array Result with success status and error info
+	 */
+	private function process_webhook_data($data)
+	{
+		// Validate webhook data structure
+		$validation_result = $this->validate_webhook_request($data);
+		if (!$validation_result['valid']) {
+			return [
+				'success' => false,
+				'critical_error' => $validation_result['critical'],
+				'error' => $validation_result['error']
+			];
+		}
+
+		$checkout_id = sanitize_text_field($data['id']);
+
+		// Get access token
+		$access_token = $this->get_access_token();
+		if (empty($access_token)) {
+			return [
+				'success' => false,
+				'critical_error' => false,
+				'error' => 'Failed to obtain access token'
+			];
+		}
+
+		// Fetch checkout data
+		$checkout_data = $this->fetch_checkout_data($checkout_id, $access_token);
+		if (empty($checkout_data)) {
+			return [
+				'success' => false,
+				'critical_error' => false,
+				'error' => 'Failed to obtain checkout data'
+			];
+		}
+
+		// Process the order
+		return $this->process_order_from_checkout($checkout_data, $checkout_id);
+	}
+
+	/**
+	 * Validate webhook request data
+	 *
+	 * @param array $data
+	 * @return array
+	 */
+	private function validate_webhook_request($data)
+	{
+		if (!$this->validate_webhook_data($data)) {
+			return [
+				'valid' => false,
+				'critical' => true,
+				'error' => 'Invalid webhook data'
+			];
+		}
+
+		$event_type = sanitize_text_field($data['event_type']);
+		if (!$this->validate_event_type($event_type)) {
+			return [
+				'valid' => false,
+				'critical' => true,
+				'error' => 'Invalid event type: ' . $event_type
+			];
+		}
+
+		return [
+			'valid' => true,
+			'critical' => false,
+			'error' => ''
+		];
+	}
+
+	/**
+	 * Process order from checkout data
+	 *
+	 * @param array $checkout_data Checkout data from SumUp API
+	 * @param string $checkout_id Checkout ID
+	 * @return array Result array
+	 */
+	private function process_order_from_checkout($checkout_data, $checkout_id)
+	{
+		// Find the order
+		$order = $this->find_order_by_checkout($checkout_data, $checkout_id);
+		if ($order === false) {
+			return [
+				'success' => false,
+				'critical_error' => true,
+				'error' => 'Order not found: ' . $this->extract_order_id($checkout_data)
+			];
+		}
+
+		// Validate transaction code
+		$transaction_code = $checkout_data['transaction_code'] ?? '';
+		if (empty($transaction_code)) {
+			return [
+				'success' => false,
+				'critical_error' => false,
+				'error' => 'Transaction code is missing'
+			];
+		}
+
+		// Update order status
+		$this->update_order_status($order, $checkout_data, $transaction_code);
+
+		return [
+			'success' => true,
+			'critical_error' => false,
+			'error' => 'Order processed successfully'
+		];
+	}
+
+	/**
+	 * Extract order ID from checkout data
+	 *
+	 * @param array $checkout_data
+	 * @return int
+	 */
+	private function extract_order_id($checkout_data)
+	{
+		$checkout_reference = $checkout_data['checkout_reference'] ?? '';
+		$order_id = str_replace('WC_SUMUP_', '', $checkout_reference);
+		return intval($order_id);
+	}
+
+	/**
+	 * Schedule webhook retry with exponential backoff
+	 *
+	 * @param array $data Webhook data
+	 * @param int $attempt Next attempt number
+	 * @return void
+	 */
+	private function schedule_webhook_retry($data, $attempt)
+	{
+		$delay_seconds = $this->calculate_retry_delay($attempt);
+		$checkout_id = $data['id'] ?? '';
+		$unique_identifiers = $this->generate_retry_identifiers($checkout_id);
+
+		$this->log_webhook_retry_scheduled($delay_seconds, $attempt, $checkout_id);
+		$this->schedule_retry_action($data, $attempt, $delay_seconds, $unique_identifiers);
+	}
+
+	/**
+	 * Calculate retry delay with exponential backoff
+	 *
+	 * @param int $attempt
+	 * @return int Delay in seconds
+	 */
+	private function calculate_retry_delay($attempt)
+	{
+		$delay_minutes = pow(2, $attempt - 1);
+		return $delay_minutes * 60;
+	}
+
+	/**
+	 * Generate unique identifiers for retry
+	 *
+	 * @param string $checkout_id
+	 * @return array
+	 */
+	private function generate_retry_identifiers($checkout_id)
+	{
+		return [
+			'unique_id' => 'sumup_webhook_' . $checkout_id . '_' . microtime(true),
+			'unique_group' => 'sumup-webhooks-' . $checkout_id . '-' . microtime(true)
+		];
+	}
+
+	/**
+	 * Schedule retry action in ActionScheduler
+	 *
+	 * @param array $data
+	 * @param int $attempt
+	 * @param int $delay_seconds
+	 * @param array $unique_identifiers
+	 * @return void
+	 */
+	private function schedule_retry_action($data, $attempt, $delay_seconds, $unique_identifiers)
+	{
+		as_schedule_single_action(
+			time() + $delay_seconds,
+			'process_webhook_order_priority',
+			[$data, $attempt, $unique_identifiers['unique_id']],
+			$unique_identifiers['unique_group'],
+			false,
+			5 // Medium priority for retries
+		);
+	}
+
+	/**
+	 * Log webhook retry scheduling
+	 *
+	 * @param int $delay_seconds
+	 * @param int $attempt
+	 * @param string $checkout_id
+	 * @return void
+	 */
+	private function log_webhook_retry_scheduled($delay_seconds, $attempt, $checkout_id)
+	{
+		$delay_minutes = $delay_seconds / 60;
+		WC_SUMUP_LOGGER::log("Scheduling webhook retry in {$delay_minutes} minutes. Attempt {$attempt}. Checkout ID: {$checkout_id}");
+	}
+
+	/**
+	 * Handle final webhook failure after all retries
+	 *
+	 * @param array $data Webhook data
+	 * @param string $error Error message
+	 * @return void
+	 */
+	private function handle_webhook_final_failure($data, $error)
+	{
+		$checkout_id = $data['id'] ?? '';
+
+		// Log crítico
+		WC_SUMUP_LOGGER::log("CRITICAL FAILURE: Webhook failed after all attempts. Checkout ID: {$checkout_id}. Error: {$error}");
 
 	}
 

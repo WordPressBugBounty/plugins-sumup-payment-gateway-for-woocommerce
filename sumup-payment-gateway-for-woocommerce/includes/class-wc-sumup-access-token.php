@@ -47,6 +47,8 @@ class Wc_Sumup_Access_Token {
 				CURLOPT_URL => 'https://api.sumup.com/token',
 				CURLOPT_RETURNTRANSFER => true,
 				CURLOPT_POST => true,
+				CURLOPT_TIMEOUT => 30,
+				CURLOPT_CONNECTTIMEOUT => 10,
 				CURLOPT_POSTFIELDS => http_build_query(
 					array(
 						'grant_type' => 'client_credentials',
