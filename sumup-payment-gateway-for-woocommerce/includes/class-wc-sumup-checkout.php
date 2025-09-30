@@ -1,6 +1,6 @@
 <?php
 
-if ( ! defined( 'ABSPATH' ) ) {
+if (! defined('ABSPATH')) {
 	exit;
 }
 
@@ -9,7 +9,8 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * @return array
  */
-class Wc_Sumup_Checkout {
+class Wc_Sumup_Checkout
+{
 	/**
 	 * Get access token
 	 *
@@ -19,9 +20,11 @@ class Wc_Sumup_Checkout {
 	 *
 	 * @return array
 	 */
-	public static function create( $access_token = '', $signup_data = array() ) {
+	public static function create($access_token = '', $signup_data = array())
+	{
 		$curl = curl_init();
-		curl_setopt_array( $curl,
+		curl_setopt_array(
+			$curl,
 			array(
 				CURLOPT_URL => 'https://api.sumup.com/v0.1/checkouts',
 				CURLOPT_RETURNTRANSFER => true,
@@ -31,7 +34,7 @@ class Wc_Sumup_Checkout {
 				CURLOPT_FOLLOWLOCATION => true,
 				CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
 				CURLOPT_CUSTOMREQUEST => 'POST',
-				CURLOPT_POSTFIELDS => json_encode( $signup_data ),
+				CURLOPT_POSTFIELDS => json_encode($signup_data),
 				CURLOPT_HTTPHEADER => array(
 					'Content-Type: application/json',
 					'Accept: application/json',
@@ -40,11 +43,12 @@ class Wc_Sumup_Checkout {
 			)
 		);
 
-		$response = curl_exec( $curl );
+		$response = curl_exec($curl);
 		$response_http_code = curl_getinfo($curl, CURLINFO_HTTP_CODE);
-		curl_close( $curl );
+		curl_close($curl);
 
 		$response = json_decode($response, true);
+		WC_SUMUP_LOGGER::log('SumUp checkout created. Payload: ' . json_encode($signup_data) . ' Response: ' . json_encode($response) . ' HTTP Code: ' . $response_http_code);
 		if ($response != false && ($response_http_code === 201 || $response_http_code === 200)) {
 			return $response;
 		}
@@ -72,13 +76,15 @@ class Wc_Sumup_Checkout {
 	 *
 	 * @return array
 	 */
-	public static function get( $checkout_id = '', $access_token = '' ) {
-		if( empty( $checkout_id ) || empty( $access_token ) ) {
+	public static function get($checkout_id = '', $access_token = '')
+	{
+		if (empty($checkout_id) || empty($access_token)) {
 			return array();
 		}
 
 		$curl = curl_init();
-		curl_setopt_array( $curl,
+		curl_setopt_array(
+			$curl,
 			array(
 				CURLOPT_URL => 'https://api.sumup.com/v0.1/checkouts/' . $checkout_id,
 				CURLOPT_RETURNTRANSFER => true,
@@ -96,8 +102,8 @@ class Wc_Sumup_Checkout {
 			)
 		);
 
-		$response = curl_exec( $curl );
-		curl_close( $curl );
-		return $response !== false ? json_decode( $response, true ) : array();
+		$response = curl_exec($curl);
+		curl_close($curl);
+		return $response !== false ? json_decode($response, true) : array();
 	}
 }

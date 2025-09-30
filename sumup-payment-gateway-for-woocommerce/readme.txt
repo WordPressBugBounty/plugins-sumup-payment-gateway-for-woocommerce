@@ -4,7 +4,7 @@ Tags: sumup, payment gateway, woocommerce, payments, ecommerce
 Requires at least: 5.0
 Tested up to: 6.7.2
 Requires PHP: 7.2
-Stable tag: 2.7.6
+Stable tag: 2.7.7
 License: GPL2
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -98,6 +98,10 @@ If you have any questions, please get in contact with us through our [contact fo
 Yes. If you need a testing environment, please contact us through our [contact form](https://developer.sumup.com/contact).
 
 == Changelog ==
+
+= 2.7.7 =
+* Improvement: Added log to checkout created.
+* Fixed: Fixed deprecated warning, declare dynamic property.
 
 = 2.7.6 =
 * Fixed: Fixed webhook priority process on schedule_actions.
@@ -246,7 +250,6 @@ Yes. If you need a testing environment, please contact us through our [contact f
 
 == Upgrade Notice ==
 
-= 2.7.6 =
-* Fixed: Fixed webhook priority process on schedule_actions.
-
-
+= 2.7.7 =
+* Improvement: Added log to checkout created.
+* Fixed: Fixed deprecated warning, declare dynamic property.

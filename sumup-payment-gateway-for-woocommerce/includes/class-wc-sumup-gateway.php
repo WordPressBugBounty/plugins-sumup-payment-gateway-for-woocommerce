@@ -89,6 +89,33 @@ class WC_Gateway_SumUp extends \WC_Payment_Gateway
 	protected $open_payment_in_modal;
 
 	/**
+	 * Enable webhook priority
+	 *
+	 * @since 2.0
+	 */
+	protected $enable_webhook_priority;
+
+	/**
+	 * Webhook retry attempts
+	 *
+	 * @since 2.0
+	 */
+	protected $webhook_retry_attempts;
+
+	/**
+	 * Enable webhook notifications
+	 *
+	 * @since 2.0
+	 */
+	protected $enable_webhook_notifications;
+
+	/**
+	 * Webhook timeout
+	 *
+	 * @since 2.0
+	 */
+	protected $webhook_timeout;
+	/**
 	 * Constructor.
 	 */
 	public function __construct()
@@ -191,7 +218,6 @@ class WC_Gateway_SumUp extends \WC_Payment_Gateway
 				exit;
 			}
 		}
-
 	}
 
 	public function webhook()
@@ -326,9 +352,9 @@ class WC_Gateway_SumUp extends \WC_Payment_Gateway
 	private function validate_webhook_data($data)
 	{
 		return isset($data['id']) &&
-			   !empty($data['id']) &&
-			   isset($data['event_type']) &&
-			   !empty($data['event_type']);
+			!empty($data['id']) &&
+			isset($data['event_type']) &&
+			!empty($data['event_type']);
 	}
 
 	/**
@@ -545,7 +571,6 @@ class WC_Gateway_SumUp extends \WC_Payment_Gateway
 			}
 
 			$this->handle_webhook_failure($data, $attempt, $max_attempts, $result);
-
 		} catch (Exception $e) {
 			$this->handle_webhook_exception($data, $attempt, $max_attempts, $e, $checkout_id);
 		}
@@ -876,7 +901,6 @@ class WC_Gateway_SumUp extends \WC_Payment_Gateway
 
 		// Log crítico
 		WC_SUMUP_LOGGER::log("CRITICAL FAILURE: Webhook failed after all attempts. Checkout ID: {$checkout_id}. Error: {$error}");
-
 	}
 
 	/**
@@ -956,7 +980,7 @@ class WC_Gateway_SumUp extends \WC_Payment_Gateway
 		);
 		echo wp_kses_post($failed_message);
 
-		?>
+?>
 		<script>
 			if (document.readyState === 'complete') {
 				sumUpSubmitOrderAfterRedirect();
@@ -1119,7 +1143,7 @@ class WC_Gateway_SumUp extends \WC_Payment_Gateway
 			echo '<p>' . esc_html($this->description) . '</p>';
 			$extra_class = $this->open_payment_in_modal === 'yes' ? 'modal' : 'no-modal';
 
-			?>
+		?>
 			<style>
 				.wc-sumup-modal {
 					position: fixed;
@@ -1205,7 +1229,7 @@ class WC_Gateway_SumUp extends \WC_Payment_Gateway
 					</div>
 				</div>
 			</div>
-			<?php
+		<?php
 			return;
 		}
 
@@ -1296,7 +1320,7 @@ class WC_Gateway_SumUp extends \WC_Payment_Gateway
 		if (isset($sumup_checkout['id'])) {
 			$extra_class = $this->open_payment_in_modal === 'yes' ? 'no-modal' : '';
 
-			?>
+		?>
 			<style>
 				.wc-sumup-modal {
 					position: fixed;
@@ -1391,11 +1415,11 @@ class WC_Gateway_SumUp extends \WC_Payment_Gateway
 					sumup_gateway_params.country = '';
 				}
 
-				jQuery(function ($) {
+				jQuery(function($) {
 					$(document.body).trigger('sumupCardInit');
 				});
 			</script>
-			<?php
+		<?php
 		}
 
 		if (isset($sumup_checkout['error_code'])) {
@@ -1587,14 +1611,14 @@ class WC_Gateway_SumUp extends \WC_Payment_Gateway
 
 	public function verify_credential_options()
 	{
-		$pay_to_email = get_transient( 'pay_to_email' );
-		$api_key = get_transient( 'api_key' );
-		$merchant_id = get_transient( 'merchant_id' );
+		$pay_to_email = get_transient('pay_to_email');
+		$api_key = get_transient('api_key');
+		$merchant_id = get_transient('merchant_id');
 
 		if ($pay_to_email && $api_key && $merchant_id) {
 			$settings = get_option('woocommerce_sumup_settings');
 			$settings['pay_to_email'] = $pay_to_email;
-			$settings['api_key'] = $api_key ;
+			$settings['api_key'] = $api_key;
 			$settings['merchant_id'] = $merchant_id;
 			update_option('woocommerce_sumup_settings', $settings);
 		}
@@ -1717,7 +1741,7 @@ class WC_Gateway_SumUp extends \WC_Payment_Gateway
 		<?php
 
 		if (!empty($pix_code) && !empty($pix_image)) {
-			?>
+		?>
 			<style>
 				#sumup-boleto-code {
 					background: #ececec;
@@ -1735,14 +1759,14 @@ class WC_Gateway_SumUp extends \WC_Payment_Gateway
 			<p><?php esc_html_e('PIX code: ', 'sumup-payment-gateway-for-woocommerce'); ?> <span
 					id="sumup-boleto-code"><?php echo esc_html($pix_code); ?></span></p>
 			<img id="sumup-pix-qr-code" src="<?php echo esc_attr($pix_image); ?>" alt="sumup-pix-qr-code" style="">
-			<?php
+		<?php
 		}
 
 		$boleto_code = sanitize_text_field($_GET['boleto-code'] ?? '');
 		$boleto_link = sanitize_text_field($_GET['boleto-link'] ?? '');
 
 		if (!empty($boleto_code) && !empty($boleto_link)) {
-			?>
+		?>
 			<style>
 				#sumup-boleto-code {
 					background: #ececec;
@@ -1756,7 +1780,7 @@ class WC_Gateway_SumUp extends \WC_Payment_Gateway
 					id="sumup-boleto-code"><?php echo esc_html($boleto_code); ?></span></p>
 			<a class="button" href="<?php echo esc_attr($boleto_link); ?>"
 				target="_blank"><?php esc_html_e('Download Boleto', 'sumup-payment-gateway-for-woocommerce'); ?></a>
-			<?php
+<?php
 		}
 	}
 }
