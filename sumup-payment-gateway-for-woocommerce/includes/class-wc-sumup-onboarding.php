@@ -91,7 +91,7 @@ class WC_Sumup_Onboarding {
 			curl_setopt_array(
 				$ch,
 				array(
-					CURLOPT_URL => 'https://op-plugin-onboarding.op-live-eks-eu-west-1.sam-app.ro/v1/connections', //https://op-plugin-onboarding.op-dev-eks-eu-west-1.sam-app.ro/v1/connections
+					CURLOPT_URL => 'https://api.sumup.com/online-payments-plugin/connections',
 					CURLOPT_RETURNTRANSFER => true,
 					CURLOPT_POST => true,
 					CURLOPT_POSTFIELDS => $data,

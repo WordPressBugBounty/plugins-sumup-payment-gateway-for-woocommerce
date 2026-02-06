@@ -4,7 +4,7 @@ Tags: sumup, payment gateway, woocommerce, payments, ecommerce
 Requires at least: 5.0
 Tested up to: 6.7.2
 Requires PHP: 7.2
-Stable tag: 2.7.7
+Stable tag: 2.7.10
 License: GPL2
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -98,6 +98,14 @@ If you have any questions, please get in contact with us through our [contact fo
 Yes. If you need a testing environment, please contact us through our [contact form](https://developer.sumup.com/contact).
 
 == Changelog ==
+= 2.7.10 =
+* Fixed: Improvement in overall security.
+
+= 2.7.9 =
+* Fixed: Fixed the update of new checkout data in the payment modal.
+
+= 2.7.8 =
+* Fixed: Change onboarding endpoint.
 
 = 2.7.7 =
 * Improvement: Added log to checkout created.
@@ -250,6 +258,5 @@ Yes. If you need a testing environment, please contact us through our [contact f
 
 == Upgrade Notice ==
 
-= 2.7.7 =
-* Improvement: Added log to checkout created.
-* Fixed: Fixed deprecated warning, declare dynamic property.
+= 2.7.10 =
+* Fixed: Improvement in overall security.

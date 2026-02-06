@@ -15,7 +15,9 @@ add_action('rest_api_init', function () {
 		array(
 			'methods' => array('POST'),
 			'callback' => 'sumup_disconnect',
-			'permission_callback' => '__return_true',
+			'permission_callback' => function () {
+				return current_user_can('manage_options');
+			},
 		)
 	);
 });

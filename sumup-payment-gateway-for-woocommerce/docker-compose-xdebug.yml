@@ -51,6 +51,7 @@ services:
 
     volumes:
       - /opt/projects/wpd-sumup/mysql:/var/lib/mysql
+      - mysql_data_sumup:/var/lib/mysql
 
     networks:
       backend-sumup:
@@ -64,3 +65,5 @@ networks:
       config:
         - subnet: 172.19.0.0/24
 
+volumes:
+  mysql_data_sumup:
