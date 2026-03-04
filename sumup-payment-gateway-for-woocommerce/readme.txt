@@ -4,7 +4,7 @@ Tags: sumup, payment gateway, woocommerce, payments, ecommerce
 Requires at least: 5.0
 Tested up to: 6.7.2
 Requires PHP: 7.2
-Stable tag: 2.7.10
+Stable tag: 2.8.2
 License: GPL2
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -98,6 +98,18 @@ If you have any questions, please get in contact with us through our [contact fo
 Yes. If you need a testing environment, please contact us through our [contact form](https://developer.sumup.com/contact).
 
 == Changelog ==
+= 2.8.2 =
+* Fixed: website connection issues and improved plugin onboarding flow.
+
+= 2.8.0 =
+* Improvement: Improvements to the security system.
+
+= 2.7.12 =
+* Fixed: Fixed Fatal error when wc-countries is null.
+
+= 2.7.11 =
+* Fixed: Fixed showed payment buttons on paid orders.
+
 = 2.7.10 =
 * Fixed: Improvement in overall security.
 
@@ -258,5 +270,5 @@ Yes. If you need a testing environment, please contact us through our [contact f
 
 == Upgrade Notice ==
 
-= 2.7.10 =
-* Fixed: Improvement in overall security.
+= 2.8.2 =
+* Fixed: website connection issues and improved plugin onboarding flow.

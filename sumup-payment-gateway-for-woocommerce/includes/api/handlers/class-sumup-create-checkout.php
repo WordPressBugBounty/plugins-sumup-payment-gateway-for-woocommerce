@@ -115,7 +115,7 @@ class Sumup_API_Create_Chekout_Handler extends Sumup_Api_Handler
 				'amount' => $total,
 				'currency' => get_woocommerce_currency(),
 				'description' => 'WooCommerce #' . $order_id,
-				'redirect_url' => wc_get_checkout_url() . '?sumup-validate-order=' . $order_id,
+				'redirect_url' => add_query_arg('sumup-validate-order', $order_id, wc_get_checkout_url()),
 				'return_url' => WC()->api_request_url('wc_gateway_sumup'),
 			);
 

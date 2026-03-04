@@ -12,6 +12,61 @@ if (!defined('ABSPATH')) {
 class WC_Gateway_SumUp extends \WC_Payment_Gateway
 {
 	/**
+	 * Hide payment buttons on paid orders (Fix for some themes)
+	 * 
+	 * @return void
+	 */
+	public function hide_payment_buttons_on_paid_orders()
+	{
+		global $wp;
+
+		$order_id = 0;
+
+		// Check if we are on Order Received or View Order page
+		if (isset($wp->query_vars['order-received'])) {
+			$order_id = absint($wp->query_vars['order-received']);
+		} elseif (isset($wp->query_vars['view-order'])) {
+			$order_id = absint($wp->query_vars['view-order']);
+		}
+
+		if (!$order_id) {
+			return;
+		}
+
+		$order = wc_get_order($order_id);
+
+		if (!$order) {
+			return;
+		}
+
+		// Check if gateway is SumUp
+		if ($order->get_payment_method() !== 'sumup') {
+			return;
+		}
+
+		// Check if status is NOT pending or on-hold
+		if (in_array($order->get_status(), ['pending', 'on-hold', 'failed'], true)) {
+			return;
+		}
+
+?>
+		<style>
+			/* SumUp Plugin Fix v2.1 - Hide Buttons on Paid Orders */
+			.woocommerce-order-details .order-again,
+			.woocommerce-order-details .pay,
+			.woocommerce-order-details .cancel,
+			.woocommerce-order-details a.button.pay,
+			.woocommerce-order-details a.button.cancel,
+			.woocommerce-table--order-details .pay,
+			.woocommerce-table--order-details .cancel,
+			.my_account_orders .button.pay,
+			.my_account_orders .button.cancel {
+				display: none !important;
+			}
+		</style>
+	<?php
+	}
+	/**
 	 * Merchant ID
 	 *
 	 * @since 2.0
@@ -202,7 +257,8 @@ class WC_Gateway_SumUp extends \WC_Payment_Gateway
 			isset($_GET['page']) && $_GET['page'] === 'wc-settings' &&
 			isset($_GET['tab']) && $_GET['tab'] === 'checkout' &&
 			isset($_GET['section']) && $_GET['section'] === 'sumup' &&
-			!isset($_GET['validate_settings'])
+			!isset($_GET['validate_settings']) &&
+			empty($_POST)
 		) {
 
 			$is_valid_onboarding_settings = Wc_Sumup_Credentials::validate();
@@ -957,6 +1013,17 @@ class WC_Gateway_SumUp extends \WC_Payment_Gateway
 
 		//Verify if the transaction is correct before check status PAID
 		$transaction_code = $sumup_checkout['transaction_code'] ?? '';
+
+		// Try to find transaction code in transactions array if not at root
+		if (empty($transaction_code) && !empty($sumup_checkout['transactions']) && is_array($sumup_checkout['transactions'])) {
+			foreach ($sumup_checkout['transactions'] as $transaction) {
+				if (!empty($transaction['transaction_code'])) {
+					$transaction_code = $transaction['transaction_code'];
+					break;
+				}
+			}
+		}
+
 		if (empty($transaction_code)) {
 			WC_SUMUP_LOGGER::log('Missing transaction code on redirect payment flow from SumUp. Checkout data: ' . $checkout_data . '. Merchant Id: ' . $this->merchant_id . '. Checkout ID: ' . $checkout_data['id']);
 			wp_redirect($this->get_return_url($order));
@@ -980,7 +1047,7 @@ class WC_Gateway_SumUp extends \WC_Payment_Gateway
 		);
 		echo wp_kses_post($failed_message);
 
-?>
+	?>
 		<script>
 			if (document.readyState === 'complete') {
 				sumUpSubmitOrderAfterRedirect();
@@ -1054,7 +1121,7 @@ class WC_Gateway_SumUp extends \WC_Payment_Gateway
 				'amount' => $order->get_total(),
 				'currency' => get_woocommerce_currency(),
 				'description' => 'WooCommerce #' . $order_id,
-				'redirect_url' => wc_get_checkout_url() . '?sumup-validate-order=' . $order_id,
+				'redirect_url' => add_query_arg('sumup-validate-order', $order_id, wc_get_checkout_url()),
 				'return_url' => WC()->api_request_url('wc_gateway_sumup'),
 			];
 
@@ -1287,7 +1354,7 @@ class WC_Gateway_SumUp extends \WC_Payment_Gateway
 				'amount' => $total,
 				'currency' => get_woocommerce_currency(),
 				'description' => 'WooCommerce #' . $order_id,
-				'redirect_url' => wc_get_checkout_url() . '?sumup-validate-order=' . $order_id,
+				'redirect_url' => add_query_arg('sumup-validate-order', $order_id, wc_get_checkout_url()),
 				'return_url' => WC()->api_request_url('wc_gateway_sumup'),
 			);
 
@@ -1662,6 +1729,24 @@ class WC_Gateway_SumUp extends \WC_Payment_Gateway
 		$payment_status = $checkout_data['status'] ?? '';
 		if ($payment_status === 'FAILED') {
 			$order->update_status('failed');
+		} elseif ($payment_status === 'PAID' && !$order->is_paid()) {
+			//Verify if the transaction is correct before check status PAID
+			$transaction_code = $checkout_data['transaction_code'] ?? '';
+
+			// Try to find transaction code in transactions array if not at root
+			if (empty($transaction_code) && !empty($checkout_data['transactions']) && is_array($checkout_data['transactions'])) {
+				foreach ($checkout_data['transactions'] as $transaction) {
+					if (!empty($transaction['transaction_code'])) {
+						$transaction_code = $transaction['transaction_code'];
+						break;
+					}
+				}
+			}
+
+			if (!empty($transaction_code)) {
+				$order->payment_complete($checkout_id);
+				$order->add_order_note('SumUp payment validated via Thank You page. Transaction Code: ' . $transaction_code);
+			}
 		}
 		?>
 		<style>

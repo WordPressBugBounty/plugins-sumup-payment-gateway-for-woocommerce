@@ -47,7 +47,7 @@ $fields = array(
  *
  * @since 2.0
  */
-$shop_base_country = WC()->countries->get_base_country();
+$shop_base_country = isset(WC()->countries) ? WC()->countries->get_base_country() : '';
 if ( $shop_base_country === 'BR' ) {
 	$fields['enable_installments'] = array(
 		'title'       => __( 'Installments', 'sumup-payment-gateway-for-woocommerce' ),
