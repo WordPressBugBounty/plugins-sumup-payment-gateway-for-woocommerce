@@ -4,7 +4,7 @@ Tags: sumup, payment gateway, woocommerce, payments, ecommerce
 Requires at least: 5.0
 Tested up to: 6.7.2
 Requires PHP: 7.2
-Stable tag: 2.8.2
+Stable tag: 2.9.0
 License: GPL2
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -98,6 +98,10 @@ If you have any questions, please get in contact with us through our [contact fo
 Yes. If you need a testing environment, please contact us through our [contact form](https://developer.sumup.com/contact).
 
 == Changelog ==
+= 2.9.0 =
+* Fixed: Add compatibility for Woocommerce Checkout blocks
+* Fixed: Show footer on widget open in modal.
+
 = 2.8.2 =
 * Fixed: website connection issues and improved plugin onboarding flow.
 
@@ -270,5 +274,6 @@ Yes. If you need a testing environment, please contact us through our [contact f
 
 == Upgrade Notice ==
 
-= 2.8.2 =
-* Fixed: website connection issues and improved plugin onboarding flow.
+= 2.9.0 =
+* Fixed: Add compatibility for Woocommerce Checkout blocks
+* Fixed: Show footer on widget open in modal.
