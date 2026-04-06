@@ -4,7 +4,7 @@ Tags: sumup, payment gateway, woocommerce, payments, ecommerce
 Requires at least: 5.0
 Tested up to: 6.7.2
 Requires PHP: 7.2
-Stable tag: 2.9.0
+Stable tag: 2.9.1
 License: GPL2
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -98,6 +98,11 @@ If you have any questions, please get in contact with us through our [contact fo
 Yes. If you need a testing environment, please contact us through our [contact form](https://developer.sumup.com/contact).
 
 == Changelog ==
+= 2.9.1 =
+* Fixed: Optimized ActionScheduler webhook processing to prevent excessive database growth.
+* Fixed: Implemented deduplication for webhook actions and stabilized group identifiers.
+* Fixed: Improved retry logic to avoid unnecessary attempts on failed checkout status. 
+
 = 2.9.0 =
 * Fixed: Add compatibility for Woocommerce Checkout blocks
 * Fixed: Show footer on widget open in modal.
@@ -274,6 +279,7 @@ Yes. If you need a testing environment, please contact us through our [contact f
 
 == Upgrade Notice ==
 
-= 2.9.0 =
-* Fixed: Add compatibility for Woocommerce Checkout blocks
-* Fixed: Show footer on widget open in modal.
+= 2.9.1 =
+* Fixed: Optimized ActionScheduler webhook processing to prevent excessive database growth.
+* Fixed: Implemented deduplication for webhook actions and stabilized group identifiers.
+* Fixed: Improved retry logic to avoid unnecessary attempts on failed checkout status.

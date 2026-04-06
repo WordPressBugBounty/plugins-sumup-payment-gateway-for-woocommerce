@@ -243,7 +243,7 @@ class WC_Gateway_SumUp extends \WC_Payment_Gateway
 		add_action('woocommerce_api_wc_gateway_sumup', array($this, 'webhook'));
 		add_action('template_redirect', array($this, 'check_redirect_flow'), 99);
 		add_action('process_webhook_order', array($this, 'handle_webhook_order'));
-		add_action('process_webhook_order_priority', array($this, 'handle_webhook_order_with_retry'));
+		add_action('process_webhook_order_priority', array($this, 'handle_webhook_order_with_retry'), 10, 2);
 		$this->admin_custom_url();
 	}
 
@@ -303,39 +303,35 @@ class WC_Gateway_SumUp extends \WC_Payment_Gateway
 	 */
 	private function enqueue_webhook_with_priority($data)
 	{
-		$checkout_id = $data['id'] ?? '';
-		$unique_id = $this->generate_unique_webhook_id($checkout_id);
+		$payload = $this->build_webhook_payload($data);
+		$checkout_id = $payload['id'] ?? '';
 
-		$this->schedule_webhook_action($data, $unique_id);
-		$this->log_webhook_scheduled($unique_id, $checkout_id);
+		$this->schedule_webhook_action($payload);
+		$this->log_webhook_scheduled($checkout_id);
 	}
 
-	/**
-	 * Generate unique webhook identifier
-	 *
-	 * @param string $checkout_id
-	 * @return string
-	 */
-	private function generate_unique_webhook_id($checkout_id)
+	private function build_webhook_payload($data)
 	{
-		return 'sumup_webhook_' . $checkout_id . '_' . microtime(true);
+		return [
+			'id' => sanitize_text_field($data['id'] ?? ''),
+			'event_type' => sanitize_text_field($data['event_type'] ?? ''),
+		];
 	}
 
 	/**
 	 * Schedule webhook action in ActionScheduler
 	 *
-	 * @param array $data Webhook data
-	 * @param string $unique_id Unique identifier
+	 * @param array $payload Webhook data
 	 * @return void
 	 */
-	private function schedule_webhook_action($data, $unique_id)
+	private function schedule_webhook_action($payload)
 	{
 		as_schedule_single_action(
 			time() + 60, // Execute in up to 1 minute
 			'process_webhook_order_priority',
-			[$data, 1, $unique_id], // data + attempt count + unique_id
+			[$payload, 1],
 			'sumup-webhooks-priority', // high priority group
-			false, // Allow multiple webhooks - FIX for simultaneous webhooks
+			true,
 			10 // high priority (lower number = max priority)
 		);
 	}
@@ -343,13 +339,12 @@ class WC_Gateway_SumUp extends \WC_Payment_Gateway
 	/**
 	 * Log webhook scheduled event
 	 *
-	 * @param string $unique_id
 	 * @param string $checkout_id
 	 * @return void
 	 */
-	private function log_webhook_scheduled($unique_id, $checkout_id)
+	private function log_webhook_scheduled($checkout_id)
 	{
-		WC_SUMUP_LOGGER::log('Webhook scheduled with high priority. ID: ' . $unique_id . ', Checkout: ' . $checkout_id);
+		WC_SUMUP_LOGGER::log('Webhook scheduled with high priority. Checkout: ' . $checkout_id);
 	}
 
 	/**
@@ -612,6 +607,11 @@ class WC_Gateway_SumUp extends \WC_Payment_Gateway
 	 */
 	public function handle_webhook_order_with_retry($data, $attempt = 1)
 	{
+		$attempt = is_numeric($attempt) ? (int) $attempt : 1;
+		if ($attempt < 1) {
+			$attempt = 1;
+		}
+
 		$max_attempts = $this->webhook_retry_attempts;
 		$checkout_id = $data['id'] ?? '';
 		$performance_tracker = $this->start_performance_tracking();
@@ -833,9 +833,11 @@ class WC_Gateway_SumUp extends \WC_Payment_Gateway
 			];
 		}
 
+		$payment_status = $checkout_data['status'] ?? '';
+
 		// Validate transaction code
 		$transaction_code = $checkout_data['transaction_code'] ?? '';
-		if (empty($transaction_code)) {
+		if ($payment_status === 'PAID' && empty($transaction_code)) {
 			return [
 				'success' => false,
 				'critical_error' => false,
@@ -876,11 +878,11 @@ class WC_Gateway_SumUp extends \WC_Payment_Gateway
 	private function schedule_webhook_retry($data, $attempt)
 	{
 		$delay_seconds = $this->calculate_retry_delay($attempt);
-		$checkout_id = $data['id'] ?? '';
-		$unique_identifiers = $this->generate_retry_identifiers($checkout_id);
+		$payload = $this->build_webhook_payload($data);
+		$checkout_id = $payload['id'] ?? '';
 
 		$this->log_webhook_retry_scheduled($delay_seconds, $attempt, $checkout_id);
-		$this->schedule_retry_action($data, $attempt, $delay_seconds, $unique_identifiers);
+		$this->schedule_retry_action($payload, $attempt, $delay_seconds);
 	}
 
 	/**
@@ -896,36 +898,21 @@ class WC_Gateway_SumUp extends \WC_Payment_Gateway
 	}
 
 	/**
-	 * Generate unique identifiers for retry
-	 *
-	 * @param string $checkout_id
-	 * @return array
-	 */
-	private function generate_retry_identifiers($checkout_id)
-	{
-		return [
-			'unique_id' => 'sumup_webhook_' . $checkout_id . '_' . microtime(true),
-			'unique_group' => 'sumup-webhooks-' . $checkout_id . '-' . microtime(true)
-		];
-	}
-
-	/**
 	 * Schedule retry action in ActionScheduler
 	 *
-	 * @param array $data
+	 * @param array $payload
 	 * @param int $attempt
 	 * @param int $delay_seconds
-	 * @param array $unique_identifiers
 	 * @return void
 	 */
-	private function schedule_retry_action($data, $attempt, $delay_seconds, $unique_identifiers)
+	private function schedule_retry_action($payload, $attempt, $delay_seconds)
 	{
 		as_schedule_single_action(
 			time() + $delay_seconds,
 			'process_webhook_order_priority',
-			[$data, $attempt, $unique_identifiers['unique_id']],
-			$unique_identifiers['unique_group'],
-			false,
+			[$payload, $attempt],
+			'sumup-webhooks-priority',
+			true,
 			5 // Medium priority for retries
 		);
 	}
