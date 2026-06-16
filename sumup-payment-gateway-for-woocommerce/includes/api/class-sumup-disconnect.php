@@ -48,12 +48,20 @@ function sumup_disconnect(): WP_REST_Response
 		$settings['client_id'] = null;
 		$settings['client_secret'] = null;
 	}
+	if (isset($settings['merchant_id'])) {
+		$settings['merchant_id'] = null;
+	}
+	if (isset($settings['pay_to_email'])) {
+		$settings['pay_to_email'] = null;
+	}
+	$settings['enabled'] = 'no';
 
 	update_option('woocommerce_sumup_settings', $settings);
-	update_option('sumup_valid_credentials', 0, false);
+	update_option('sumup_connection_status', 'not_connected', false);
+	delete_option('sumup_valid_credentials');
 
 	/*
 	 * Redirect to sumup payment admin page
 	 */
-	return new WP_REST_Response(['status' => 'disconnected', 'redirect_url' => admin_url("admin.php?page=wc-settings&tab=checkout&section=sumup&validate_settings=false")], 200);
+	return new WP_REST_Response(['status' => 'disconnected', 'redirect_url' => admin_url("admin.php?page=wc-settings&tab=checkout&section=sumup")], 200);
 }

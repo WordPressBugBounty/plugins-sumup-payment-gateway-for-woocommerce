@@ -22,7 +22,9 @@ final class WC_Sumup_Blocks_Support extends AbstractPaymentMethodType
 
 	public function is_active()
 	{
-		return !empty($this->settings['enabled']) && 'yes' === $this->settings['enabled'];
+		return ! empty($this->settings['enabled'])
+			&& 'yes' === $this->settings['enabled']
+			&& sumup_gateway_is_configured($this->settings);
 	}
 
 	public function get_payment_method_script_handles()
@@ -122,6 +124,15 @@ final class WC_Sumup_Blocks_Support extends AbstractPaymentMethodType
 		}
 
 		if (is_cart() || is_checkout()) {
+			$asset_data = sumup_get_build_asset_metadata(
+				'build/index.asset.php',
+				array(
+					'wc-blocks-registry',
+					'wc-settings',
+					'wc-blocks-data-store',
+					'sumup_gateway_card_sdk',
+				)
+			);
 
 			/*
 			 * Use the SumUp's SDK for accepting card payments.
@@ -131,18 +142,12 @@ final class WC_Sumup_Blocks_Support extends AbstractPaymentMethodType
 			wp_register_script(
 				'wc-sumup-blocks-integration',
 				plugin_dir_url(__DIR__) . 'build/index.js',
-				array(
-					'wc-blocks-registry',
-					'wc-settings',
-					'wp-element',
-					'wp-html-entities',
-					'sumup_gateway_card_sdk'
-				),
-				null, // or time() or filemtime( ... ) to skip caching
+				$asset_data['dependencies'],
+				$asset_data['version'],
 				true
 			);
 
-			wp_register_style("wc_sumup_checkout", plugin_dir_url(__DIR__) . 'build/index.css', array(), WC_SUMUP_VERSION);
+			wp_register_style("wc_sumup_checkout", plugin_dir_url(__DIR__) . 'build/index.css', array(), $asset_data['version']);
 		}
 		/**
 		 * Translators: the following error messages are shown to the end user
@@ -153,6 +158,7 @@ final class WC_Sumup_Blocks_Support extends AbstractPaymentMethodType
 		wp_localize_script('wc-sumup-blocks-integration', 'sumup_gateway_params', array(
 
 			'showInstallments' => $show_installments,
+			'checkoutNonce' => wp_create_nonce('sumup-create-checkout'),
 			'sumup_handler_url' => add_query_arg(
 				array(
 					'wc-api' => 'sumup_api_handler',
@@ -182,9 +188,18 @@ final class WC_Sumup_Blocks_Support extends AbstractPaymentMethodType
 
 	public function get_payment_method_data()
 	{
+		$title = ! empty( $this->gateway->title )
+			? $this->gateway->title
+			: __( 'Credit / Debit Card', 'sumup-payment-gateway-for-woocommerce' );
+
+		$description = ! empty( $this->gateway->description )
+			? $this->gateway->description
+			: __( 'Pay securely with your credit or debit card, or use other available payment methods.', 'sumup-payment-gateway-for-woocommerce' );
+
 		return array(
-			'title' => $this->get_setting('title'),
-			'description' => $this->get_setting('description'),
+			'title' => $title,
+			'description' => $description,
+			'icon' => WC_SUMUP_PLUGIN_URL . '/assets/images/sumup-logomark.svg',
 			'supports' => array_filter($this->gateway->supports, [$this->gateway, 'supports'])
 		);
 	}

@@ -36,12 +36,18 @@ class Sumup_API_Connection_Website_Handler extends Sumup_Api_Handler
 	{
 		$json_data = file_get_contents('php://input');
 		$post_data = json_decode($json_data, true);
+		$connection_id = isset($post_data['id']) ? sanitize_text_field($post_data['id']) : '';
 
 		WC_SUMUP_LOGGER::log( "Receive connect data handler");
 
-		$transient = get_transient('sumup-connection-id-' . sanitize_text_field($post_data['id']));
+		if ( empty( $connection_id ) ) {
+			WC_SUMUP_LOGGER::log( 'Rejecting legacy connect callback: missing connection ID' );
+			$reponse_body = array('status' => 'error', 'message' => 'Invalid connection ID');
+			$this->send_response($reponse_body['status'],$reponse_body['message'],array() ,400);
+		}
 
-		if ( empty( $post_data['id'] ) || empty( $transient ) || $post_data['id'] !== $transient ) {
+		if ( ! sumup_has_pending_connection_id( $connection_id ) ) {
+			WC_SUMUP_LOGGER::log( 'Rejecting legacy connect callback: unknown connection ID ' . $connection_id );
 			$reponse_body = array('status' => 'error', 'message' => 'Invalid connection ID');
 			$this->send_response($reponse_body['status'],$reponse_body['message'],array() ,400);
 		}
@@ -70,10 +76,13 @@ class Sumup_API_Connection_Website_Handler extends Sumup_Api_Handler
 			$settings['pay_to_email'] = $post_data['merchant']['email'];
 			$settings['api_key'] = $post_data['merchant']['api_key'];
 			$settings['merchant_id'] = $post_data['merchant']['merchant_code'];
+			$settings['enabled'] = 'no';
 			update_option('woocommerce_sumup_settings', $settings);
 		}
 
-		delete_transient('sumup-connection-id-' . $post_data['id']);
+		update_option('sumup_connection_status', 'pending', false);
+
+		sumup_delete_pending_connection_id($connection_id);
 
 		$reponse_body = array('status' => 'connected');
 		$this->send_response($reponse_body);

@@ -47,9 +47,10 @@ class Sumup_Api_Handler
 	public function handler()
 	{
 		$handlers = $this->get_handlers();
+		$action = isset($_GET['action']) ? sanitize_key(wp_unslash($_GET['action'])) : '';
 
 		// Return an error in case action doesn't exists .
-		if (!isset($_GET['action']) || empty($_GET['action']) || !array_key_exists($_GET['action'], $handlers)) {
+		if (empty($action) || !array_key_exists($action, $handlers)) {
 			wp_send_json(
 				array(
 					'result' => 'error',
@@ -57,7 +58,17 @@ class Sumup_Api_Handler
 				), 500);
 		}
 
-		$action = $_GET['action'];
+		$expected_method = isset($handlers[$action]['method']) ? strtoupper($handlers[$action]['method']) : '';
+		if ($expected_method && strtoupper(wp_unslash($_SERVER['REQUEST_METHOD'] ?? '')) !== $expected_method) {
+			wp_send_json(
+				array(
+					'result' => 'error',
+					'message' => __('Invalid request method.', 'sumup-payment-gateway-for-woocommerce'),
+				),
+				405
+			);
+		}
+
 		call_user_func($handlers[$action]['callback']);
 	}
 

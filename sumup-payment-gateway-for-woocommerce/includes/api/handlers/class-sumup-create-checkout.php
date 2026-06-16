@@ -34,13 +34,21 @@ class Sumup_API_Create_Chekout_Handler extends Sumup_Api_Handler
 		$json_data = file_get_contents('php://input');
 		$post_data = json_decode($json_data, true);
 
-		$post_data = json_decode($json_data, true);
-
-		if (!isset($post_data['order_id'])) {
-			$reponse_body = array('status' => 'error', 'message' => 'Invalid order_id');
-			$this->send_response($reponse_body['status'],$reponse_body['message'],array() ,400);
+		if (!is_array($post_data)) {
+			$this->send_response('error', __('Invalid request payload.', 'sumup-payment-gateway-for-woocommerce'), array(), 400);
 		}
-		$result = $this->create_checkout($post_data['order_id']);
+
+		$nonce = isset($post_data['nonce']) ? sanitize_text_field(wp_unslash($post_data['nonce'])) : '';
+		if (!wp_verify_nonce($nonce, 'sumup-create-checkout')) {
+			$this->send_response('error', __('Invalid request nonce.', 'sumup-payment-gateway-for-woocommerce'), array(), 403);
+		}
+
+		$order_id = isset($post_data['order_id']) ? absint($post_data['order_id']) : 0;
+		if (!$order_id) {
+			$this->send_response('error', __('Invalid order ID.', 'sumup-payment-gateway-for-woocommerce'), array(), 400);
+		}
+
+		$result = $this->create_checkout($order_id);
 
 		if($result['status'] == 'error'){
 			$this->send_response($result['status'],$result['message'],array(),400);
@@ -53,7 +61,7 @@ class Sumup_API_Create_Chekout_Handler extends Sumup_Api_Handler
 	private function create_checkout($order_id, $is_checkout_blocks = false)
 	{
 
-		if (!get_option('sumup_valid_credentials')) {
+		if (!sumup_gateway_is_configured()) {
 			$message = __('Merchant account settings are incorrectly configured. Check the plugin settings page.', 'sumup-payment-gateway-for-woocommerce');
 			return 	array(
 				'status' => 'error',
@@ -83,7 +91,14 @@ class Sumup_API_Create_Chekout_Handler extends Sumup_Api_Handler
 			);
 		}
 
-		$order = new WC_Order( $order_id );
+		$order = wc_get_order($order_id);
+		if (!$order instanceof WC_Order) {
+			return array(
+				'status' => 'error',
+				'message' => __('Order ID is not available to make the payment. Try again soon or contact the website support.', 'sumup-payment-gateway-for-woocommerce'),
+				'data' => null,
+			);
+		}
 
 		$total = $order->get_total();
 
@@ -102,11 +117,6 @@ class Sumup_API_Create_Chekout_Handler extends Sumup_Api_Handler
 		$sumup_settings['sumup_access_token'] = $access_token['access_token'];
 		$sumup_settings['sumup_token_fetched_date'] = date('Y/m/d H:i:s');
 		update_option('woocommerce_sumup_settings', $sumup_settings);
-
-		if ($order === false) {
-			echo '<p>' . __('Order ID is not available to make the payment. Try again soon or contact the website support.', 'sumup-payment-gateway-for-woocommerce') . '</p>';
-			return;
-		}
 
 		$sumup_checkout = $order->get_meta('_sumup_checkout_data');
 		if (empty($sumup_checkout)) {

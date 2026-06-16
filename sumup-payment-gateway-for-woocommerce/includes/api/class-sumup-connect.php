@@ -23,12 +23,20 @@ add_action('rest_api_init', function () {
 function sumup_connect($request)
 {
 	$post_data = json_decode($request->get_body(), true);
+	$connection_id = isset($post_data['id']) ? sanitize_text_field($post_data['id']) : '';
 
 	WC_SUMUP_LOGGER::log("Receive connect data");
 
-	$transient = get_transient('sumup-connection-id-' . sanitize_text_field($post_data['id']));
+	if (empty($connection_id)) {
+		WC_SUMUP_LOGGER::log('Rejecting connect callback: missing connection ID');
+		$reponse_body = array('status' => 'error', 'message' => 'Invalid connection ID');
+		$response = new WP_REST_Response($reponse_body);
+		$response->set_status(400);
+		return $response;
+	}
 
-	if (empty($post_data['id']) || empty($transient) || $post_data['id'] !== $transient) {
+	if (!sumup_has_pending_connection_id($connection_id)) {
+		WC_SUMUP_LOGGER::log('Rejecting connect callback: unknown connection ID ' . $connection_id);
 		$reponse_body = array('status' => 'error', 'message' => 'Invalid connection ID');
 		$response = new WP_REST_Response($reponse_body);
 		$response->set_status(400);
@@ -60,9 +68,11 @@ function sumup_connect($request)
 	$settings['pay_to_email'] = $post_data['merchant']['email'];
 	$settings['api_key'] = $post_data['merchant']['api_key'];
 	$settings['merchant_id'] = $post_data['merchant']['merchant_code'];
+	$settings['enabled'] = 'no';
 	update_option('woocommerce_sumup_settings', $settings);
+	update_option('sumup_connection_status', 'pending', false);
 
-	delete_transient('sumup-connection-id-' . $post_data['id']);
+	sumup_delete_pending_connection_id($connection_id);
 
 	$reponse_body = array('status' => 'connected');
 	$response = new WP_REST_Response($reponse_body);

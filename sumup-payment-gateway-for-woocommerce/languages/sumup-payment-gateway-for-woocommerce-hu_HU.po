@@ -78,9 +78,9 @@ msgid "Your credentials are valid and you are ready to use the plugin."
 msgstr "Az Ön hitelesítő adatai érvényesek, és készen áll a bővítmény használatára."
 
 #. translators: %1$s = https://me.sumup.com/, %2$s = https://me.sumup.com/developers
-#: includes/class-wc-sumup-gateway.php:117
-msgid "SumUp works by adding payment fields on the checkout and then sending the details to SumUp for verification. <a href=\"%1$s\" target=\"_blank\">Sign up</a> for a SumUp account. After logging in, <a href=\"%2$s\" target=\"_blank\">get your SumUp account keys</a>."
-msgstr "A SumUp úgy működik, hogy hozzáadja a fizetési mezőket a pénztárnál, majd elküldi a részleteket a SumUp-nek ellenőrzésre. <a href=\"%1$s\" target=\"_blank\">Regisztráljon</a> egy SumUp fiókra. A bejelentkezés után <a href=\"%2$s\" target=\"_blank\">szerezze be SumUp fiókjának kulcsait</a>."
+#: includes/class-wc-sumup-gateway.php:203
+msgid "Accept credit and debit cards with SumUp, plus eligible payment methods such as Apple Pay, PayPal, Bancontact, and iDEAL."
+msgstr "Fogadjon el hitel- és betéti kártyákat a SumUp segítségével, valamint támogatott fizetési módokat, például Apple Pay, PayPal, Bancontact és iDEAL."
 
 #: includes/class-wc-sumup-gateway.php:227
 msgid "SumUp charge complete. Transaction Code: %s"
@@ -145,8 +145,8 @@ msgid "This controls the title the user sees during checkout."
 msgstr "Ez szabályozza a leírást, amit a felhasználó lát a pénztárnál."
 
 #: includes/class-wc-sumup-settings.php:25
-msgid "Pay with SumUp"
-msgstr "Fizetés SumUp-pal"
+msgid "Credit / Debit Card"
+msgstr "Hitel- / betéti kártya"
 
 #: includes/class-wc-sumup-settings.php:29
 msgid "Description"
@@ -157,8 +157,8 @@ msgid "This controls the description the user sees during checkout."
 msgstr "Ez szabályozza a leírást, amit a felhasználó lát a pénztárnál."
 
 #: includes/class-wc-sumup-settings.php:32
-msgid "You can choose how you'd like to pay after you place your order."
-msgstr "Kiválaszthatja, hogyan szeretne fizetni a rendelés leadása után."
+msgid "Pay securely with your credit or debit card, or use other available payment methods."
+msgstr "Pay securely with your credit or debit card, or use other available payment methods."
 
 #: includes/class-wc-sumup-settings.php:36
 msgid "Merchant ID"

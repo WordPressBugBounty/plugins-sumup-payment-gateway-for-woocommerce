@@ -13,7 +13,7 @@ class WC_Gateway_SumUp extends \WC_Payment_Gateway
 {
 	/**
 	 * Hide payment buttons on paid orders (Fix for some themes)
-	 * 
+	 *
 	 * @return void
 	 */
 	public function hide_payment_buttons_on_paid_orders()
@@ -198,8 +198,8 @@ class WC_Gateway_SumUp extends \WC_Payment_Gateway
 	{
 		$this->id = 'sumup';
 		$this->method_title = __('SumUp', 'sumup-payment-gateway-for-woocommerce');
-		/* translators: %1$s = https://me.sumup.com/, %2$s = https://me.sumup.com/developers */
-		$this->method_description = sprintf(__('SumUp works by adding payment fields on the checkout and then sending the details to SumUp for verification. <a href="%1$s" target="_blank">Sign up</a> for a SumUp account. After logging in, <a href="%2$s" target="_blank">get your SumUp account keys</a>.', 'sumup-payment-gateway-for-woocommerce'), 'https://me.sumup.com/', 'https://me.sumup.com/developers');
+		$this->icon = WC_SUMUP_PLUGIN_URL . '/assets/images/sumup-logo.svg';
+		$this->method_description = __('Accept credit and debit cards with SumUp, plus eligible payment methods such as Apple Pay, PayPal, Bancontact, and iDEAL.', 'sumup-payment-gateway-for-woocommerce');
 		$this->has_fields = true;
 		$this->supports = array(
 			'subscriptions',
@@ -207,7 +207,7 @@ class WC_Gateway_SumUp extends \WC_Payment_Gateway
 		);
 		$this->title = $this->get_option('title');
 		$this->description = $this->get_option('description');
-		$this->enabled = 'yes' === $this->get_option('enabled');
+		$this->enabled = 'yes' === $this->get_option('enabled') && sumup_gateway_is_configured($this->settings);
 		$this->merchant_id = $this->get_option('merchant_id');
 		$this->installments_enabled = $this->get_option('enable_installments', false);
 		$this->number_of_installments = $this->get_option('number_of_installments', false);
@@ -253,27 +253,179 @@ class WC_Gateway_SumUp extends \WC_Payment_Gateway
 	 */
 	public function admin_custom_url()
 	{
+		$page = isset($_GET['page']) ? sanitize_key(wp_unslash($_GET['page'])) : '';
+		$tab = isset($_GET['tab']) ? sanitize_key(wp_unslash($_GET['tab'])) : '';
+		$section = isset($_GET['section']) ? sanitize_key(wp_unslash($_GET['section'])) : '';
+		$validate_settings = isset($_GET['validate_settings']) ? sanitize_text_field(wp_unslash($_GET['validate_settings'])) : '';
+		$settings_url = admin_url('admin.php?page=wc-settings&tab=checkout&section=sumup');
+
 		if (
-			isset($_GET['page']) && $_GET['page'] === 'wc-settings' &&
-			isset($_GET['tab']) && $_GET['tab'] === 'checkout' &&
-			isset($_GET['section']) && $_GET['section'] === 'sumup' &&
-			!isset($_GET['validate_settings']) &&
-			empty($_POST)
+			'wc-settings' === $page &&
+			'checkout' === $tab &&
+			'sumup' === $section &&
+			empty($_POST) &&
+			sumup_gateway_has_connection_details($this->settings)
 		) {
+			if ( sumup_gateway_is_configured( $this->settings ) ) {
+				if ( '' !== $validate_settings ) {
+					wp_safe_redirect( $settings_url );
+					exit;
+				}
+
+				return;
+			}
+
+			if ( 'false' === $validate_settings ) {
+				return;
+			}
 
 			$is_valid_onboarding_settings = Wc_Sumup_Credentials::validate();
-			// If the params already exist, will don't add again.
-			if (!isset($_GET['validate_settings'])) {
-				$new_url = add_query_arg([
-					'validate_settings' => $is_valid_onboarding_settings ? "true" : "false",
-				], admin_url('admin.php?page=wc-settings&tab=checkout&section=sumup'));
+			$new_url = $is_valid_onboarding_settings
+				? $settings_url
+				: add_query_arg(
+					array(
+						'validate_settings' => 'false',
+					),
+					$settings_url
+				);
 
-				//redirect to new url.
-				wp_safe_redirect($new_url);
+			//redirect to new url.
+			wp_safe_redirect($new_url);
 
-				exit;
-			}
+			exit;
 		}
+	}
+
+	public function needs_setup()
+	{
+		return ! sumup_gateway_is_configured($this->settings);
+	}
+
+	public function is_account_connected()
+	{
+		return sumup_gateway_is_configured($this->settings);
+	}
+
+	public function get_connection_url($return_url = '')
+	{
+		$url = admin_url('admin.php?page=wc-settings&tab=checkout&section=sumup');
+
+		if (! empty($return_url)) {
+			$url = add_query_arg('return_url', rawurlencode($return_url), $url);
+		}
+
+		return $url;
+	}
+
+	public function admin_options()
+	{
+		if (! $this->needs_setup()) {
+			wp_enqueue_script( 'sumup-settings' );
+			wp_enqueue_style( 'sumup-settings' );
+			parent::admin_options();
+			return;
+		}
+
+		global $hide_save_button;
+
+		$hide_save_button = true;
+		$return_url = admin_url('admin.php?page=wc-settings&tab=checkout');
+		$header = $this->get_method_title();
+		$return_text = __('Return to payments', 'sumup-payment-gateway-for-woocommerce');
+		$onboarding = new WC_Sumup_Onboarding();
+
+		echo '<h2>';
+		echo esc_html($header);
+		echo wc_back_link($return_text, $return_url);
+		echo '</h2>';
+
+		$onboarding->render_setup_screen();
+	}
+
+	/**
+	 * Render read-only connection details inside the gateway settings table.
+	 *
+	 * @param string $key Field key.
+	 * @param array  $data Field configuration.
+	 * @return string
+	 */
+	public function generate_sumup_connection_summary_html( $key, $data ) {
+		$field_key = $this->get_field_key( $key );
+		$connection_status = sumup_get_gateway_connection_status( $this->settings );
+		$status_label = 'connected' === $connection_status
+			? __( 'Connected', 'sumup-payment-gateway-for-woocommerce' )
+			: ucfirst( str_replace( '_', ' ', $connection_status ) );
+		$account_email = ! empty( $this->pay_to_email ) ? $this->pay_to_email : __( 'Not available', 'sumup-payment-gateway-for-woocommerce' );
+		$merchant_id = ! empty( $this->merchant_id ) ? $this->merchant_id : __( 'Not available', 'sumup-payment-gateway-for-woocommerce' );
+
+		ob_start();
+		?>
+		<tr valign="top">
+			<th scope="row" class="titledesc">
+				<?php echo esc_html__( 'Account details', 'sumup-payment-gateway-for-woocommerce' ); ?>
+			</th>
+			<td class="forminp">
+				<fieldset>
+					<div id="<?php echo esc_attr( $field_key ); ?>" class="sumup-connection-summary">
+						<p class="sumup-connection-summary__row">
+							<strong><?php echo esc_html__( 'Status', 'sumup-payment-gateway-for-woocommerce' ); ?>:</strong>
+							<?php echo esc_html( $status_label ); ?>
+						</p>
+						<p class="sumup-connection-summary__row">
+							<strong><?php echo esc_html__( 'Account email', 'sumup-payment-gateway-for-woocommerce' ); ?>:</strong>
+							<?php echo esc_html( $account_email ); ?>
+						</p>
+						<p class="sumup-connection-summary__row">
+							<strong><?php echo esc_html__( 'Merchant ID', 'sumup-payment-gateway-for-woocommerce' ); ?>:</strong>
+							<?php echo esc_html( $merchant_id ); ?>
+						</p>
+					</div>
+				</fieldset>
+			</td>
+		</tr>
+		<?php
+		return ob_get_clean();
+	}
+
+	/**
+	 * Render connection actions inside the gateway settings table.
+	 *
+	 * @param string $key Field key.
+	 * @param array  $data Field configuration.
+	 * @return string
+	 */
+	public function generate_sumup_connection_actions_html( $key, $data ) {
+		$field_key = $this->get_field_key( $key );
+
+		ob_start();
+		?>
+		<tr valign="top">
+			<th scope="row" class="titledesc">
+				<?php echo esc_html__( 'Actions', 'sumup-payment-gateway-for-woocommerce' ); ?>
+			</th>
+			<td class="forminp">
+				<fieldset>
+					<div id="sumup_notice" class="notice notice-error inline hidden sumup-connection-actions__notice">
+						<p class="sumup-notice__message"></p>
+					</div>
+					<p id="<?php echo esc_attr( $field_key ); ?>" class="sumup-connection-actions">
+						<button
+							id="sumup-payment-settings-disconnect"
+							type="button"
+							class="components-button is-secondary is-destructive"
+							data-text="<?php esc_attr_e( 'Disconnect account', 'sumup-payment-gateway-for-woocommerce' ); ?>"
+						>
+							<span class="sumup-button-label">
+								<?php esc_html_e( 'Disconnect account', 'sumup-payment-gateway-for-woocommerce' ); ?>
+							</span>
+							<span class="sumup-button-loading" aria-hidden="true"></span>
+						</button>
+					</p>
+				</fieldset>
+			</td>
+		</tr>
+		<?php
+		return ob_get_clean();
 	}
 
 	public function webhook()
@@ -959,7 +1111,11 @@ class WC_Gateway_SumUp extends \WC_Payment_Gateway
 			return;
 		}
 
-		$order_id = (int) $_GET['sumup-validate-order'];
+		$order_id = isset($_GET['sumup-validate-order']) ? absint(wp_unslash($_GET['sumup-validate-order'])) : 0;
+		if (!$order_id) {
+			return;
+		}
+
 		$order = wc_get_order($order_id);
 		if ($order === false) {
 			WC_SUMUP_LOGGER::log('Order not found on validation after payment redirect. Merchant Id: ' . $this->merchant_id . '. Order ID: ' . $order_id);
@@ -988,7 +1144,7 @@ class WC_Gateway_SumUp extends \WC_Payment_Gateway
 		$payment_status = $sumup_checkout['status'] ?? '';
 
 		if ($payment_status === 'PENDING') {
-			$this->check_redirect_flow();
+			add_action('woocommerce_before_checkout_form', array($this, 'redirect_validation_pending_message'));
 			return;
 		}
 
@@ -1055,6 +1211,20 @@ class WC_Gateway_SumUp extends \WC_Payment_Gateway
 	}
 
 	/**
+	 * Redirect validation pending message
+	 *
+	 * @return void
+	 */
+	public function redirect_validation_pending_message()
+	{
+		$pending_message = sprintf(
+			'<div class="woocommerce-NoticeGroup woocommerce-NoticeGroup-checkout woocommerce-info">%1$s</div>',
+			__('We are still waiting for SumUp to confirm this payment. Please wait a moment and refresh the page if the order is not updated automatically.', 'sumup-payment-gateway-for-woocommerce')
+		);
+		echo wp_kses_post($pending_message);
+	}
+
+	/**
 	 * Initialise gateway settings form fields
 	 *
 	 * @since   1.0.0
@@ -1082,7 +1252,7 @@ class WC_Gateway_SumUp extends \WC_Payment_Gateway
 			WC_SUMUP_LOGGER::log('Error on request (cURL) to get access token. Merchant Id: ' . $this->merchant_id);
 			$message = current_user_can('manage_options') ? 'Error to generate SumUp access token.' : 'Sorry, SumUp is not available. Try again soon.';
 
-			if (!get_option('sumup_valid_credentials')) {
+			if (!sumup_gateway_is_configured($this->settings)) {
 				if (!empty($sumup_checkout) && isset($sumup_checkout['isCheckoutBlocks']) && $sumup_checkout['isCheckoutBlocks']) {
 					throw new Exception($message);
 				} else {
@@ -1188,7 +1358,7 @@ class WC_Gateway_SumUp extends \WC_Payment_Gateway
 			return;
 		}
 
-		if (!get_option('sumup_valid_credentials')) {
+		if (!sumup_gateway_is_configured($this->settings)) {
 			esc_html_e('Error: Merchant account settings are incorrectly configured. Check the plugin settings page.', 'sumup-payment-gateway-for-woocommerce');
 			return;
 		}
@@ -1211,7 +1381,7 @@ class WC_Gateway_SumUp extends \WC_Payment_Gateway
 					justify-content: center;
 					align-items: center;
 					z-index: 9999;
-					overflow: scroll
+					overflow: auto
 				}
 
 				.wc-sumup-modal.disabled {
@@ -1262,7 +1432,24 @@ class WC_Gateway_SumUp extends \WC_Payment_Gateway
 
 				.wc-sumup-modal.no-modal {
 					position: relative;
-					background: #fff
+					display: block;
+					height: auto;
+					background: transparent;
+					overflow: visible;
+					z-index: auto
+				}
+
+				.wc-sumup-modal.no-modal #sumup-card {
+					width: 100%;
+					max-width: none;
+					max-height: none;
+					border-radius: 0;
+					min-height: 140px;
+					padding: 0
+				}
+
+				.wc-sumup-modal.no-modal #sumup-card form {
+					padding: 0 16px 16px
 				}
 
 				.wc-sumup-modal.no-modal #wc-sumup-payment-modal-close {
@@ -1372,7 +1559,7 @@ class WC_Gateway_SumUp extends \WC_Payment_Gateway
 		}
 
 		if (isset($sumup_checkout['id'])) {
-			$extra_class = $this->open_payment_in_modal === 'yes' ? 'no-modal' : '';
+			$extra_class = $this->open_payment_in_modal === 'yes' ? '' : 'no-modal';
 
 		?>
 			<style>
@@ -1388,7 +1575,7 @@ class WC_Gateway_SumUp extends \WC_Payment_Gateway
 					justify-content: center;
 					align-items: center;
 					z-index: 9999;
-					overflow: scroll
+					overflow: auto
 				}
 
 				.wc-sumup-modal.disabled {
@@ -1439,7 +1626,24 @@ class WC_Gateway_SumUp extends \WC_Payment_Gateway
 
 				.wc-sumup-modal.no-modal {
 					position: relative;
-					background: #fff
+					display: block;
+					height: auto;
+					background: transparent;
+					overflow: visible;
+					z-index: auto
+				}
+
+				.wc-sumup-modal.no-modal #sumup-card {
+					width: 100%;
+					max-width: none;
+					max-height: none;
+					border-radius: 0;
+					min-height: 140px;
+					padding: 0
+				}
+
+				.wc-sumup-modal.no-modal #sumup-card form {
+					padding: 0 16px 16px
 				}
 
 				.wc-sumup-modal.no-modal #wc-sumup-payment-modal-close {
@@ -1519,7 +1723,7 @@ class WC_Gateway_SumUp extends \WC_Payment_Gateway
 		}
 
 		/* Add JavaScript only if the plugin is set up correctly */
-		if (!get_option('sumup_valid_credentials')) {
+		if (!sumup_gateway_is_configured($this->settings)) {
 			return;
 		}
 
@@ -1527,10 +1731,20 @@ class WC_Gateway_SumUp extends \WC_Payment_Gateway
 		 * Use the SumUp's SDK for accepting card payments.
 		 * Documentation can be found at https://developer.sumup.com/docs/widgets-card
 		 */
+		$front_script_asset = sumup_get_build_asset_metadata(
+			'build/sumup-gateway.asset.php',
+			array('sumup_gateway_card_sdk')
+		);
+		$process_checkout_asset = sumup_get_build_asset_metadata(
+			'build/sumup-process-checkout.asset.php',
+			array('jquery')
+		);
 		wp_enqueue_script('sumup_gateway_card_sdk', 'https://gateway.sumup.com/gateway/ecom/card/v2/sdk.js', array(), WC_SUMUP_VERSION, false);
-		wp_register_script('sumup_gateway_front_script', WC_SUMUP_PLUGIN_URL . 'assets/js/sumup-gateway.min.js', array('sumup_gateway_card_sdk'), WC_SUMUP_VERSION, false);
-		wp_register_script('sumup_gateway_process_checkout', WC_SUMUP_PLUGIN_URL . 'assets/js/sumup-process-checkout.min.js', array('jquery'), WC_SUMUP_VERSION, true);
+		wp_register_script('sumup_gateway_front_script', WC_SUMUP_PLUGIN_URL . 'build/sumup-gateway.js', $front_script_asset['dependencies'], $front_script_asset['version'], false);
+		wp_register_script('sumup_gateway_process_checkout', WC_SUMUP_PLUGIN_URL . 'build/sumup-process-checkout.js', $process_checkout_asset['dependencies'], $process_checkout_asset['version'], true);
+		wp_register_style('sumup-checkout', WC_SUMUP_PLUGIN_URL . 'build/sumup-process-checkout.css', array(), $process_checkout_asset['version']);
 		wp_enqueue_script('sumup_gateway_process_checkout');
+		wp_enqueue_style('sumup-checkout');
 
 		$shop_base_country = WC()->countries->get_base_country();
 		$supported_countries = array(
@@ -1635,6 +1849,7 @@ class WC_Gateway_SumUp extends \WC_Payment_Gateway
 			'showZipCode' => "$show_zipcode",
 			'showInstallments' => "$installments",
 			'maxInstallments' => $number_of_installments,
+			'checkoutNonce' => wp_create_nonce('sumup-create-checkout'),
 			'locale' => "$card_locale",
 			'country' => '',
 			'status' => '',

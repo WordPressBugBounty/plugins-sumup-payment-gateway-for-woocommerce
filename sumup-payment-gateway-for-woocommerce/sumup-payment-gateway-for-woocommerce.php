@@ -6,13 +6,13 @@
  * Description: Take credit card payments on your store using SumUp.
  * Author: SumUp
  * Author URI: https://sumup.com
- * Version: 2.9.1
- * Requires at least: 5.0
- * Requires PHP: 7.2
+ * Version: 2.12.0
+ * Requires at least: 6.9
+ * Requires PHP: 7.4
  * Text Domain: sumup-payment-gateway-for-woocommerce
  * Domain Path: /languages
- * License: GPL-2.0+
- * License URI: http://www.gnu.org/licenses/gpl-2.0.txt
+ * License: Apache-2.0
+ * License URI: https://www.apache.org/licenses/LICENSE-2.0
  */
 
 if (! defined('ABSPATH')) {
@@ -22,10 +22,209 @@ if (! defined('ABSPATH')) {
 define('WC_SUMUP_MAIN_FILE', __FILE__);
 define('WC_SUMUP_PLUGIN_PATH', untrailingslashit(plugin_dir_path(__FILE__)));
 define('WC_SUMUP_PLUGIN_URL', plugin_dir_url(__FILE__));
-define('WC_SUMUP_VERSION', '2.9.1');
-define('WC_SUMUP_MINIMUM_PHP_VERSION', '7.2');
-define('WC_SUMUP_MINIMUM_WP_VERSION', '5.0');
+define('WC_SUMUP_VERSION', '2.12.0');
+define('WC_SUMUP_MINIMUM_PHP_VERSION', '7.4');
+define('WC_SUMUP_MINIMUM_WP_VERSION', '6.9');
 define('WC_SUMUP_PLUGIN_SLUG', 'sumup-payment-gateway-for-woocommerce');
+
+/**
+ * Get the stored SumUp gateway settings.
+ *
+ * @return array
+ */
+function sumup_get_gateway_settings()
+{
+	$settings = get_option('woocommerce_sumup_settings', array());
+
+	return is_array($settings) ? $settings : array();
+}
+
+/**
+ * Check whether the stored settings include enough account details to connect.
+ *
+ * @param array|null $settings Optional settings array.
+ * @return bool
+ */
+function sumup_gateway_has_connection_details($settings = null)
+{
+	if (! is_array($settings)) {
+		$settings = sumup_get_gateway_settings();
+	}
+
+	$has_auth_material = ! empty($settings['api_key']) || (! empty($settings['client_id']) && ! empty($settings['client_secret']));
+	$has_account_reference = ! empty($settings['merchant_id']) || ! empty($settings['pay_to_email']);
+
+	return $has_auth_material && $has_account_reference;
+}
+
+/**
+ * Get the current gateway connection status.
+ *
+ * @param array|null $settings Optional settings array.
+ * @return string
+ */
+function sumup_get_gateway_connection_status($settings = null)
+{
+	if (! is_array($settings)) {
+		$settings = sumup_get_gateway_settings();
+	}
+
+	if (! sumup_gateway_has_connection_details($settings)) {
+		return 'not_connected';
+	}
+
+	$status = get_option('sumup_connection_status', '');
+	if (in_array($status, array('connected', 'invalid', 'pending'), true)) {
+		return $status;
+	}
+
+	$legacy_status = get_option('sumup_valid_credentials', null);
+	if ('1' === (string) $legacy_status) {
+		return 'connected';
+	}
+
+	if ('0' === (string) $legacy_status) {
+		return 'invalid';
+	}
+
+	return 'pending';
+}
+
+/**
+ * Get the persisted pending onboarding connection IDs.
+ *
+ * A short-lived transient is still used as the primary store, but onboarding
+ * regularly crosses multiple systems and tabs. Keeping a durable fallback
+ * prevents legitimate callbacks from failing when the transient is evicted.
+ *
+ * @return array<string, int>
+ */
+function sumup_get_pending_connection_ids()
+{
+	$pending_connection_ids = get_option('sumup_pending_connection_ids', array());
+	if (! is_array($pending_connection_ids)) {
+		return array();
+	}
+
+	$now = time();
+	$normalized_pending_connection_ids = array();
+
+	foreach ($pending_connection_ids as $connection_id => $expires_at) {
+		$connection_id = is_string($connection_id) ? sanitize_text_field($connection_id) : '';
+		$expires_at = is_numeric($expires_at) ? (int) $expires_at : 0;
+
+		if ('' === $connection_id || $expires_at <= $now) {
+			continue;
+		}
+
+		$normalized_pending_connection_ids[$connection_id] = $expires_at;
+	}
+
+	if ($normalized_pending_connection_ids !== $pending_connection_ids) {
+		update_option('sumup_pending_connection_ids', $normalized_pending_connection_ids, false);
+	}
+
+	return $normalized_pending_connection_ids;
+}
+
+/**
+ * Persist a pending onboarding connection ID.
+ *
+ * @param string $connection_id Connection identifier returned by onboarding.
+ * @return void
+ */
+function sumup_store_pending_connection_id($connection_id)
+{
+	$connection_id = sanitize_text_field($connection_id);
+	if ('' === $connection_id) {
+		return;
+	}
+
+	$pending_connection_ids = sumup_get_pending_connection_ids();
+	$pending_connection_ids[$connection_id] = time() + DAY_IN_SECONDS;
+	update_option('sumup_pending_connection_ids', $pending_connection_ids, false);
+}
+
+/**
+ * Check whether a pending onboarding connection ID is known.
+ *
+ * @param string $connection_id Connection identifier returned by onboarding.
+ * @return bool
+ */
+function sumup_has_pending_connection_id($connection_id)
+{
+	$connection_id = sanitize_text_field($connection_id);
+	if ('' === $connection_id) {
+		return false;
+	}
+
+	$transient_value = get_transient('sumup-connection-id-' . $connection_id);
+	if (! empty($transient_value) && $transient_value === $connection_id) {
+		return true;
+	}
+
+	$pending_connection_ids = sumup_get_pending_connection_ids();
+
+	return isset($pending_connection_ids[$connection_id]);
+}
+
+/**
+ * Remove a pending onboarding connection ID from every local store.
+ *
+ * @param string $connection_id Connection identifier returned by onboarding.
+ * @return void
+ */
+function sumup_delete_pending_connection_id($connection_id)
+{
+	$connection_id = sanitize_text_field($connection_id);
+	if ('' === $connection_id) {
+		return;
+	}
+
+	delete_transient('sumup-connection-id-' . $connection_id);
+
+	$pending_connection_ids = sumup_get_pending_connection_ids();
+	if (! isset($pending_connection_ids[$connection_id])) {
+		return;
+	}
+
+	unset($pending_connection_ids[$connection_id]);
+	update_option('sumup_pending_connection_ids', $pending_connection_ids, false);
+}
+
+/**
+ * Check whether the gateway has a valid connected account.
+ *
+ * @param array|null $settings Optional settings array.
+ * @return bool
+ */
+function sumup_gateway_is_configured($settings = null)
+{
+	return 'connected' === sumup_get_gateway_connection_status($settings);
+}
+
+/**
+ * Normalize the stored enabled flag to match the connection status.
+ *
+ * @return void
+ */
+function sumup_sync_gateway_enabled_state()
+{
+	$settings = sumup_get_gateway_settings();
+	$status = sumup_get_gateway_connection_status($settings);
+	$enabled = isset($settings['enabled']) ? $settings['enabled'] : 'no';
+
+	if ('connected' === $status && 'yes' !== $enabled) {
+		$settings['enabled'] = 'yes';
+		update_option('woocommerce_sumup_settings', $settings);
+		return;
+	}
+
+	if ('connected' !== $status && 'no' !== $enabled) {
+		$settings['enabled'] = 'no';
+		update_option('woocommerce_sumup_settings', $settings);
+	}
+}
 
 /**
  * Check PHP and WP version before start anything.
@@ -50,6 +249,8 @@ if (! version_compare(get_bloginfo('version'), WC_SUMUP_MINIMUM_WP_VERSION, '>='
  */
 function sumup_payment_gateway_for_woocommerce_init()
 {
+	sumup_sync_gateway_enabled_state();
+
 	/**
 	 * Display links next to the plugin's version.
 	 *
@@ -92,8 +293,7 @@ function sumup_payment_gateway_for_woocommerce_init()
 	 */
 	function get_sumup_gateway_setup_link()
 	{
-		$validate_settings_param = Wc_Sumup_Credentials::validate() ? "true" : "false";
-		return admin_url('admin.php?page=wc-settings&tab=checkout&section=sumup&validate_settings=' . $validate_settings_param);
+		return admin_url('admin.php?page=wc-settings&tab=checkout&section=sumup');
 	}
 
 	/**
@@ -105,20 +305,23 @@ function sumup_payment_gateway_for_woocommerce_init()
 	function plugin_not_configured_notice()
 	{
 		add_option('sumup_valid_currency', true);
-		$plugin_options          = get_option('woocommerce_sumup_settings');
+		$plugin_options          = sumup_get_gateway_settings();
 		$plugin_enabled          = isset($plugin_options['enabled']) && 'yes' === $plugin_options['enabled'];
-		$is_plugin_configured    = get_option('sumup_valid_credentials', 'not_configured');
-		$is_plugin_settings_page = !empty($_GET['page']) && $_GET['page'] === 'wc-settings' && !empty($_GET['tab']) && $_GET['tab'] === 'checkout' && !empty($_GET['section']) && $_GET['section'] === 'sumup';
+		$connection_status       = sumup_get_gateway_connection_status($plugin_options);
+		$page = isset($_GET['page']) ? sanitize_key(wp_unslash($_GET['page'])) : '';
+		$tab = isset($_GET['tab']) ? sanitize_key(wp_unslash($_GET['tab'])) : '';
+		$section = isset($_GET['section']) ? sanitize_key(wp_unslash($_GET['section'])) : '';
+		$is_plugin_settings_page = 'wc-settings' === $page && 'checkout' === $tab && 'sumup' === $section;
 		$is_valid_currency_configured = get_option('sumup_valid_currency');
 
-		if ($is_plugin_configured === 'not_configured') {
+		if ('not_connected' === $connection_status) {
 			/* translators: %s = admin.php?page=wc-settings&tab=checkout&section=sumup */
 			echo '<div class="notice notice-warning"><p><strong>' . sprintf(__('SumUp Gateway is almost ready. To get started, <a href="%s">set your SumUp account keys</a>.', 'sumup-payment-gateway-for-woocommerce'), get_sumup_gateway_setup_link()) . '</strong></p></div>';
 
 			return; /* don't display other notices about configurations */
 		}
 
-		if ($plugin_enabled && !$is_plugin_configured && !$is_plugin_settings_page) {
+		if ($plugin_enabled && 'invalid' === $connection_status && ! $is_plugin_settings_page) {
 			/* translators: %s = admin.php?page=wc-settings&tab=checkout&section=sumup */
 			echo '<div class="notice notice-error"><p><strong>' . sprintf(__('SumUp Gateway is not configured properly. You can fix this from <a href="%s">here</a>.', 'sumup-payment-gateway-for-woocommerce'), get_sumup_gateway_setup_link()) . '</strong></p></div>';
 		}
@@ -229,7 +432,8 @@ function sumup_payment_admin_notice_wp_version_fail()
  */
 function sumup_enqueue_admin_scripts()
 {
-	wp_register_script('sumup-settings', WC_SUMUP_PLUGIN_URL . 'assets/js/settings.min.js', array(), WC_SUMUP_VERSION, true);
+	$settings_asset = sumup_get_build_asset_metadata('build/settings.asset.php');
+	wp_register_script('sumup-settings', WC_SUMUP_PLUGIN_URL . 'build/settings.js', $settings_asset['dependencies'], $settings_asset['version'], true);
 	wp_localize_script(
 		'sumup-settings',
 		'sumup_settings_ajax',
@@ -240,20 +444,13 @@ function sumup_enqueue_admin_scripts()
 		)
 	);
 
-	wp_register_style('sumup-settings', WC_SUMUP_PLUGIN_URL . 'assets/css/admin/settings.min.css', array(), WC_SUMUP_VERSION);
+	wp_register_style('sumup-settings', WC_SUMUP_PLUGIN_URL . 'build/settings.css', array(), $settings_asset['version']);
 }
 
 add_action('admin_enqueue_scripts', 'sumup_enqueue_admin_scripts', 10);
 
 add_action('woocommerce_blocks_loaded', 'woocommerce_gateway_sumup_woocommerce_block_support');
 
-
-function sumup_enqueue_scripts()
-{
-	wp_enqueue_style('sumup-checkout', WC_SUMUP_PLUGIN_URL . 'assets/css/checkout/modal.min.css', array(), WC_SUMUP_VERSION);
-}
-
-add_action('wp_enqueue_scripts', 'sumup_enqueue_scripts');
 function woocommerce_gateway_sumup_woocommerce_block_support()
 {
 
@@ -275,16 +472,60 @@ function woocommerce_gateway_sumup_woocommerce_block_support()
 
 add_action('before_woocommerce_init', 'sumup_cart_checkout_blocks_compatibility');
 
+function sumup_declare_woocommerce_compatibility()
+{
+	if (! class_exists('\Automattic\WooCommerce\Utilities\FeaturesUtil')) {
+		return;
+	}
+
+	\Automattic\WooCommerce\Utilities\FeaturesUtil::declare_compatibility(
+		'cart_checkout_blocks',
+		__FILE__,
+		true
+	);
+	\Automattic\WooCommerce\Utilities\FeaturesUtil::declare_compatibility(
+		'custom_order_tables',
+		__FILE__,
+		true
+	);
+}
+
+function sumup_get_build_asset_metadata($relative_asset_path, $fallback_dependencies = array())
+{
+	$normalized_asset_path = ltrim($relative_asset_path, '/');
+	$build_directory = realpath(WC_SUMUP_PLUGIN_PATH . '/build');
+	$asset_path = realpath(WC_SUMUP_PLUGIN_PATH . '/' . $normalized_asset_path);
+	$asset_data = array();
+
+	if (
+		$build_directory &&
+		$asset_path &&
+		0 === strpos($asset_path, $build_directory . DIRECTORY_SEPARATOR) &&
+		preg_match('/\.asset\.php$/', $normalized_asset_path)
+	) {
+		$asset_data = include $asset_path;
+	}
+
+	if (! is_array($asset_data)) {
+		$asset_data = array();
+	}
+
+	return array(
+		'dependencies' => array_values(
+			array_unique(
+				array_merge(
+					$fallback_dependencies,
+					isset($asset_data['dependencies']) ? (array) $asset_data['dependencies'] : array()
+				)
+			)
+		),
+		'version' => isset($asset_data['version']) ? $asset_data['version'] : WC_SUMUP_VERSION,
+	);
+}
+
 function sumup_cart_checkout_blocks_compatibility()
 {
-
-	if (class_exists('\Automattic\WooCommerce\Utilities\FeaturesUtil')) {
-		\Automattic\WooCommerce\Utilities\FeaturesUtil::declare_compatibility(
-			'cart_checkout_blocks',
-			__FILE__,
-			true // true (compatible, default) or false (not compatible)
-		);
-	}
+	sumup_declare_woocommerce_compatibility();
 }
 
 function sumup_gateway_load_textdomain()

@@ -35,7 +35,6 @@ class WC_Sumup_Onboarding {
 	public function __construct() {
 		$this->website_url = untrailingslashit( get_bloginfo( 'url' ) );
 		$this->business_name = get_bloginfo( 'name' );
-		\add_filter( 'woocommerce_settings_checkout', array( $this, 'onboarding_template' ) );
 	}
 
 	/**
@@ -53,14 +52,34 @@ class WC_Sumup_Onboarding {
 	 * @return void
 	 */
 	public function sumup_connect() {
-		if ( ! wp_verify_nonce( $_REQUEST['nonce'], 'sumup-settings-nonce' ) ) {
-			exit( 'Sorry, request not authorized' );
+		if ( ! current_user_can( 'manage_woocommerce' ) ) {
+			wp_send_json_error(
+				array(
+					'detail' => __( 'Sorry, you are not allowed to manage SumUp settings.', 'sumup-payment-gateway-for-woocommerce' ),
+				),
+				403
+			);
+		}
+
+		$nonce = isset( $_REQUEST['nonce'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['nonce'] ) ) : '';
+		if ( ! wp_verify_nonce( $nonce, 'sumup-settings-nonce' ) ) {
+			wp_send_json_error(
+				array(
+					'detail' => __( 'Sorry, request not authorized.', 'sumup-payment-gateway-for-woocommerce' ),
+				),
+				403
+			);
 		}
 
 		$response = $this->request_connection();
+		$response_data = json_decode( $response, true );
 
-		$connection_id = json_decode( $response, true )[ 'id' ];
-		set_transient( 'sumup-connection-id-' . $connection_id, $connection_id, 7200 );
+		if ( is_array( $response_data ) && ! empty( $response_data['id'] ) ) {
+			$connection_id = sanitize_text_field( $response_data['id'] );
+			set_transient( 'sumup-connection-id-' . $connection_id, $connection_id, 7200 );
+			sumup_store_pending_connection_id( $connection_id );
+		}
+
 		echo $response;
 		die();
 	}
@@ -149,37 +168,16 @@ class WC_Sumup_Onboarding {
 	 *
 	 * @return void
 	 */
-	public function onboarding_template() {
-		if ( empty( $_GET[ 'section' ] ) || 'sumup' !== $_GET[ 'section' ] ) {
-			return;
-		}
-
-		$is_valid_onboarding_settings = Wc_Sumup_Credentials::validate();
-
+	public function render_setup_screen() {
 		wp_enqueue_script( 'sumup-settings' );
 		wp_enqueue_style( 'sumup-settings' );
 
-		/**
-		 * Validate sumup account/connection after redirect from SumUp integrations page
-		 */
-		if ( ! empty( $_GET[ 'validate_settings' ] ) && $_GET[ 'validate_settings' ] === 'true' ) {
+		$sumup_settings = get_option( 'woocommerce_sumup_settings', array() );
+		$has_connection_details = sumup_gateway_has_connection_details( $sumup_settings );
+		$validate_settings = isset( $_GET['validate_settings'] ) ? sanitize_text_field( wp_unslash( $_GET['validate_settings'] ) ) : '';
 
-			if ( $is_valid_onboarding_settings ) {
-				include_once WC_SUMUP_PLUGIN_PATH . '/templates/onboarding-success-message.php';
-			} else {
-				include_once WC_SUMUP_PLUGIN_PATH . '/templates/onboarding-failed-message.php';
-			}
-		}
-
-		/**
-		 * Check if important settings already filled out.
-		 *
-		 * [] If is connected and DO NOT HAVE API Key show to connect? Old clients
-		 */
-		$sumup_settings = get_option( 'woocommerce_sumup_settings' );
-		$is_integrations_settings_filled = ! empty( $sumup_settings['api_key'] ) || ( ! empty( $sumup_settings['client_id'] ) && ! empty( $sumup_settings['client_secret'] ) );
-		if ( $is_integrations_settings_filled && $is_valid_onboarding_settings ) {
-			return;
+		if ( $has_connection_details && 'false' === $validate_settings ) {
+			include_once WC_SUMUP_PLUGIN_PATH . '/templates/onboarding-failed-message.php';
 		}
 
 		include_once WC_SUMUP_PLUGIN_PATH . '/templates/onboarding.php';

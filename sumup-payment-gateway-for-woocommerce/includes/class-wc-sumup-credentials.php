@@ -48,7 +48,9 @@ class Wc_Sumup_Credentials {
 		$access_token = Wc_Sumup_Access_Token::get( $settings['client_id'], $settings['client_secret'], $settings['api_key'], true );
 		if ( ! isset( $access_token['access_token'] ) ) {
 			WC_SUMUP_LOGGER::log( 'Error on settings to create access token. Merchant Id: ' . $settings['merchant_id'] );
-			update_option( 'sumup_valid_credentials', 0, false );
+			$settings['enabled'] = 'no';
+			update_option( 'woocommerce_sumup_settings', $settings );
+			update_option( 'sumup_connection_status', 'invalid', false );
 
 			return false;
 		}
@@ -69,7 +71,9 @@ class Wc_Sumup_Credentials {
 			if ( isset( $sumup_checkout['error_code'] ) ) {
 				$error_message = isset( $sumup_checkout['error_message'] ) ? $sumup_checkout['error_message'] : $sumup_checkout['message'] ?? '';
 				WC_SUMUP_LOGGER::log( $sumup_checkout['error_code'] . ': ' . $error_message );
-				update_option( 'sumup_valid_credentials', 0, false );
+				$settings['enabled'] = 'no';
+				update_option( 'woocommerce_sumup_settings', $settings );
+				update_option( 'sumup_connection_status', 'invalid', false );
 
 				if ( isset( $sumup_checkout['message'] ) && (strpos( $sumup_checkout['message'], 'payments' ) || $sumup_checkout['error_code'] == 'INSUFFICIENT_SCOPES') ) {
 					echo '<div class="notice notice-error"><p>' . esc_html__( 'Missing scope: payments. Please contact support team.', 'sumup-payment-gateway-for-woocommerce' ) . '</p></div>';
@@ -80,14 +84,18 @@ class Wc_Sumup_Credentials {
 				}
 
 				if (isset($sumup_checkout['message']) && $sumup_checkout['error_code'] == "INVALID" && $sumup_checkout['param'] == "currency") {
+					$settings['enabled'] = 'yes';
+					update_option( 'woocommerce_sumup_settings', $settings );
 					update_option( 'sumup_valid_currency', 0, true );
-					update_option( 'sumup_valid_credentials', 1, false );
+					update_option( 'sumup_connection_status', 'connected', false );
 					return true;
 				}
 
 				if ($sumup_checkout['error_code'] == "DUPLICATED_CHECKOUT" ) {
+					$settings['enabled'] = 'yes';
+					update_option( 'woocommerce_sumup_settings', $settings );
 					update_option( 'sumup_valid_currency', 1, true );
-					update_option( 'sumup_valid_credentials', 1, false );
+					update_option( 'sumup_connection_status', 'connected', false );
 					return true;
 				}
 
@@ -97,7 +105,9 @@ class Wc_Sumup_Credentials {
 			return false;
 		}
 
-		update_option( 'sumup_valid_credentials', 1, false );
+		$settings['enabled'] = 'yes';
+		update_option( 'woocommerce_sumup_settings', $settings );
+		update_option( 'sumup_connection_status', 'connected', false );
 		update_option( 'sumup_valid_currency', 1, true );
 
 		return true;

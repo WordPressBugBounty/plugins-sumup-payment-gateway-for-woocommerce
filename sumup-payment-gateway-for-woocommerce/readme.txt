@@ -1,48 +1,42 @@
 === SumUp Payment Gateway For WooCommerce ===
 Contributors: sumup
 Tags: sumup, payment gateway, woocommerce, payments, ecommerce
-Requires at least: 5.0
-Tested up to: 6.7.2
-Requires PHP: 7.2
-Stable tag: 2.9.1
-License: GPL2
-License URI: https://www.gnu.org/licenses/gpl-2.0.html
+Requires at least: 6.9
+Tested up to: 7.0
+Requires PHP: 7.4
+Stable tag: 2.12.0
+License: Apache-2.0
+License URI: https://www.apache.org/licenses/LICENSE-2.0
 
 The SumUp plugin for WooCommerce allows businesses to securely process payments online. Accept payments from customers using a range of payment methods.
 
 == Description ==
 
-Grow your business by accepting payments through SumUp in your WooCommerce store.
+Accept online payments in WooCommerce with SumUp.
 
-The SumUp plugin for WooCommerce offers consumers a seamless payment experience with their favourite payment methods in just a few steps.  The payments are processed through the SumUp payment platform, so you can see them alongside your in-store sales. It's affordable, easy to set up and use, and simply a better way to get paid.
+This plugin adds SumUp as a payment gateway for WooCommerce stores. It supports standard checkout flows, redirect-based payment confirmation, and WooCommerce Cart and Checkout Blocks.
 
-= TAKE PAYMENTS =
-* [No fixed costs. No binding contracts. Just a small % per transaction](https://sumup.co.uk/credit-card-processing-pricing/)
-* Receive secure payments to your bank account within 3 days
-* Find everything in one place in the SumUp Dashboard and App
+= Features =
+* Accept card payments with SumUp in WooCommerce
+* Support eligible alternative payment methods enabled on the merchant account
+* Compatible with WooCommerce Cart and Checkout Blocks
+* Compatible with High-Performance Order Storage (HPOS)
+* Update WooCommerce orders based on SumUp checkout status and webhooks
 
-= SUPPORTED PAYMENT METHODS =
-* Accept different debit and credit cards: Visa, VPay, Mastercard, American Express, Diners Club, Discover
-* Accept alternative payment methods: Apple Pay, Bancontact, Boleto, iDeal, PayPal & Sofort
-* [Request access to Alternative Payment Methods here](https://developer.sumup.com/contact)
+= Supported payment methods =
+* Cards: Visa, VPay, Mastercard, American Express, Diners Club, Discover
+* Alternative payment methods: Apple Pay, Bancontact, Boleto, iDEAL, PayPal, Sofort
 
-= STAY SECURE =
-SumUp is authorised as a Payment Institution by the Financial Conduct Authority and is Europay, Mastercard and Visa (EMV) and PCI-DSS certified.
-This ensures that payments are processed in accordance with the highest security standards.
+Availability depends on the merchant account configuration and country support.
 
-= BE FLEXIBLE =
-* SumUp processes in 16 currencies: Australian Dollar (AUD), Brazilian Real (BRL), Bulgarian Lev (BGN), Chilean Peso (CLP), Colombian Peso (COP), Czech Koruna (CZK), Danish Krone (DKK), Euro (EUR), Forint (HUF), Norwegian Krone (NOK), Pound Sterling (GBP), Romanian Leu (RON), Swedish Krona (SEK), Swiss Franc (CHF), US Dollar (USD), Zloty (PLZ)
-* SumUp supports 22 languages: Bulgarian, Czech, Danish, Dutch, English, Estonian, Finnish, French, German, Greek, Hungarian, Italian, Latvian, Lithuanian, Norwegian, Polish, Portuguese, Romanian, Slovak, Slovenian, Spanish and Swedish
+= Supported currencies =
+AUD, BRL, BGN, CLP, COP, CZK, DKK, EUR, HUF, NOK, GBP, RON, SEK, CHF, USD, PLN
 
-**Want to try it?**
+= Supported languages =
+Bulgarian, Czech, Danish, Dutch, English, Estonian, Finnish, French, German, Greek, Hungarian, Italian, Latvian, Lithuanian, Norwegian, Polish, Portuguese, Romanian, Slovak, Slovenian, Spanish, Swedish
 
-= GET STARTED =
-* Download the plugin
-* Create a [free account](https://buy.sumup.com/en-gb/signup/create-account) or use [your existing one](https://me.sumup.com/)
-* Verify your account and connect the plugin by using the “Connect Account” button
-* [Contact our support team](https://developer.sumup.com/contact) for a test account or to enable necessary scopes when you are ready to accept payments
-
-You're ready to go.
+= Documentation =
+Setup guide: https://developer.sumup.com/online-payments/plugins/woocommerce/
 
 == Screenshots ==
 
@@ -54,18 +48,20 @@ You're ready to go.
 
 = Automated installation =
 
-Automatic installation is the easiest option, as WordPress will handle the file transfer and you won�t need to leave your web browser.
-Note: Ensure the [WooCommerce plugin](https://wordpress.org/plugins/woocommerce/) is pre-installed prior to initiating the steps in this guide.
+Automatic installation is the easiest option, as WordPress handles the file transfer and you do not need to leave the browser.
+Before starting, ensure WooCommerce is already installed and active.
 
 1. Install the plugin via the "Plugins" section in the Dashboard
-1.1. Click on "Add new" and search for "SumUp Payment Gateway for WooCommerce"
-1.2. Then click on the "Install Now" button
-1.3. Click "Activate" to active the plugin
-2. Follow the instructions on the SumUp pop-up window appearing in the plugin setting screen and use the “Connect Account” button to initiate the connection with your SumUp account
+2. Click on "Add new" and search for "SumUp Payment Gateway for WooCommerce"
+3. Click "Install Now"
+4. Click "Activate"
+5. Go to `WooCommerce > Settings > Payments > SumUp`
+6. Use "Connect Account" to link the merchant account
+7. Verify the remaining settings before accepting live payments
 
 = Manual Installation =
 
-The manual installation method involves downloading our plugin and uploading it to your web server via your favorite FTP application. WordPress contains [instructions on how to do this](https://wordpress.org/support/article/managing-plugins/#manual-plugin-installation).
+The manual installation method involves downloading the plugin and uploading it to the web server via FTP or a hosting file manager. WordPress provides instructions for manual plugin installation in its support documentation.
 
 == Frequently Asked Questions ==
 
@@ -75,29 +71,51 @@ Yes. You'll be able to accept Visa, VPay, Mastercard, American Express, Diners C
 
 = What currencies does the plugin support? =
 
-We support 16 currencies with more being added.
+Supported currencies are AUD, BRL, BGN, CLP, COP, CZK, DKK, EUR, HUF, NOK, GBP, RON, SEK, CHF, USD, and PLN.
 
 = Which Alternative Payment Methods (APMs) are supported? =
 
-At SumUp you can process online payments with Apple Pay, Bancontact, Boleto, iDeal, PayPal & Sofort. Read more about our APMs in our [official developer documentation](https://developer.sumup.com/online-payments/apm/introduction).
+Depending on merchant account configuration and country support, SumUp can process Apple Pay, Bancontact, Boleto, iDEAL, PayPal, and Sofort.
 
 = How can I enable Alternative Payment Methods (APMs)? =
 
-Our Support team will enable the APMs that are relevant to your business location. Reach out to us through [our contact form](https://developer.sumup.com/contact) for assistance.
+Alternative payment methods must be enabled for the merchant account by SumUp.
 
 = Where can I find documentation? =
 
-You can find all the information you'll need on how to set up your plugin [here](https://developer.sumup.com/online-payments/plugins/woocommerce/).
+You can find setup documentation here: https://developer.sumup.com/online-payments/plugins/woocommerce/
 
 = Where can I get support if needed? =
 
-If you have any questions, please get in contact with us through our [contact form](https://developer.sumup.com/contact).
+If you need help with setup or testing, contact SumUp support through the official support channels for your merchant account.
 
 = Does this support both production mode and sandbox mode for testing? =
 
-Yes. If you need a testing environment, please contact us through our [contact form](https://developer.sumup.com/contact).
+Yes. Test the integration fully before enabling live payments.
 
 == Changelog ==
+= 2.12.0 =
+* Fixed: Prevented onboarding responses without a valid redirect URL from sending merchants to `/wp-admin/undefined`.
+* Fixed: Made the WooCommerce onboarding callback more reliable by persisting pending connection IDs across the full account-linking flow.
+* Fixed: Added clearer logging when the website callback rejects a connection so support can diagnose onboarding failures faster.
+
+= 2.11.0 =
+* Improvements: Updated the SumUp settings page to make it easier to understand and manage.
+* Improvements: Added a dedicated Connection section showing the connected account details and account actions.
+* Improvements: Reorganized settings into clearer sections for connection, checkout, payment options, and diagnostics.
+* Improvements: Refreshed the SumUp branding and onboarding visuals in the plugin.
+* Fixed: After connecting a SumUp account, merchants are now taken to the proper settings screen instead of being asked to connect again.
+* Fixed: Improved the loading state of the Connect and Disconnect buttons in the plugin settings.
+* Fixed: Improved the layout of the SumUp payment method in WooCommerce Checkout Blocks so the logo and label stay aligned.
+* New: Added a local example environment and documentation to make development and testing easier.
+
+= 2.10.0 =
+* Fixed: Improved reliability when processing payment updates and webhooks from SumUp.
+* Fixed: Reduced unnecessary background tasks that could increase database usage over time.
+* Fixed: Improved compatibility with WooCommerce Checkout Blocks.
+* Fixed: Restored the “Powered by SumUp” footer when opening the payment widget in a modal.
+* Improvements: Updated the plugin build and test setup to support more reliable releases.
+
 = 2.9.1 =
 * Fixed: Optimized ActionScheduler webhook processing to prevent excessive database growth.
 * Fixed: Implemented deduplication for webhook actions and stabilized group identifiers.
@@ -279,7 +297,5 @@ Yes. If you need a testing environment, please contact us through our [contact f
 
 == Upgrade Notice ==
 
-= 2.9.1 =
-* Fixed: Optimized ActionScheduler webhook processing to prevent excessive database growth.
-* Fixed: Implemented deduplication for webhook actions and stabilized group identifiers.
-* Fixed: Improved retry logic to avoid unnecessary attempts on failed checkout status.
+= 2.12.0 =
+* Improves WooCommerce onboarding reliability and prevents broken redirects during account connection.

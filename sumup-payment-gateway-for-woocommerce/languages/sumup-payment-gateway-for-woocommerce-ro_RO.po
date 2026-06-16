@@ -78,9 +78,9 @@ msgid "Your credentials are valid and you are ready to use the plugin."
 msgstr "Acreditările dumneavoastră sunt valabile și sunteți gata să utilizați plugin-ul."
 
 #. translators: %1$s = https://me.sumup.com/, %2$s = https://me.sumup.com/developers
-#: includes/class-wc-sumup-gateway.php:117
-msgid "SumUp works by adding payment fields on the checkout and then sending the details to SumUp for verification. <a href=\"%1$s\" target=\"_blank\">Sign up</a> for a SumUp account. After logging in, <a href=\"%2$s\" target=\"_blank\">get your SumUp account keys</a>."
-msgstr "SumUp funcționează prin adăugarea câmpurilor de plată la checkout și apoi trimiterea detaliilor către SumUp pentru verificare. <a href=\"%1$s\" target=\"_blank\">Înscrieți-vă</a> pentru un cont SumUp. După ce vă conectați, <a href=\"%2$s\" target=\"_blank\">obțineți cheile contului SumUp</a>."
+#: includes/class-wc-sumup-gateway.php:203
+msgid "Accept credit and debit cards with SumUp, plus eligible payment methods such as Apple Pay, PayPal, Bancontact, and iDEAL."
+msgstr "Acceptați carduri de credit și debit cu SumUp, precum și metode de plată acceptate precum Apple Pay, PayPal, Bancontact și iDEAL."
 
 #: includes/class-wc-sumup-gateway.php:227
 msgid "SumUp charge complete. Transaction Code: %s"
@@ -145,8 +145,8 @@ msgid "This controls the title the user sees during checkout."
 msgstr "Aceasta controlează titlul pe care utilizatorul îl vede în timpul checkout-ului."
 
 #: includes/class-wc-sumup-settings.php:25
-msgid "Pay with SumUp"
-msgstr "Plătiți cu SumUp"
+msgid "Credit / Debit Card"
+msgstr "Card de credit / debit"
 
 #: includes/class-wc-sumup-settings.php:29
 msgid "Description"
@@ -157,8 +157,8 @@ msgid "This controls the description the user sees during checkout."
 msgstr "Aceasta controlează descrierea pe care utilizatorul o vede în timpul plății."
 
 #: includes/class-wc-sumup-settings.php:32
-msgid "You can choose how you'd like to pay after you place your order."
-msgstr "Puteți alege cum doriți să plătiți după ce plasați comanda."
+msgid "Pay securely with your credit or debit card, or use other available payment methods."
+msgstr "Pay securely with your credit or debit card, or use other available payment methods."
 
 #: includes/class-wc-sumup-settings.php:36
 msgid "Merchant ID"
@@ -334,7 +334,7 @@ msgstr "Selectați butonul \"Conecta\" pentru a începe."
 
 #: templates/onboarding.php:46
 msgid "Return to WooCommerce by selecting the “View plugin” button."
-msgstr "Reveniți la WooCommerce selectând butonul \“Vizualizați pluginul\”."
+msgstr "Reveniți la WooCommerce selectând butonul \"Vizualizați pluginul\"."
 
 #: templates/onboarding.php:52
 msgid "Advanced Version"
@@ -346,4 +346,4 @@ msgstr "Conectați Cont"
 
 #: sumup-payment-gateway-for-woocommerce.php:126
 msgid "Please use the “Connect Account” button to start the configuration."
-msgstr "Vă rugăm să folosiți butonul \“Conectați Cont\” pentru a porni configurarea."
+msgstr "Vă rugăm să folosiți butonul \"Conectați Cont\" pentru a porni configurarea."
