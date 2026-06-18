@@ -154,11 +154,14 @@ final class WC_Sumup_Blocks_Support extends AbstractPaymentMethodType
 		 */
 		$error_general = __('Transaction was unsuccessful. Please check the minimum amount or use another valid card.', 'sumup-payment-gateway-for-woocommerce');
 		$error_invalid_form = __('Fill in all required details.', 'sumup-payment-gateway-for-woocommerce');
+		$error_instructions = __('Unable to save payment instructions. Please try again.', 'sumup-payment-gateway-for-woocommerce');
 
 		wp_localize_script('wc-sumup-blocks-integration', 'sumup_gateway_params', array(
 
 			'showInstallments' => $show_installments,
 			'checkoutNonce' => wp_create_nonce('sumup-create-checkout'),
+			'paymentInstructionsNonce' => wp_create_nonce('sumup-store-payment-instructions'),
+			'wcStoreApiNonce' => wp_create_nonce('wc_store_api'),
 			'sumup_handler_url' => add_query_arg(
 				array(
 					'wc-api' => 'sumup_api_handler',
@@ -174,6 +177,7 @@ final class WC_Sumup_Blocks_Support extends AbstractPaymentMethodType
 			'errors' => array(
 				'general_error' => "$error_general",
 				'invalid_form' => "$error_invalid_form",
+				'instructions_error' => "$error_instructions",
 				'payment_error' => ""
 			),
 			'enablePix' => isset($this->settings["enable_pix"]) ? $this->settings["enable_pix"] : 'no',

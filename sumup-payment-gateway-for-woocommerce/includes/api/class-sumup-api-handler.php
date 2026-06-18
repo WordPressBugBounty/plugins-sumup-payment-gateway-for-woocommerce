@@ -28,6 +28,7 @@ class Sumup_Api_Handler
 	private function includes()
 	{
 		include_once dirname(__FILE__) . '/handlers/class-sumup-create-checkout.php';
+		include_once dirname(__FILE__) . '/handlers/class-sumup-store-payment-instructions.php';
 		include_once dirname(__FILE__) . '/handlers/class-sumup-validation-website-handler.php';
 		include_once dirname(__FILE__) . '/handlers/class-sumup-connect-website-handler.php';
 	}

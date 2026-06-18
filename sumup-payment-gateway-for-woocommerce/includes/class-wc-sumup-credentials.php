@@ -44,10 +44,14 @@ class Wc_Sumup_Credentials {
 	 */
 	public static function validate() {
 		$settings = self::get_integration_settings();
+		$log_context = array(
+			'flow' => 'settings_validation',
+			'merchant_code' => $settings['merchant_id'],
+		);
 
-		$access_token = Wc_Sumup_Access_Token::get( $settings['client_id'], $settings['client_secret'], $settings['api_key'], true );
+		$access_token = Wc_Sumup_Access_Token::get( $settings['client_id'], $settings['client_secret'], $settings['api_key'], true, $log_context );
 		if ( ! isset( $access_token['access_token'] ) ) {
-			WC_SUMUP_LOGGER::log( 'Error on settings to create access token. Merchant Id: ' . $settings['merchant_id'] );
+			WC_SUMUP_LOGGER::log( 'Error on settings to create access token.', $log_context, 'error' );
 			$settings['enabled'] = 'no';
 			update_option( 'woocommerce_sumup_settings', $settings );
 			update_option( 'sumup_connection_status', 'invalid', false );
@@ -66,11 +70,21 @@ class Wc_Sumup_Credentials {
 			'return_url' => wc_get_checkout_url(),
 		);
 
-		$sumup_checkout = Wc_Sumup_Checkout::create( $access_token['access_token'], $checkout_data );
+		$sumup_checkout = Wc_Sumup_Checkout::create( $access_token['access_token'], $checkout_data, $log_context );
 		if ( empty( $sumup_checkout ) || ! isset( $sumup_checkout['id'] ) ) {
 			if ( isset( $sumup_checkout['error_code'] ) ) {
 				$error_message = isset( $sumup_checkout['error_message'] ) ? $sumup_checkout['error_message'] : $sumup_checkout['message'] ?? '';
-				WC_SUMUP_LOGGER::log( $sumup_checkout['error_code'] . ': ' . $error_message );
+				WC_SUMUP_LOGGER::log(
+					'Settings validation checkout creation failed.',
+					array_merge(
+						$log_context,
+						array(
+							'error_code' => $sumup_checkout['error_code'],
+							'error' => $error_message,
+						)
+					),
+					'warning'
+				);
 				$settings['enabled'] = 'no';
 				update_option( 'woocommerce_sumup_settings', $settings );
 				update_option( 'sumup_connection_status', 'invalid', false );

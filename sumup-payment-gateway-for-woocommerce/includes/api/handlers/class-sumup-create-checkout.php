@@ -48,17 +48,23 @@ class Sumup_API_Create_Chekout_Handler extends Sumup_Api_Handler
 			$this->send_response('error', __('Invalid order ID.', 'sumup-payment-gateway-for-woocommerce'), array(), 400);
 		}
 
-		$result = $this->create_checkout($order_id);
-
-		if($result['status'] == 'error'){
-			$this->send_response($result['status'],$result['message'],array(),400);
+		$order_key = isset($post_data['order_key']) ? wc_clean(wp_unslash($post_data['order_key'])) : '';
+		if (empty($order_key)) {
+			$this->send_response('error', __('Invalid order key.', 'sumup-payment-gateway-for-woocommerce'), array(), 400);
 		}
 
-		$this->send_response($result);
+		$is_checkout_blocks = !empty($post_data['isCheckoutBlocks']);
+		$result = $this->create_checkout($order_id, $order_key, $is_checkout_blocks);
+
+		if (isset($result['status']) && 'error' === $result['status']) {
+			$this->send_response($result['status'], $result['message'], array(), 400);
+		}
+
+		$this->send_response('success', '', $result);
 
 	}
 
-	private function create_checkout($order_id, $is_checkout_blocks = false)
+	private function create_checkout($order_id, $order_key = '', $is_checkout_blocks = false)
 	{
 
 		if (!sumup_gateway_is_configured()) {
@@ -82,7 +88,14 @@ class Sumup_API_Create_Chekout_Handler extends Sumup_Api_Handler
 		}
 
 		if (empty($sumup_settings['pay_to_email']) && empty($sumup_settings['merchant_id'])) {
-			WC_SUMUP_LOGGER::log('Please fill "Login Email" and "Merchant ID" on the plugin settings. Merchant Id: ' . $this->merchant_id);
+			WC_SUMUP_LOGGER::log(
+				'Gateway configuration is incomplete: missing Login Email and Merchant ID.',
+				array(
+					'flow' => 'blocks_checkout_create',
+					'merchant_code' => $sumup_settings['merchant_id'] ?? '',
+				),
+				'error'
+			);
 			$message = current_user_can('manage_options') ? 'Please fill "Login Email" and "Merchant ID" on the plugin settings.' : 'Sorry, SumUp is not available. Try again soon.';
 			return 	array(
 				'status' => 'error',
@@ -100,11 +113,27 @@ class Sumup_API_Create_Chekout_Handler extends Sumup_Api_Handler
 			);
 		}
 
-		$total = $order->get_total();
+		$gateway = $this->get_sumup_gateway('sumup');
+		$log_context = $gateway->get_order_log_context(
+			$order,
+			array(
+				'flow' => 'blocks_checkout_create',
+				'merchant_code' => $sumup_settings['merchant_id'] ?? '',
+			)
+		);
+		$order_access = $gateway->validate_order_access_for_checkout($order, $order_key);
+		if (!$order_access['valid']) {
+			WC_SUMUP_LOGGER::log('Rejected checkout creation because order validation failed.', $log_context, 'warning');
+			return array(
+				'status' => 'error',
+				'message' => $order_access['error'],
+				'data' => null,
+			);
+		}
 
-		$access_token = Wc_Sumup_Access_Token::get($sumup_settings['client_id'], $sumup_settings['client_secret'], $sumup_settings['api_key']);
+		$access_token = Wc_Sumup_Access_Token::get($sumup_settings['client_id'], $sumup_settings['client_secret'], $sumup_settings['api_key'], false, $log_context);
 		if (!isset($access_token['access_token'])) {
-			WC_SUMUP_LOGGER::log('Error on request (cURL) to get access token. Merchant Id: ' . $sumup_settings['merchant_id']);
+			WC_SUMUP_LOGGER::log('Error on request to get access token.', $log_context, 'error');
 			$message = current_user_can('manage_options') ? 'Error to generate SumUp access token.' : 'Sorry, SumUp is not available. Try again soon.';
 
 			return 	array(
@@ -119,27 +148,26 @@ class Sumup_API_Create_Chekout_Handler extends Sumup_Api_Handler
 		update_option('woocommerce_sumup_settings', $sumup_settings);
 
 		$sumup_checkout = $order->get_meta('_sumup_checkout_data');
-		if (empty($sumup_checkout)) {
-			$checkout_data = array(
-				'checkout_reference' => 'WC_SUMUP_' . $order_id,
-				'amount' => $total,
-				'currency' => get_woocommerce_currency(),
-				'description' => 'WooCommerce #' . $order_id,
-				'redirect_url' => add_query_arg('sumup-validate-order', $order_id, wc_get_checkout_url()),
-				'return_url' => WC()->api_request_url('wc_gateway_sumup'),
+		if ($gateway->should_refresh_checkout_for_order($order, $sumup_checkout)) {
+			if (!empty($sumup_checkout['id'])) {
+				WC_SUMUP_LOGGER::log('Refreshing stored SumUp checkout in Blocks because the order context changed.', $gateway->get_checkout_log_context($sumup_checkout, $log_context), 'info');
+			}
+
+			$gateway->clear_checkout_for_order($order);
+			$sumup_checkout = array();
+		} else {
+			$sumup_checkout = $gateway->enrich_checkout_data_for_order(
+				$order,
+				$sumup_checkout,
+				$is_checkout_blocks
 			);
+		}
 
-			if (!empty($sumup_settings['merchant_id'])) {
-				$checkout_data['merchant_code'] = $sumup_settings['merchant_id'];
-			}
-
-			if (!empty($sumup_settings['pay_to_email']) && empty($sumup_settings['merchant_id'])) {
-				$checkout_data['pay_to_email'] = $sumup_settings['pay_to_email'];
-			}
-
-			$sumup_checkout = Wc_Sumup_Checkout::create($sumup_settings['sumup_access_token'], $checkout_data);
+		if (empty($sumup_checkout)) {
+			$checkout_data = $gateway->build_checkout_request_data($order);
+			$sumup_checkout = Wc_Sumup_Checkout::create($sumup_settings['sumup_access_token'], $checkout_data, $log_context);
 			if (empty($sumup_checkout)) {
-				WC_SUMUP_LOGGER::log('Error on request (cURL) to create SumUp checkout ID. Merchant Id: ' . $sumup_settings['merchant_id']);
+				WC_SUMUP_LOGGER::log('Error on request to create SumUp checkout ID.', $log_context, 'error');
 				$message = current_user_can('manage_options') ? 'Error to generate SumUp checkout id.' : 'Sorry, SumUp is not available. Try again soon.';
 				return 	array(
 					'status' => 'error',
@@ -147,15 +175,11 @@ class Sumup_API_Create_Chekout_Handler extends Sumup_Api_Handler
 					'data' => null,
 				);
 			}
-			if($is_checkout_blocks){
-				$sumup_checkout['isCheckoutBlocks'] = $is_checkout_blocks;
-			}
+			$sumup_checkout = $gateway->enrich_checkout_data_for_order($order, $sumup_checkout, $is_checkout_blocks);
 
 			$order->update_meta_data('_sumup_checkout_data', $sumup_checkout);
 			$order->save();
 		}
-
-		$gateway = $this->get_sumup_gateway('sumup');
 
 		/**
 		 * Fallback to fill merchant code to "old" users. Temporary solution while SumUp team check other ways to enable request to get merchant_code.
@@ -165,19 +189,28 @@ class Sumup_API_Create_Chekout_Handler extends Sumup_Api_Handler
 		}
 
 		if (isset($sumup_checkout['id'])) {
-			$extra_class = $sumup_settings['open_payment_in_modal'] === 'yes' ? 'no-modal' : '';
-
-			return array(
-				"amount" => $total,
-				"checkoutId" => $sumup_checkout['id'],
-				"country" => $order->get_billing_country()
+			return array_merge(
+				$gateway->get_widget_context_for_order($order),
+				array(
+					"checkoutId" => $sumup_checkout['id'],
+				)
 			);
 
 		}
 
 		if (isset($sumup_checkout['error_code'])) {
 			$error = isset($sumup_checkout['error_message']) ? $sumup_checkout['error_message'] : $sumup_checkout['message'];
-			WC_SUMUP_LOGGER::log('SumUp create checkout request: ' . $error . '. Merchant Id: ' . $sumup_settings['merchant_id']);
+			WC_SUMUP_LOGGER::log(
+				'SumUp create checkout request failed.',
+				array_merge(
+					$gateway->get_checkout_log_context($sumup_checkout, $log_context),
+					array(
+						'error' => $error,
+						'error_code' => $sumup_checkout['error_code'],
+					)
+				),
+				'warning'
+			);
 			$message = current_user_can('manage_options') ? 'Error from response to create checkout on SumUp. Check the logs.' : 'Sorry, SumUp is not available. Try again soon.';
 			return 	array(
 				'status' => 'error',

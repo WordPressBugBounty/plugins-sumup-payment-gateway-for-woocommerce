@@ -4,7 +4,7 @@ Tags: sumup, payment gateway, woocommerce, payments, ecommerce
 Requires at least: 6.9
 Tested up to: 7.0
 Requires PHP: 7.4
-Stable tag: 2.12.0
+Stable tag: 2.13.0
 License: Apache-2.0
 License URI: https://www.apache.org/licenses/LICENSE-2.0
 
@@ -94,6 +94,14 @@ If you need help with setup or testing, contact SumUp support through the offici
 Yes. Test the integration fully before enabling live payments.
 
 == Changelog ==
+= 2.13.0 =
+* Improvements: Added more detailed observability and debugging logs across checkout and connection flows.
+* Improvements: Hardened the order-pay widget initialization and flow so stored orders reopen more reliably.
+* Fixed: Preserved checkout binding during redirect payments and refreshed stale checkouts more safely.
+* Fixed: Strengthened webhook handling, checkout validation, and WooCommerce Blocks order binding.
+* Fixed: Stored pending Pix and Boleto payment instructions on the order for later retrieval.
+* Fixed: Redacted sensitive provider HTTP data from logs and improved fallback handling on thank-you pages.
+
 = 2.12.0 =
 * Fixed: Prevented onboarding responses without a valid redirect URL from sending merchants to `/wp-admin/undefined`.
 * Fixed: Made the WooCommerce onboarding callback more reliable by persisting pending connection IDs across the full account-linking flow.
@@ -297,5 +305,5 @@ Yes. Test the integration fully before enabling live payments.
 
 == Upgrade Notice ==
 
-= 2.12.0 =
-* Improves WooCommerce onboarding reliability and prevents broken redirects during account connection.
+= 2.13.0 =
+* Improves observability, payment flow resilience, and webhook handling.

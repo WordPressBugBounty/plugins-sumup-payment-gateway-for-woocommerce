@@ -439,8 +439,17 @@ class WC_Gateway_SumUp extends \WC_Payment_Gateway
 			return;
 		}
 
-		// Log to received webhook
-		WC_SUMUP_LOGGER::log('Webhook received: ' . json_encode($data, JSON_UNESCAPED_UNICODE));
+		WC_SUMUP_LOGGER::log(
+			'Webhook received.',
+			$this->get_gateway_log_context(
+				array(
+					'flow' => 'webhook',
+					'checkout_id' => sanitize_text_field((string) ($data['id'] ?? '')),
+					'event_type' => sanitize_text_field((string) ($data['event_type'] ?? '')),
+				)
+			),
+			'info'
+		);
 
 		$this->enqueue_webhook_with_priority($data);
 
@@ -496,7 +505,16 @@ class WC_Gateway_SumUp extends \WC_Payment_Gateway
 	 */
 	private function log_webhook_scheduled($checkout_id)
 	{
-		WC_SUMUP_LOGGER::log('Webhook scheduled with high priority. Checkout: ' . $checkout_id);
+		WC_SUMUP_LOGGER::log(
+			'Webhook scheduled with high priority.',
+			$this->get_gateway_log_context(
+				array(
+					'flow' => 'webhook',
+					'checkout_id' => sanitize_text_field((string) $checkout_id),
+				)
+			),
+			'info'
+		);
 	}
 
 	/**
@@ -519,14 +537,21 @@ class WC_Gateway_SumUp extends \WC_Payment_Gateway
 		}
 
 		$this->log_webhook_processing($event_type, $checkout_id);
+		$log_context = $this->get_gateway_log_context(
+			array(
+				'flow' => 'webhook',
+				'checkout_id' => $checkout_id,
+				'event_type' => $event_type,
+			)
+		);
 
-		$access_token = $this->get_access_token();
+		$access_token = $this->get_access_token($log_context);
 		if (empty($access_token)) {
 			$this->log_access_token_error($checkout_id);
 			return;
 		}
 
-		$checkout_data = $this->fetch_checkout_data($checkout_id, $access_token);
+		$checkout_data = $this->fetch_checkout_data($checkout_id, $access_token, $log_context);
 		if (empty($checkout_data)) {
 			$this->log_checkout_data_error($checkout_id);
 			return;
@@ -576,9 +601,9 @@ class WC_Gateway_SumUp extends \WC_Payment_Gateway
 	 *
 	 * @return string
 	 */
-	private function get_access_token()
+	private function get_access_token($log_context = array())
 	{
-		$access_token = Wc_Sumup_Access_Token::get($this->client_id, $this->client_secret, $this->api_key, true);
+		$access_token = Wc_Sumup_Access_Token::get($this->client_id, $this->client_secret, $this->api_key, true, $log_context);
 		return $access_token['access_token'] ?? '';
 	}
 
@@ -589,9 +614,489 @@ class WC_Gateway_SumUp extends \WC_Payment_Gateway
 	 * @param string $access_token
 	 * @return array
 	 */
-	private function fetch_checkout_data($checkout_id, $access_token)
+	private function fetch_checkout_data($checkout_id, $access_token, $log_context = array())
 	{
-		return Wc_Sumup_Checkout::get($checkout_id, $access_token);
+		return Wc_Sumup_Checkout::get($checkout_id, $access_token, $log_context);
+	}
+
+	/**
+	 * Build the checkout payload sent to SumUp for a WooCommerce order.
+	 *
+	 * @param WC_Order $order WooCommerce order.
+	 * @return array
+	 */
+	public function build_checkout_request_data($order)
+	{
+		$checkout_data = array(
+			'checkout_reference' => 'WC_SUMUP_' . $order->get_id(),
+			'amount' => (float) $order->get_total(),
+			'currency' => $order->get_currency(),
+			'description' => 'WooCommerce #' . $order->get_id(),
+			'redirect_url' => add_query_arg('sumup-validate-order', $order->get_id(), wc_get_checkout_url()),
+			'return_url' => WC()->api_request_url('wc_gateway_sumup'),
+		);
+
+		if (!empty($this->merchant_id)) {
+			$checkout_data['merchant_code'] = $this->merchant_id;
+		} elseif (!empty($this->pay_to_email)) {
+			$checkout_data['pay_to_email'] = $this->pay_to_email;
+		}
+
+		return $checkout_data;
+	}
+
+	/**
+	 * Validate that the current visitor is allowed to pay for the given order.
+	 *
+	 * @param WC_Order $order WooCommerce order.
+	 * @param string   $order_key WooCommerce order key from the current request.
+	 * @return array{valid: bool, error: string}
+	 */
+	public function validate_order_access_for_checkout($order, $order_key = '')
+	{
+		if (!$order instanceof WC_Order) {
+			return array(
+				'valid' => false,
+				'error' => __('Order ID is not available to make the payment. Try again soon or contact the website support.', 'sumup-payment-gateway-for-woocommerce'),
+			);
+		}
+
+		if (empty($order_key) || !hash_equals($order->get_order_key(), $order_key)) {
+			return array(
+				'valid' => false,
+				'error' => __('Order validation failed. Refresh checkout and try again.', 'sumup-payment-gateway-for-woocommerce'),
+			);
+		}
+
+		if (is_user_logged_in()) {
+			$order_customer_id = (int) $order->get_customer_id();
+			$current_customer_id = get_current_user_id();
+
+			if ($order_customer_id > 0 && $order_customer_id !== $current_customer_id) {
+				return array(
+					'valid' => false,
+					'error' => __('Order validation failed. Refresh checkout and try again.', 'sumup-payment-gateway-for-woocommerce'),
+				);
+			}
+		}
+
+		return array(
+			'valid' => true,
+			'error' => '',
+		);
+	}
+
+	/**
+	 * Build widget context from an order so frontend state stays consistent across checkout flows.
+	 *
+	 * @param WC_Order $order WooCommerce order.
+	 * @return array
+	 */
+	public function get_widget_context_for_order($order)
+	{
+		if (!$order instanceof WC_Order) {
+			return array();
+		}
+
+		return array(
+			'amount' => wc_format_decimal($order->get_total(), wc_get_price_decimals()),
+			'currency' => $order->get_currency(),
+			'country' => strtoupper((string) $order->get_billing_country()),
+			'firstName' => sanitize_text_field($order->get_billing_first_name()),
+			'lastName' => sanitize_text_field($order->get_billing_last_name()),
+			'email' => sanitize_email($order->get_billing_email()),
+			'phoneNumber' => sanitize_text_field($order->get_billing_phone()),
+			'city' => sanitize_text_field($order->get_billing_city()),
+			'street' => sanitize_text_field($order->get_billing_address_1()),
+			'streetNumber' => sanitize_text_field($order->get_billing_address_2()),
+			'postalCode' => sanitize_text_field($order->get_billing_postcode()),
+			'stateName' => sanitize_text_field($order->get_billing_state()),
+			'redirectUrl' => $this->get_return_url($order),
+			'orderId' => $order->get_id(),
+			'orderKey' => $order->get_order_key(),
+		);
+	}
+
+	/**
+	 * Attach local order context to stored checkout data.
+	 *
+	 * @param WC_Order $order WooCommerce order.
+	 * @param array    $sumup_checkout SumUp checkout payload.
+	 * @param bool     $is_checkout_blocks Whether the checkout was created from Blocks.
+	 * @return array
+	 */
+	public function enrich_checkout_data_for_order($order, $sumup_checkout, $is_checkout_blocks = false)
+	{
+		if (!is_array($sumup_checkout)) {
+			$sumup_checkout = array();
+		}
+
+		$sumup_checkout['_sumup_context'] = array(
+			'order_total' => (string) $order->get_total(),
+			'currency' => $order->get_currency(),
+			'billing_country' => $order->get_billing_country(),
+			'order_status' => $order->get_status(),
+		);
+
+		if ($is_checkout_blocks) {
+			$sumup_checkout['isCheckoutBlocks'] = true;
+		}
+
+		return $sumup_checkout;
+	}
+
+	/**
+	 * Build a structured log context for a WooCommerce order.
+	 *
+	 * @param WC_Order $order WooCommerce order.
+	 * @param array    $extra Additional context fields.
+	 * @return array
+	 */
+	public function get_order_log_context($order, $extra = array())
+	{
+		$context = is_array($extra) ? $extra : array();
+
+		if ($order instanceof WC_Order) {
+			$context['order_id'] = $order->get_id();
+		}
+
+		return $this->get_gateway_log_context($context);
+	}
+
+	/**
+	 * Build a structured log context for a checkout payload.
+	 *
+	 * @param array $checkout_data Checkout payload.
+	 * @param array $extra Additional context fields.
+	 * @return array
+	 */
+	public function get_checkout_log_context($checkout_data, $extra = array())
+	{
+		$context = is_array($extra) ? $extra : array();
+		$checkout_data = is_array($checkout_data) ? $checkout_data : array();
+
+		if (!empty($checkout_data['id'])) {
+			$context['checkout_id'] = sanitize_text_field((string) $checkout_data['id']);
+		}
+
+		if (!empty($checkout_data['checkout_reference'])) {
+			$context['checkout_reference'] = sanitize_text_field((string) $checkout_data['checkout_reference']);
+		}
+
+		return $this->get_gateway_log_context($context);
+	}
+
+	/**
+	 * Attach gateway-level identifiers to log context.
+	 *
+	 * @param array $context Structured context.
+	 * @return array
+	 */
+	private function get_gateway_log_context($context = array())
+	{
+		$context = is_array($context) ? $context : array();
+
+		if (!empty($this->merchant_id)) {
+			$context['merchant_code'] = $this->merchant_id;
+		}
+
+		return $context;
+	}
+
+	/**
+	 * Determine whether a stored checkout should be recreated because the order drifted.
+	 *
+	 * @param WC_Order $order WooCommerce order.
+	 * @param mixed    $sumup_checkout Stored SumUp checkout data.
+	 * @return bool
+	 */
+	public function should_refresh_checkout_for_order($order, $sumup_checkout)
+	{
+		if (!is_array($sumup_checkout) || empty($sumup_checkout['id'])) {
+			return true;
+		}
+
+		$expected_reference = 'WC_SUMUP_' . $order->get_id();
+		$checkout_reference = isset($sumup_checkout['checkout_reference']) ? sanitize_text_field($sumup_checkout['checkout_reference']) : '';
+		if ($checkout_reference !== $expected_reference) {
+			return true;
+		}
+
+		$checkout_status = isset($sumup_checkout['status']) ? sanitize_text_field($sumup_checkout['status']) : '';
+		if ('PAID' === $checkout_status || !empty($sumup_checkout['transaction_code'])) {
+			return false;
+		}
+
+		if ('FAILED' === $checkout_status) {
+			return true;
+		}
+
+		$checkout_amount = isset($sumup_checkout['amount']) ? (float) $sumup_checkout['amount'] : null;
+		if (null === $checkout_amount || abs($checkout_amount - (float) $order->get_total()) > 0.00001) {
+			return true;
+		}
+
+		$checkout_currency = isset($sumup_checkout['currency']) ? strtoupper(sanitize_text_field($sumup_checkout['currency'])) : '';
+		if ('' === $checkout_currency || $checkout_currency !== strtoupper($order->get_currency())) {
+			return true;
+		}
+
+		if (
+			empty($sumup_checkout['_sumup_context']) ||
+			!is_array($sumup_checkout['_sumup_context'])
+		) {
+			return true;
+		}
+
+		$stored_context = $sumup_checkout['_sumup_context'];
+		$stored_total = isset($stored_context['order_total']) ? (float) $stored_context['order_total'] : null;
+		$stored_currency = isset($stored_context['currency']) ? strtoupper(sanitize_text_field($stored_context['currency'])) : '';
+		$stored_billing_country = isset($stored_context['billing_country']) ? strtoupper(sanitize_text_field($stored_context['billing_country'])) : '';
+		$stored_order_status = isset($stored_context['order_status']) ? sanitize_text_field($stored_context['order_status']) : '';
+
+		if (null === $stored_total || abs($stored_total - (float) $order->get_total()) > 0.00001) {
+			return true;
+		}
+
+		if ('' === $stored_currency || $stored_currency !== strtoupper($order->get_currency())) {
+			return true;
+		}
+
+		if ($stored_billing_country !== strtoupper($order->get_billing_country())) {
+			return true;
+		}
+
+		if ('' === $stored_order_status || $stored_order_status !== $order->get_status()) {
+			return true;
+		}
+
+		return false;
+	}
+
+	/**
+	 * Clear stale checkout data from the order.
+	 *
+	 * @param WC_Order $order WooCommerce order.
+	 * @return void
+	 */
+	public function clear_checkout_for_order($order)
+	{
+		$order->delete_meta_data('_sumup_checkout_data');
+		$order->save();
+	}
+
+	/**
+	 * Persist pending voucher-style payment instructions against the order.
+	 *
+	 * @param WC_Order $order WooCommerce order.
+	 * @param array    $instructions Pending payment instructions.
+	 * @return void
+	 */
+	public function store_pending_payment_instructions($order, $instructions)
+	{
+		if (!is_array($instructions)) {
+			$instructions = array();
+		}
+
+		$payment_method = isset($instructions['payment_method']) ? sanitize_text_field($instructions['payment_method']) : '';
+		$normalized_instructions = array(
+			'payment_method' => $payment_method,
+			'pix_code' => isset($instructions['pix_code']) ? sanitize_textarea_field($instructions['pix_code']) : '',
+			'qr_code_image' => isset($instructions['qr_code_image']) ? esc_url_raw($instructions['qr_code_image']) : '',
+			'boleto_download_url' => isset($instructions['boleto_download_url']) ? esc_url_raw($instructions['boleto_download_url']) : '',
+			'boleto_barcode' => isset($instructions['boleto_barcode']) ? sanitize_textarea_field($instructions['boleto_barcode']) : '',
+			'stored_at' => time(),
+		);
+
+		$has_supported_payment_method = in_array($payment_method, array('boleto', 'pix', 'qr_code_pix'), true);
+		$has_pix_instructions = in_array($payment_method, array('pix', 'qr_code_pix'), true) &&
+			!empty($normalized_instructions['pix_code']) &&
+			!empty($normalized_instructions['qr_code_image']);
+		$has_boleto_instructions = 'boleto' === $payment_method &&
+			!empty($normalized_instructions['boleto_download_url']) &&
+			!empty($normalized_instructions['boleto_barcode']);
+
+		if (!$has_supported_payment_method || (!$has_pix_instructions && !$has_boleto_instructions)) {
+			$this->clear_pending_payment_instructions($order);
+			return;
+		}
+
+		$order->update_meta_data('_sumup_pending_payment_instructions', $normalized_instructions);
+		$order->save();
+	}
+
+	/**
+	 * Fetch stored pending voucher-style payment instructions.
+	 *
+	 * @param WC_Order $order WooCommerce order.
+	 * @return array
+	 */
+	public function get_pending_payment_instructions($order)
+	{
+		$instructions = $order->get_meta('_sumup_pending_payment_instructions');
+
+		return is_array($instructions) ? $instructions : array();
+	}
+
+	/**
+	 * Clear stored pending voucher-style payment instructions from the order.
+	 *
+	 * @param WC_Order $order WooCommerce order.
+	 * @return void
+	 */
+	public function clear_pending_payment_instructions($order)
+	{
+		$order->delete_meta_data('_sumup_pending_payment_instructions');
+		$order->save();
+	}
+
+	/**
+	 * Extract the transaction code from a checkout payload.
+	 *
+	 * @param array $checkout_data SumUp checkout payload.
+	 * @return string
+	 */
+	private function extract_transaction_code($checkout_data)
+	{
+		$transaction_code = isset($checkout_data['transaction_code']) ? sanitize_text_field($checkout_data['transaction_code']) : '';
+		if (!empty($transaction_code)) {
+			return $transaction_code;
+		}
+
+		if (empty($checkout_data['transactions']) || !is_array($checkout_data['transactions'])) {
+			return '';
+		}
+
+		foreach ($checkout_data['transactions'] as $transaction) {
+			if (!is_array($transaction) || empty($transaction['transaction_code'])) {
+				continue;
+			}
+
+			return sanitize_text_field($transaction['transaction_code']);
+		}
+
+		return '';
+	}
+
+	/**
+	 * Ensure the fetched SumUp checkout still matches the local WooCommerce order.
+	 *
+	 * Webhook payloads are treated as untrusted hints; order mutations only happen once
+	 * the latest remote checkout state is bound back to the local order.
+	 *
+	 * @param WC_Order $order WooCommerce order.
+	 * @param array    $checkout_data Latest checkout payload from SumUp.
+	 * @param string   $checkout_id Checkout ID from the trigger path.
+	 * @return array{valid: bool, error: string}
+	 */
+	private function validate_checkout_for_order($order, $checkout_data, $checkout_id = '')
+	{
+		$checkout_id = sanitize_text_field((string) $checkout_id);
+		$stored_checkout = $order->get_meta('_sumup_checkout_data');
+		$remote_checkout_id = isset($checkout_data['id']) ? sanitize_text_field($checkout_data['id']) : '';
+		$expected_reference = 'WC_SUMUP_' . $order->get_id();
+		$remote_reference = isset($checkout_data['checkout_reference']) ? sanitize_text_field($checkout_data['checkout_reference']) : '';
+		$remote_currency = isset($checkout_data['currency']) ? strtoupper(sanitize_text_field($checkout_data['currency'])) : '';
+		$order_currency = strtoupper($order->get_currency());
+		$remote_amount = isset($checkout_data['amount']) ? (float) $checkout_data['amount'] : null;
+		$order_amount = (float) $order->get_total();
+		$has_stored_checkout = is_array($stored_checkout) && !empty($stored_checkout['id']);
+
+		if ('' === $remote_checkout_id) {
+			return array(
+				'valid' => false,
+				'error' => 'Fetched checkout ID is missing.',
+			);
+		}
+
+		if ($expected_reference !== $remote_reference) {
+			return array(
+				'valid' => false,
+				'error' => 'Fetched checkout reference does not match the order reference.',
+			);
+		}
+
+		if ('' === $remote_currency || $order_currency !== $remote_currency) {
+			return array(
+				'valid' => false,
+				'error' => 'Fetched checkout currency does not match the order currency.',
+			);
+		}
+
+		if (null === $remote_amount || abs($remote_amount - $order_amount) > 0.00001) {
+			return array(
+				'valid' => false,
+				'error' => 'Fetched checkout amount does not match the order total.',
+			);
+		}
+
+		if ($has_stored_checkout) {
+			$stored_checkout_id = sanitize_text_field($stored_checkout['id']);
+
+			if ('' !== $checkout_id && $stored_checkout_id !== $checkout_id) {
+				return array(
+					'valid' => false,
+					'error' => 'Triggered checkout ID does not match the order checkout ID.',
+				);
+			}
+
+			if ($stored_checkout_id !== $remote_checkout_id) {
+				return array(
+					'valid' => false,
+					'error' => 'Fetched checkout ID does not match the order checkout ID.',
+				);
+			}
+		} elseif ('' !== $checkout_id && $remote_checkout_id !== $checkout_id) {
+			return array(
+				'valid' => false,
+				'error' => 'Triggered checkout ID does not match the fetched checkout ID.',
+			);
+		}
+
+		$remote_merchant_code = isset($checkout_data['merchant_code']) ? sanitize_text_field($checkout_data['merchant_code']) : '';
+		if (!empty($this->merchant_id) && '' !== $remote_merchant_code && $this->merchant_id !== $remote_merchant_code) {
+			return array(
+				'valid' => false,
+				'error' => 'Fetched checkout merchant does not match the configured merchant.',
+			);
+		}
+
+		$remote_pay_to_email = isset($checkout_data['pay_to_email']) ? sanitize_email($checkout_data['pay_to_email']) : '';
+		if (!empty($this->pay_to_email) && '' !== $remote_pay_to_email && strtolower($this->pay_to_email) !== strtolower($remote_pay_to_email)) {
+			return array(
+				'valid' => false,
+				'error' => 'Fetched checkout pay-to email does not match the configured account.',
+			);
+		}
+
+		if (!$has_stored_checkout) {
+			$rebound_checkout = $this->enrich_checkout_data_for_order(
+				$order,
+				$checkout_data,
+				!empty($checkout_data['isCheckoutBlocks'])
+			);
+			$order->update_meta_data('_sumup_checkout_data', $rebound_checkout);
+			$order->save();
+			WC_SUMUP_LOGGER::log(
+				'Recovered missing SumUp checkout binding from remote checkout data.',
+				$this->get_checkout_log_context(
+					$rebound_checkout,
+					$this->get_order_log_context(
+						$order,
+						array(
+							'checkout_id' => $remote_checkout_id,
+							'flow' => 'webhook_rebind',
+						)
+					)
+				),
+				'warning'
+			);
+		}
+
+		return array(
+			'valid' => true,
+			'error' => '',
+		);
 	}
 
 	/**
@@ -664,6 +1169,7 @@ class WC_Gateway_SumUp extends \WC_Payment_Gateway
 	 */
 	private function process_paid_order($order, $transaction_code)
 	{
+		$this->clear_pending_payment_instructions($order);
 		$order->update_meta_data('_sumup_transaction_code', $transaction_code);
 
 		// Updates current status unless it's a Virtual AND Downloadable product.
@@ -685,6 +1191,7 @@ class WC_Gateway_SumUp extends \WC_Payment_Gateway
 	 */
 	private function process_failed_order($order)
 	{
+		$this->clear_pending_payment_instructions($order);
 		$order->update_status('failed');
 		$message = __('SumUp payment failed.', 'sumup-payment-gateway-for-woocommerce');
 		$order->add_order_note($message);
@@ -722,32 +1229,107 @@ class WC_Gateway_SumUp extends \WC_Payment_Gateway
 	// Logging methods
 	private function log_invalid_event_type($event_type, $checkout_id)
 	{
-		WC_SUMUP_LOGGER::log('Invalid event type on Webhook. Event: ' . $event_type . '. Merchant Id: ' . $this->merchant_id . '. Checkout ID: ' . $checkout_id);
+		WC_SUMUP_LOGGER::log(
+			'Invalid event type on webhook.',
+			$this->get_gateway_log_context(
+				array(
+					'flow' => 'webhook',
+					'event_type' => $event_type,
+					'checkout_id' => $checkout_id,
+				)
+			),
+			'warning'
+		);
 	}
 
 	private function log_webhook_processing($event_type, $checkout_id)
 	{
-		WC_SUMUP_LOGGER::log('Handling Webhook. Event: ' . $event_type . '. Merchant Id: ' . $this->merchant_id . '. Checkout ID: ' . $checkout_id);
+		WC_SUMUP_LOGGER::log(
+			'Handling webhook.',
+			$this->get_gateway_log_context(
+				array(
+					'flow' => 'webhook',
+					'event_type' => $event_type,
+					'checkout_id' => $checkout_id,
+				)
+			),
+			'info'
+		);
 	}
 
 	private function log_access_token_error($checkout_id)
 	{
-		WC_SUMUP_LOGGER::log('Error to try get access token on Webhook. Merchant Id: ' . $this->merchant_id . '. Checkout ID: ' . $checkout_id);
+		WC_SUMUP_LOGGER::log(
+			'Error while retrieving access token during webhook processing.',
+			$this->get_gateway_log_context(
+				array(
+					'flow' => 'webhook',
+					'checkout_id' => $checkout_id,
+				)
+			),
+			'error'
+		);
 	}
 
 	private function log_checkout_data_error($checkout_id)
 	{
-		WC_SUMUP_LOGGER::log('Error to try get checkout on Webhook. Merchant Id: ' . $this->merchant_id . '. Checkout ID: ' . $checkout_id);
+		WC_SUMUP_LOGGER::log(
+			'Error while retrieving checkout data during webhook processing.',
+			$this->get_gateway_log_context(
+				array(
+					'flow' => 'webhook',
+					'checkout_id' => $checkout_id,
+				)
+			),
+			'error'
+		);
 	}
 
 	private function log_order_not_found($checkout_id)
 	{
-		WC_SUMUP_LOGGER::log('Order not found on Webhook request from SumUp. Merchant Id: ' . $this->merchant_id . '. Checkout ID: ' . $checkout_id);
+		WC_SUMUP_LOGGER::log(
+			'Order not found during webhook processing.',
+			$this->get_gateway_log_context(
+				array(
+					'flow' => 'webhook',
+					'checkout_id' => $checkout_id,
+				)
+			),
+			'error'
+		);
 	}
 
 	private function log_missing_transaction_code($checkout_id)
 	{
-		WC_SUMUP_LOGGER::log('Missing transaction code on Webhook request from SumUp. Merchant Id: ' . $this->merchant_id . '. Checkout ID: ' . $checkout_id);
+		WC_SUMUP_LOGGER::log(
+			'Missing transaction code during webhook processing.',
+			$this->get_gateway_log_context(
+				array(
+					'flow' => 'webhook',
+					'checkout_id' => $checkout_id,
+				)
+			),
+			'warning'
+		);
+	}
+
+	private function log_checkout_validation_error($order_id, $checkout_id, $error)
+	{
+		$order = wc_get_order($order_id);
+		$context = array(
+			'flow' => 'checkout_validation',
+			'checkout_id' => $checkout_id,
+			'error' => $error,
+		);
+
+		if ($order instanceof WC_Order) {
+			$context = $this->get_order_log_context($order, $context);
+		} else {
+			$context['order_id'] = $order_id;
+			$context = $this->get_gateway_log_context($context);
+		}
+
+		WC_SUMUP_LOGGER::log('Checkout validation failed.', $context, 'warning');
 	}
 
 	/**
@@ -870,24 +1452,70 @@ class WC_Gateway_SumUp extends \WC_Payment_Gateway
 	// Performance and retry logging methods
 	private function log_webhook_attempt($attempt, $max_attempts, $checkout_id, $start_time)
 	{
-		WC_SUMUP_LOGGER::log("Processing webhook (attempt {$attempt}/{$max_attempts}). Checkout ID: {$checkout_id} - Initial time: " . $start_time);
+		WC_SUMUP_LOGGER::log(
+			'Processing webhook attempt.',
+			$this->get_gateway_log_context(
+				array(
+					'flow' => 'webhook_retry',
+					'attempt' => $attempt,
+					'max_attempts' => $max_attempts,
+					'checkout_id' => $checkout_id,
+					'started_at' => $start_time,
+				)
+			),
+			'info'
+		);
 	}
 
 	private function log_webhook_success($checkout_id, $attempt, $start_time)
 	{
 		$execution_time = $this->calculate_execution_time($start_time);
 		$end_time = date('Y-m-d H:i:s');
-		WC_SUMUP_LOGGER::log("Webhook processed with success on attempt {$attempt}. Checkout ID: {$checkout_id} - End time: " . $end_time . " Total time: " . $execution_time . " seconds");
+		WC_SUMUP_LOGGER::log(
+			'Webhook processed successfully.',
+			$this->get_gateway_log_context(
+				array(
+					'flow' => 'webhook_retry',
+					'attempt' => $attempt,
+					'checkout_id' => $checkout_id,
+					'finished_at' => $end_time,
+					'execution_time_seconds' => $execution_time,
+				)
+			),
+			'info'
+		);
 	}
 
 	private function log_webhook_final_failure($checkout_id, $attempt, $error)
 	{
-		WC_SUMUP_LOGGER::log("Webhook failed after {$attempt} attempts. Checkout ID: {$checkout_id}. Error: " . $error);
+		WC_SUMUP_LOGGER::log(
+			'Webhook failed after all retry attempts.',
+			$this->get_gateway_log_context(
+				array(
+					'flow' => 'webhook_retry',
+					'attempt' => $attempt,
+					'checkout_id' => $checkout_id,
+					'error' => $error,
+				)
+			),
+			'error'
+		);
 	}
 
 	private function log_webhook_exception($attempt, $checkout_id, $error)
 	{
-		WC_SUMUP_LOGGER::log("Exception during webhook processing (attempt {$attempt}). Checkout ID: {$checkout_id}. Error: " . $error);
+		WC_SUMUP_LOGGER::log(
+			'Exception during webhook processing.',
+			$this->get_gateway_log_context(
+				array(
+					'flow' => 'webhook_retry',
+					'attempt' => $attempt,
+					'checkout_id' => $checkout_id,
+					'error' => $error,
+				)
+			),
+			'error'
+		);
 	}
 
 	/**
@@ -911,7 +1539,14 @@ class WC_Gateway_SumUp extends \WC_Payment_Gateway
 		$checkout_id = sanitize_text_field($data['id']);
 
 		// Get access token
-		$access_token = $this->get_access_token();
+		$log_context = $this->get_gateway_log_context(
+			array(
+				'flow' => 'webhook_retry',
+				'checkout_id' => $checkout_id,
+			)
+		);
+
+		$access_token = $this->get_access_token($log_context);
 		if (empty($access_token)) {
 			return [
 				'success' => false,
@@ -921,7 +1556,7 @@ class WC_Gateway_SumUp extends \WC_Payment_Gateway
 		}
 
 		// Fetch checkout data
-		$checkout_data = $this->fetch_checkout_data($checkout_id, $access_token);
+		$checkout_data = $this->fetch_checkout_data($checkout_id, $access_token, $log_context);
 		if (empty($checkout_data)) {
 			return [
 				'success' => false,
@@ -985,10 +1620,20 @@ class WC_Gateway_SumUp extends \WC_Payment_Gateway
 			];
 		}
 
+		$validation_result = $this->validate_checkout_for_order($order, $checkout_data, $checkout_id);
+		if (!$validation_result['valid']) {
+			$this->log_checkout_validation_error($order->get_id(), $checkout_id, $validation_result['error']);
+			return [
+				'success' => false,
+				'critical_error' => true,
+				'error' => $validation_result['error'],
+			];
+		}
+
 		$payment_status = $checkout_data['status'] ?? '';
 
 		// Validate transaction code
-		$transaction_code = $checkout_data['transaction_code'] ?? '';
+		$transaction_code = $this->extract_transaction_code($checkout_data);
 		if ($payment_status === 'PAID' && empty($transaction_code)) {
 			return [
 				'success' => false,
@@ -1080,7 +1725,18 @@ class WC_Gateway_SumUp extends \WC_Payment_Gateway
 	private function log_webhook_retry_scheduled($delay_seconds, $attempt, $checkout_id)
 	{
 		$delay_minutes = $delay_seconds / 60;
-		WC_SUMUP_LOGGER::log("Scheduling webhook retry in {$delay_minutes} minutes. Attempt {$attempt}. Checkout ID: {$checkout_id}");
+		WC_SUMUP_LOGGER::log(
+			'Scheduling webhook retry.',
+			$this->get_gateway_log_context(
+				array(
+					'flow' => 'webhook_retry',
+					'attempt' => $attempt,
+					'checkout_id' => $checkout_id,
+					'retry_delay_minutes' => $delay_minutes,
+				)
+			),
+			'warning'
+		);
 	}
 
 	/**
@@ -1094,8 +1750,17 @@ class WC_Gateway_SumUp extends \WC_Payment_Gateway
 	{
 		$checkout_id = $data['id'] ?? '';
 
-		// Log crítico
-		WC_SUMUP_LOGGER::log("CRITICAL FAILURE: Webhook failed after all attempts. Checkout ID: {$checkout_id}. Error: {$error}");
+		WC_SUMUP_LOGGER::log(
+			'Critical webhook failure after all retry attempts.',
+			$this->get_gateway_log_context(
+				array(
+					'flow' => 'webhook_retry',
+					'checkout_id' => $checkout_id,
+					'error' => $error,
+				)
+			),
+			'critical'
+		);
 	}
 
 	/**
@@ -1118,27 +1783,46 @@ class WC_Gateway_SumUp extends \WC_Payment_Gateway
 
 		$order = wc_get_order($order_id);
 		if ($order === false) {
-			WC_SUMUP_LOGGER::log('Order not found on validation after payment redirect. Merchant Id: ' . $this->merchant_id . '. Order ID: ' . $order_id);
+			WC_SUMUP_LOGGER::log(
+				'Order not found during payment redirect validation.',
+				$this->get_gateway_log_context(
+					array(
+						'flow' => 'redirect_validation',
+						'order_id' => $order_id,
+					)
+				),
+				'error'
+			);
 			return;
 		}
+
+		$log_context = $this->get_order_log_context($order, array('flow' => 'redirect_validation'));
 
 		$checkout_data = $order->get_meta('_sumup_checkout_data');
-		if (!isset($checkout_data['id'])) {
-			WC_SUMUP_LOGGER::log('Missed $checkout_data on validation after payment redirect. Merchant Id: ' . $this->merchant_id . '. Order ID: ' . $order_id);
+		if (!is_array($checkout_data) || empty($checkout_data['id'])) {
+			WC_SUMUP_LOGGER::log('Stored checkout data is missing during payment redirect validation.', $log_context, 'warning');
 			return;
 		}
+		$checkout_id = sanitize_text_field((string) $checkout_data['id']);
 
-		$access_token = Wc_Sumup_Access_Token::get($this->client_id, $this->client_secret, $this->api_key);
+		$access_token = Wc_Sumup_Access_Token::get($this->client_id, $this->client_secret, $this->api_key, false, array_merge($log_context, array('checkout_id' => $checkout_id)));
 		$access_token = $access_token['access_token'] ?? '';
 		if (empty($access_token)) {
-			WC_SUMUP_LOGGER::log('Error to try get access token on validation after payment redirect. Merchant Id: ' . $this->merchant_id . '. Order ID: ' . $order_id);
+			WC_SUMUP_LOGGER::log('Error while retrieving access token during payment redirect validation.', array_merge($log_context, array('checkout_id' => $checkout_id)), 'error');
 			return;
 		}
 
-		$sumup_checkout = Wc_Sumup_Checkout::get($checkout_data['id'], $access_token);
+		$sumup_checkout = Wc_Sumup_Checkout::get($checkout_id, $access_token, array_merge($log_context, array('checkout_id' => $checkout_id)));
 		if (empty($sumup_checkout)) {
-			WC_SUMUP_LOGGER::log('Error to try get checkout on validation after payment redirect. Merchant Id: ' . $this->merchant_id . '. Order ID: ' . $order_id);
+			WC_SUMUP_LOGGER::log('Error while retrieving checkout during payment redirect validation.', array_merge($log_context, array('checkout_id' => $checkout_id)), 'error');
 			return;
+		}
+
+		$validation_result = $this->validate_checkout_for_order($order, $sumup_checkout, $checkout_id);
+		if (!$validation_result['valid']) {
+			$this->log_checkout_validation_error($order_id, $checkout_id, $validation_result['error']);
+			wp_safe_redirect($this->get_return_url($order));
+			exit;
 		}
 
 		$payment_status = $sumup_checkout['status'] ?? '';
@@ -1155,26 +1839,17 @@ class WC_Gateway_SumUp extends \WC_Payment_Gateway
 		}
 
 		//Verify if the transaction is correct before check status PAID
-		$transaction_code = $sumup_checkout['transaction_code'] ?? '';
+		$transaction_code = $this->extract_transaction_code($sumup_checkout);
 
-		// Try to find transaction code in transactions array if not at root
-		if (empty($transaction_code) && !empty($sumup_checkout['transactions']) && is_array($sumup_checkout['transactions'])) {
-			foreach ($sumup_checkout['transactions'] as $transaction) {
-				if (!empty($transaction['transaction_code'])) {
-					$transaction_code = $transaction['transaction_code'];
-					break;
-				}
-			}
-		}
-
-		if (empty($transaction_code)) {
-			WC_SUMUP_LOGGER::log('Missing transaction code on redirect payment flow from SumUp. Checkout data: ' . $checkout_data . '. Merchant Id: ' . $this->merchant_id . '. Checkout ID: ' . $checkout_data['id']);
-			wp_redirect($this->get_return_url($order));
-			exit;
+		if ($payment_status === 'PAID' && empty($transaction_code)) {
+			WC_SUMUP_LOGGER::log('Missing transaction code during payment redirect validation.', array_merge($log_context, array('checkout_id' => $checkout_id)), 'warning');
+			add_action('woocommerce_before_checkout_form', array($this, 'redirect_validation_pending_message'));
+			return;
 		}
 
 		if ($payment_status === 'PAID') {
-			wp_redirect($this->get_return_url($order));
+			$this->update_order_status($order, $sumup_checkout, $transaction_code);
+			wp_safe_redirect($this->get_return_url($order));
 			exit;
 		}
 	}
@@ -1245,11 +1920,35 @@ class WC_Gateway_SumUp extends \WC_Payment_Gateway
 	public function process_payment($order_id)
 	{
 		$order = wc_get_order($order_id);
-		$sumup_checkout = $order->get_meta('_sumup_checkout_data');
+		if (!$order instanceof WC_Order) {
+			return [
+				'result' => 'failure',
+				'redirect' => false,
+				'openModal' => false,
+				'messages' => __('Order ID is not available to make the payment. Try again soon or contact the website support.', 'sumup-payment-gateway-for-woocommerce'),
+			];
+		}
 
-		$access_token = Wc_Sumup_Access_Token::get($this->client_id, $this->client_secret, $this->api_key);
+		$log_context = $this->get_order_log_context($order, array('flow' => 'process_payment'));
+
+		$sumup_checkout = $order->get_meta('_sumup_checkout_data');
+		$previous_sumup_checkout = is_array($sumup_checkout) ? $sumup_checkout : array();
+		if ($this->should_refresh_checkout_for_order($order, $sumup_checkout)) {
+			if (!empty($sumup_checkout['id'])) {
+				WC_SUMUP_LOGGER::log('Refreshing stored SumUp checkout because the order context changed.', $this->get_checkout_log_context($sumup_checkout, $log_context), 'info');
+			}
+			$sumup_checkout = array();
+		} else {
+			$sumup_checkout = $this->enrich_checkout_data_for_order(
+				$order,
+				$sumup_checkout,
+				!empty($sumup_checkout['isCheckoutBlocks'])
+			);
+		}
+
+		$access_token = Wc_Sumup_Access_Token::get($this->client_id, $this->client_secret, $this->api_key, false, $log_context);
 		if (!isset($access_token['access_token'])) {
-			WC_SUMUP_LOGGER::log('Error on request (cURL) to get access token. Merchant Id: ' . $this->merchant_id);
+			WC_SUMUP_LOGGER::log('Error on request to get access token.', $log_context, 'error');
 			$message = current_user_can('manage_options') ? 'Error to generate SumUp access token.' : 'Sorry, SumUp is not available. Try again soon.';
 
 			if (!sumup_gateway_is_configured($this->settings)) {
@@ -1273,30 +1972,54 @@ class WC_Gateway_SumUp extends \WC_Payment_Gateway
 		update_option('woocommerce_sumup_settings', $sumup_settings);
 
 		if (empty($sumup_checkout) || !isset($sumup_checkout['id'])) {
-			$checkout_data = [
-				'checkout_reference' => 'WC_SUMUP_' . $order_id,
-				'amount' => $order->get_total(),
-				'currency' => get_woocommerce_currency(),
-				'description' => 'WooCommerce #' . $order_id,
-				'redirect_url' => add_query_arg('sumup-validate-order', $order_id, wc_get_checkout_url()),
-				'return_url' => WC()->api_request_url('wc_gateway_sumup'),
-			];
-
-			if (!empty($this->merchant_id)) {
-				$checkout_data['merchant_code'] = $this->merchant_id;
-			} elseif (!empty($this->pay_to_email)) {
-				$checkout_data['pay_to_email'] = $this->pay_to_email;
-			}
-
-			$sumup_checkout = Wc_Sumup_Checkout::create($sumup_settings['sumup_access_token'], $checkout_data);
+			$checkout_data = $this->build_checkout_request_data($order);
+			$sumup_checkout = Wc_Sumup_Checkout::create($sumup_settings['sumup_access_token'], $checkout_data, $log_context);
 			if (empty($sumup_checkout) || !isset($sumup_checkout['id'])) {
 				$error_message = isset($sumup_checkout['error_code']) ?
 					"{$sumup_checkout['error_code']} : {$sumup_checkout['message']}" :
 					'Error on request (cURL) to create SumUp checkout ID during request to SumUp.';
 
-				WC_SUMUP_LOGGER::log($error_message);
+				WC_SUMUP_LOGGER::log(
+					'SumUp checkout creation failed during payment processing.',
+					array_merge(
+						$this->get_checkout_log_context($sumup_checkout, $log_context),
+						array(
+							'error' => $error_message,
+							'error_code' => $sumup_checkout['error_code'] ?? '',
+						)
+					),
+					'warning'
+				);
+
+				if (
+					isset($sumup_checkout['error_code']) &&
+					$sumup_checkout['error_code'] === 'DUPLICATED_CHECKOUT' &&
+					!empty($previous_sumup_checkout['id'])
+				) {
+					$sumup_checkout = $this->enrich_checkout_data_for_order(
+						$order,
+						$previous_sumup_checkout,
+						!empty($previous_sumup_checkout['isCheckoutBlocks'])
+					);
+					$order->update_meta_data('_sumup_checkout_data', $sumup_checkout);
+					$order->save();
+					WC_SUMUP_LOGGER::log('Reusing previously stored SumUp checkout after duplicate checkout response.', $this->get_checkout_log_context($sumup_checkout, $log_context), 'notice');
+				}
 
 				$message = current_user_can('manage_options') ? 'Error to generate SumUp checkout ID.' : 'Sorry, SumUp is not available. Try again soon.';
+				if (!empty($sumup_checkout) && isset($sumup_checkout['id'])) {
+					return [
+						'result' => 'success',
+						'redirect' => $this->get_return_url($order),
+						'openModal' => true,
+						'checkoutId' => $sumup_checkout['id'],
+						'orderId' => $order->get_id(),
+						'orderKey' => $order->get_order_key(),
+						'redirectUrl' => $this->get_return_url($order),
+						'country' => $order->get_billing_country(),
+					];
+				}
+
 				if (!empty($sumup_checkout) && isset($sumup_checkout['isCheckoutBlocks']) && $sumup_checkout['isCheckoutBlocks']) {
 					throw new Exception($message);
 				} else {
@@ -1309,6 +2032,11 @@ class WC_Gateway_SumUp extends \WC_Payment_Gateway
 				}
 			}
 
+			$sumup_checkout = $this->enrich_checkout_data_for_order(
+				$order,
+				$sumup_checkout,
+				!empty($sumup_checkout['isCheckoutBlocks'])
+			);
 			$order->add_order_note('SumUp checkout ID: ' . $sumup_checkout['id']);
 			$order->update_meta_data('_sumup_checkout_data', $sumup_checkout);
 			$order->save();
@@ -1323,14 +2051,12 @@ class WC_Gateway_SumUp extends \WC_Payment_Gateway
 		}
 
 		if (isset($sumup_checkout['id'])) {
-			return [
+			return array_merge($this->get_widget_context_for_order($order), [
 				'result' => 'success',
 				'redirect' => $this->get_return_url($order),
 				'openModal' => true,
 				'checkoutId' => $sumup_checkout['id'],
-				'redirectUrl' => $this->get_return_url($order),
-				'country' => $order->get_billing_country(),
-			];
+			]);
 		}
 
 		$message = 'Error to get checkout ID. Check plugin logs.';
@@ -1478,7 +2204,11 @@ class WC_Gateway_SumUp extends \WC_Payment_Gateway
 		 * Required fileds to request somethings to SumUp - Refator to meke the first verification more complete.
 		 */
 		if (empty($this->pay_to_email) && empty($this->merchant_id)) {
-			WC_SUMUP_LOGGER::log('Please fill "Login Email" and "Merchant ID" on the plugin settings. Merchant Id: ' . $this->merchant_id);
+			WC_SUMUP_LOGGER::log(
+				'Gateway configuration is incomplete: missing Login Email and Merchant ID.',
+				$this->get_gateway_log_context(array('flow' => 'order_pay')),
+				'error'
+			);
 			$message = current_user_can('manage_options') ? 'Please fill "Login Email" and "Merchant ID" on the plugin settings.' : 'Sorry, SumUp is not available. Try again soon.';
 			echo $this->print_error_message($message);
 			return;
@@ -1502,9 +2232,18 @@ class WC_Gateway_SumUp extends \WC_Payment_Gateway
 			return;
 		}
 
-		$access_token = Wc_Sumup_Access_Token::get($this->client_id, $this->client_secret, $this->api_key);
+		$order_id = absint(get_query_var('order-pay'));
+		$order = wc_get_order($order_id);
+		if ($order === false) {
+			echo '<p>' . __('Order ID is not available to make the payment. Try again soon or contact the website support.', 'sumup-payment-gateway-for-woocommerce') . '</p>';
+			return;
+		}
+
+		$log_context = $this->get_order_log_context($order, array('flow' => 'order_pay'));
+
+		$access_token = Wc_Sumup_Access_Token::get($this->client_id, $this->client_secret, $this->api_key, false, $log_context);
 		if (!isset($access_token['access_token'])) {
-			WC_SUMUP_LOGGER::log('Error on request (cURL) to get access token. Merchant Id: ' . $this->merchant_id);
+			WC_SUMUP_LOGGER::log('Error on request to get access token.', $log_context, 'error');
 			$message = current_user_can('manage_options') ? 'Error to generate SumUp access token.' : 'Sorry, SumUp is not available. Try again soon.';
 			echo $this->print_error_message($message);
 			return;
@@ -1514,39 +2253,68 @@ class WC_Gateway_SumUp extends \WC_Payment_Gateway
 		$sumup_settings['sumup_token_fetched_date'] = date('Y/m/d H:i:s');
 		update_option('woocommerce_sumup_settings', $sumup_settings);
 
-		$order_id = sanitize_text_field(get_query_var('order-pay'));
-		$order = wc_get_order($order_id);
-		if ($order === false) {
-			echo '<p>' . __('Order ID is not available to make the payment. Try again soon or contact the website support.', 'sumup-payment-gateway-for-woocommerce') . '</p>';
+		$order_key = isset($_GET['key']) ? wc_clean(wp_unslash($_GET['key'])) : '';
+		$order_access = $this->validate_order_access_for_checkout($order, $order_key);
+		if (!$order_access['valid']) {
+			WC_SUMUP_LOGGER::log('Rejected order-pay rendering because order validation failed.', $this->get_order_log_context($order, array('flow' => 'order_pay')), 'warning');
+			echo $this->print_error_message($order_access['error']);
 			return;
 		}
 
 		$sumup_checkout = $order->get_meta('_sumup_checkout_data');
-		if (empty($sumup_checkout)) {
-			$checkout_data = array(
-				'checkout_reference' => 'WC_SUMUP_' . $order_id,
-				'amount' => $total,
-				'currency' => get_woocommerce_currency(),
-				'description' => 'WooCommerce #' . $order_id,
-				'redirect_url' => add_query_arg('sumup-validate-order', $order_id, wc_get_checkout_url()),
-				'return_url' => WC()->api_request_url('wc_gateway_sumup'),
+		$previous_sumup_checkout = is_array($sumup_checkout) ? $sumup_checkout : array();
+		if ($this->should_refresh_checkout_for_order($order, $sumup_checkout)) {
+			if (!empty($sumup_checkout['id'])) {
+				WC_SUMUP_LOGGER::log('Refreshing stored SumUp checkout before rendering payment fields because the order context changed.', $this->get_checkout_log_context($sumup_checkout, $log_context), 'info');
+			}
+			$this->clear_checkout_for_order($order);
+			$sumup_checkout = array();
+		} else {
+			$sumup_checkout = $this->enrich_checkout_data_for_order(
+				$order,
+				$sumup_checkout,
+				!empty($sumup_checkout['isCheckoutBlocks'])
 			);
+		}
 
-			if (!empty($this->merchant_id)) {
-				$checkout_data['merchant_code'] = $this->merchant_id;
-			}
+		if (empty($sumup_checkout)) {
+			$checkout_data = $this->build_checkout_request_data($order);
+			$sumup_checkout = Wc_Sumup_Checkout::create($sumup_settings['sumup_access_token'], $checkout_data, $log_context);
+			if (empty($sumup_checkout) || !isset($sumup_checkout['id'])) {
+				$error_message = isset($sumup_checkout['error_code']) ?
+					"{$sumup_checkout['error_code']} : {$sumup_checkout['message']}" :
+					'Error on request (cURL) to create SumUp checkout ID. Merchant Id: ' . $this->merchant_id;
 
-			if (!empty($this->pay_to_email) && empty($this->merchant_id)) {
-				$checkout_data['pay_to_email'] = $this->pay_to_email;
-			}
+				WC_SUMUP_LOGGER::log(
+					'SumUp checkout creation failed during order-pay rendering.',
+					array_merge(
+						$this->get_checkout_log_context($sumup_checkout, $log_context),
+						array(
+							'error' => $error_message,
+							'error_code' => $sumup_checkout['error_code'] ?? '',
+						)
+					),
+					'warning'
+				);
 
-			$sumup_checkout = Wc_Sumup_Checkout::create($sumup_settings['sumup_access_token'], $checkout_data);
-			if (empty($sumup_checkout)) {
-				WC_SUMUP_LOGGER::log('Error on request (cURL) to create SumUp checkout ID. Merchant Id: ' . $this->merchant_id);
-				$message = current_user_can('manage_options') ? 'Error to generate SumUp checkout id.' : 'Sorry, SumUp is not available. Try again soon.';
-				echo $this->print_error_message($message);
-				return;
+				if (
+					isset($sumup_checkout['error_code']) &&
+					$sumup_checkout['error_code'] === 'DUPLICATED_CHECKOUT' &&
+					!empty($previous_sumup_checkout['id'])
+				) {
+					$sumup_checkout = $this->enrich_checkout_data_for_order($order, $previous_sumup_checkout);
+					$order->update_meta_data('_sumup_checkout_data', $sumup_checkout);
+					$order->save();
+					WC_SUMUP_LOGGER::log('Reusing previously stored SumUp checkout on order-pay after duplicate checkout response.', $this->get_checkout_log_context($sumup_checkout, $log_context), 'notice');
+				}
+
+				if (!isset($sumup_checkout['id'])) {
+					$message = current_user_can('manage_options') ? 'Error to generate SumUp checkout id.' : 'Sorry, SumUp is not available. Try again soon.';
+					echo $this->print_error_message($message);
+					return;
+				}
 			}
+			$sumup_checkout = $this->enrich_checkout_data_for_order($order, $sumup_checkout);
 			$order->update_meta_data('_sumup_checkout_data', $sumup_checkout);
 			$order->save();
 		}
@@ -1560,6 +2328,7 @@ class WC_Gateway_SumUp extends \WC_Payment_Gateway
 
 		if (isset($sumup_checkout['id'])) {
 			$extra_class = $this->open_payment_in_modal === 'yes' ? '' : 'no-modal';
+			$widget_context = $this->get_widget_context_for_order($order);
 
 		?>
 			<style>
@@ -1666,15 +2435,57 @@ class WC_Gateway_SumUp extends \WC_Payment_Gateway
 			</div>
 
 			<script type="text/javascript">
+				let orderPayWidgetOptions = {
+					checkoutId: '<?php echo esc_js($sumup_checkout['id']); ?>',
+					amount: '<?php echo esc_js($widget_context['amount']); ?>',
+					currency: '<?php echo esc_js($widget_context['currency']); ?>',
+					country: '<?php echo esc_js($widget_context['country']); ?>',
+					firstName: '<?php echo esc_js($widget_context['firstName']); ?>',
+					lastName: '<?php echo esc_js($widget_context['lastName']); ?>',
+					email: '<?php echo esc_js($widget_context['email']); ?>',
+					phoneNumber: '<?php echo esc_js($widget_context['phoneNumber']); ?>',
+					city: '<?php echo esc_js($widget_context['city']); ?>',
+					street: '<?php echo esc_js($widget_context['street']); ?>',
+					streetNumber: '<?php echo esc_js($widget_context['streetNumber']); ?>',
+					postalCode: '<?php echo esc_js($widget_context['postalCode']); ?>',
+					stateName: '<?php echo esc_js($widget_context['stateName']); ?>',
+					orderId: '<?php echo esc_js($widget_context['orderId']); ?>',
+					orderKey: '<?php echo esc_js($widget_context['orderKey']); ?>',
+					redirectUrl: '<?php echo esc_js($widget_context['redirectUrl']) ?>'
+				};
+
 				if (typeof sumup_gateway_params !== 'undefined') {
-					sumup_gateway_params.amount = '<?php echo esc_js($total); ?>';
-					sumup_gateway_params.checkoutId = '<?php echo esc_js($sumup_checkout['id']); ?>';
-					sumup_gateway_params.redirectUrl = '<?php echo esc_js($this->get_return_url($order)) ?>';
-					sumup_gateway_params.country = '';
+					sumup_gateway_params.amount = orderPayWidgetOptions.amount;
+					sumup_gateway_params.currency = orderPayWidgetOptions.currency;
+					sumup_gateway_params.checkoutId = orderPayWidgetOptions.checkoutId;
+					sumup_gateway_params.orderId = orderPayWidgetOptions.orderId;
+					sumup_gateway_params.orderKey = orderPayWidgetOptions.orderKey;
+					sumup_gateway_params.redirectUrl = orderPayWidgetOptions.redirectUrl;
+
+					const orderPayFieldKeys = [
+						'country',
+						'firstName',
+						'lastName',
+						'email',
+						'phoneNumber',
+						'city',
+						'street',
+						'streetNumber',
+						'postalCode',
+						'stateName'
+					];
+
+					orderPayFieldKeys.forEach((key) => {
+						if (orderPayWidgetOptions[key]) {
+							sumup_gateway_params[key] = orderPayWidgetOptions[key];
+						} else {
+							delete sumup_gateway_params[key];
+						}
+					});
 				}
 
 				jQuery(function($) {
-					$(document.body).trigger('sumupCardInit');
+					$(document.body).trigger('sumupCardInit', [orderPayWidgetOptions]);
 				});
 			</script>
 		<?php
@@ -1682,7 +2493,17 @@ class WC_Gateway_SumUp extends \WC_Payment_Gateway
 
 		if (isset($sumup_checkout['error_code'])) {
 			$error = isset($sumup_checkout['error_message']) ? $sumup_checkout['error_message'] : $sumup_checkout['message'];
-			WC_SUMUP_LOGGER::log('SumUp create checkout request: ' . $error . '. Merchant Id: ' . $this->merchant_id);
+			WC_SUMUP_LOGGER::log(
+				'SumUp create checkout request failed.',
+				array_merge(
+					$this->get_checkout_log_context($sumup_checkout, $log_context),
+					array(
+						'error' => $error,
+						'error_code' => $sumup_checkout['error_code'],
+					)
+				),
+				'warning'
+			);
 			$message = current_user_can('manage_options') ? 'Error from response to create checkout on SumUp. Check the logs.' : 'Sorry, SumUp is not available. Try again soon.';
 			echo $this->print_error_message($message);
 		}
@@ -1834,6 +2655,7 @@ class WC_Gateway_SumUp extends \WC_Payment_Gateway
 		 */
 		$error_general = __('Transaction was unsuccessful. Please check the minimum amount or use another valid card.', 'sumup-payment-gateway-for-woocommerce');
 		$error_invalid_form = __('Fill in all required details.', 'sumup-payment-gateway-for-woocommerce');
+		$error_instructions = __('Unable to save payment instructions. Please try again.', 'sumup-payment-gateway-for-woocommerce');
 
 		$installments = "false";
 		$number_of_installments = null;
@@ -1850,12 +2672,32 @@ class WC_Gateway_SumUp extends \WC_Payment_Gateway
 			'showInstallments' => "$installments",
 			'maxInstallments' => $number_of_installments,
 			'checkoutNonce' => wp_create_nonce('sumup-create-checkout'),
+			'paymentInstructionsNonce' => wp_create_nonce('sumup-store-payment-instructions'),
+			'sumup_handler_url' => add_query_arg(
+				array(
+					'wc-api' => 'sumup_api_handler',
+					'action' => 'create_checkout'
+				),
+				home_url() . '/'
+			),
 			'locale' => "$card_locale",
 			'country' => '',
+			'firstName' => '',
+			'lastName' => '',
+			'email' => '',
+			'phoneNumber' => '',
+			'city' => '',
+			'street' => '',
+			'streetNumber' => '',
+			'postalCode' => '',
+			'stateName' => '',
+			'orderId' => 0,
+			'orderKey' => '',
 			'status' => '',
 			'errors' => array(
 				'general_error' => "$error_general",
-				'invalid_form' => "$error_invalid_form"
+				'invalid_form' => "$error_invalid_form",
+				'instructions_error' => "$error_instructions",
 			),
 			'enablePix' => "$enable_pix",
 			'paymentMethod' => '',
@@ -1903,51 +2745,65 @@ class WC_Gateway_SumUp extends \WC_Payment_Gateway
 	{
 		$order = wc_get_order($order_id);
 		if ($order === false) {
-			WC_SUMUP_LOGGER::log('Order not found on Thank You page request from SumUp. Merchant Id: ' . $this->merchant_id . '. Order ID: ' . $order_id);
+			WC_SUMUP_LOGGER::log(
+				'Order not found on Thank You page request.',
+				$this->get_gateway_log_context(
+					array(
+						'flow' => 'thank_you',
+						'order_id' => $order_id,
+					)
+				),
+				'error'
+			);
 			return;
 		}
+
+		$log_context = $this->get_order_log_context($order, array('flow' => 'thank_you'));
 
 		$checkout_data = $order->get_meta('_sumup_checkout_data');
-		if (!isset($checkout_data['id'])) {
-			WC_SUMUP_LOGGER::log('Missed $checkout_data on Thank You. Merchant Id: ' . $this->merchant_id . '. Order ID: ' . $order_id . ' $checkout_data: ' . $checkout_data);
+		if (!is_array($checkout_data) || empty($checkout_data['id'])) {
+			WC_SUMUP_LOGGER::log(
+				'Stored checkout data is missing on Thank You page request.',
+				$log_context,
+				'warning'
+			);
 			return;
 		}
 
-		$checkout_id = $checkout_data['id'];
+		$checkout_id = sanitize_text_field((string) $checkout_data['id']);
 
-		$access_token = Wc_Sumup_Access_Token::get($this->client_id, $this->client_secret, $this->api_key);
+		$access_token = Wc_Sumup_Access_Token::get($this->client_id, $this->client_secret, $this->api_key, false, array_merge($log_context, array('checkout_id' => $checkout_id)));
 		$access_token = $access_token['access_token'] ?? '';
 		if (empty($access_token)) {
-			WC_SUMUP_LOGGER::log('Error to try get access token on Thank You page. Merchant Id: ' . $this->merchant_id . '. Order ID: ' . $order_id);
+			WC_SUMUP_LOGGER::log('Error while retrieving access token on Thank You page.', array_merge($log_context, array('checkout_id' => $checkout_id)), 'error');
 			return;
 		}
 
-		$checkout_data = Wc_Sumup_Checkout::get($checkout_id, $access_token);
+		$checkout_data = Wc_Sumup_Checkout::get($checkout_id, $access_token, array_merge($log_context, array('checkout_id' => $checkout_id)));
 		if (empty($checkout_data)) {
-			WC_SUMUP_LOGGER::log('Error to try get checkout on Thank You page. Merchant Id: ' . $this->merchant_id . '. Order ID: ' . $order_id);
+			WC_SUMUP_LOGGER::log('Error while retrieving checkout on Thank You page.', array_merge($log_context, array('checkout_id' => $checkout_id)), 'error');
+			return;
+		}
+
+		$validation_result = $this->validate_checkout_for_order($order, $checkout_data, $checkout_id);
+		if (!$validation_result['valid']) {
+			$this->log_checkout_validation_error($order_id, $checkout_id, $validation_result['error']);
 			return;
 		}
 
 		$payment_status = $checkout_data['status'] ?? '';
 		if ($payment_status === 'FAILED') {
+			$this->clear_pending_payment_instructions($order);
 			$order->update_status('failed');
 		} elseif ($payment_status === 'PAID' && !$order->is_paid()) {
-			//Verify if the transaction is correct before check status PAID
-			$transaction_code = $checkout_data['transaction_code'] ?? '';
-
-			// Try to find transaction code in transactions array if not at root
-			if (empty($transaction_code) && !empty($checkout_data['transactions']) && is_array($checkout_data['transactions'])) {
-				foreach ($checkout_data['transactions'] as $transaction) {
-					if (!empty($transaction['transaction_code'])) {
-						$transaction_code = $transaction['transaction_code'];
-						break;
-					}
-				}
-			}
+			$transaction_code = $this->extract_transaction_code($checkout_data);
 
 			if (!empty($transaction_code)) {
-				$order->payment_complete($checkout_id);
+				$this->clear_pending_payment_instructions($order);
+				$order->update_meta_data('_sumup_transaction_code', $transaction_code);
+				$order->payment_complete($transaction_code);
 				$order->add_order_note('SumUp payment validated via Thank You page. Transaction Code: ' . $transaction_code);
+				$order->save();
 			}
 		}
 		?>
@@ -1965,69 +2821,68 @@ class WC_Gateway_SumUp extends \WC_Payment_Gateway
 		</div>
 		<?php
 
-		$pix_code = sanitize_text_field($_GET['pix-code'] ?? '');
-		$pix_image = sanitize_text_field($_GET['pix-image'] ?? '');
+		$pix_code = isset($_GET['pix-code']) ? sanitize_text_field(wp_unslash($_GET['pix-code'])) : '';
+		$pix_image = isset($_GET['pix-image']) ? esc_url_raw(wp_unslash($_GET['pix-image'])) : '';
 
+		$pending_instructions = $this->get_pending_payment_instructions($order);
+		$pending_payment_method = isset($pending_instructions['payment_method']) ? sanitize_text_field($pending_instructions['payment_method']) : '';
+		$pending_pix_code = isset($pending_instructions['pix_code']) ? sanitize_textarea_field($pending_instructions['pix_code']) : '';
+		$pending_qr_code_image = isset($pending_instructions['qr_code_image']) ? esc_url_raw($pending_instructions['qr_code_image']) : '';
+		$pending_boleto_download_url = isset($pending_instructions['boleto_download_url']) ? esc_url_raw($pending_instructions['boleto_download_url']) : '';
+		$pending_boleto_barcode = isset($pending_instructions['boleto_barcode']) ? sanitize_textarea_field($pending_instructions['boleto_barcode']) : '';
+		$has_rendered_pending_instructions = false;
+
+		if (
+			in_array($pending_payment_method, array('pix', 'qr_code_pix'), true) &&
+			'' !== $pending_pix_code &&
+			'' !== $pending_qr_code_image
+		) {
+			$has_rendered_pending_instructions = true;
 		?>
-		<div id="pix-content"></div>
-		<img id="pix-img" />
-
-		<style>
-			#sumup-boleto-code {
-				background: #ececec;
-				padding: 4px;
-				font-weight: 700
-			}
-		</style>
-		<div id="boleto-content"></div>
-		<a id="pdf-boleto" target="_blank" href=""></a>
-		<p id="barcode-boleto"></p>
-
-		<script>
-			const loadPix = () => {
-				const paymentMethod = localStorage.getItem('paymentMethod');
-
-				if (paymentMethod === 'pix' || paymentMethod === "qr_code_pix") {
-					const pixContent = document.getElementById('pix-content');
-					pixContent.innerHTML = `<h2 class="woocommerce-order-details__title"><?php esc_html_e('Payment instructions', 'sumup-payment-gateway-for-woocommerce'); ?></h2>
-						<p><?php esc_html_e('PIX code: ', 'sumup-payment-gateway-for-woocommerce'); ?> <span id="sumup-boleto-code">${localStorage.getItem('pix-content')}</span></p>`;
-					const pixImg = document.getElementById('pix-img');
-					pixImg.src = localStorage.getItem('qrcode');
-					pixImg.alt = "sumup-pix-qr-code";
-					pixImg.style.maxWidth = "100%";
-					pixImg.style.height = "auto";
-
+			<style>
+				#sumup-boleto-code {
+					background: #ececec;
+					padding: 4px;
+					font-weight: 700;
 				}
-			};
 
-			const loadBoleto = () => {
-				const paymentMethod = localStorage.getItem('paymentMethod');
-
-				if (paymentMethod === 'boleto') {
-					const divBoleto = document.getElementById("boleto-content");
-					divBoleto.innerHTML = `<h2 class="woocommerce-order-details__title"><?php esc_html_e('Payment instructions', 'sumup-payment-gateway-for-woocommerce'); ?></h2>`;
-					const boletoDownload = document.getElementById('pdf-boleto');
-					boletoDownload.text = '<?php esc_html_e('Download Boleto', 'sumup-payment-gateway-for-woocommerce'); ?>';
-					boletoDownload.setAttribute("href", localStorage.getItem('boleto-pdf'));
-					const elementBarcode = document.getElementById('barcode-boleto');
-					const barcode = localStorage.getItem('boleto-barcode');
-					elementBarcode.innerHTML = `<?php esc_html_e('Code to pay: ', 'sumup-payment-gateway-for-woocommerce'); ?> <span id="sumup-boleto-code">${barcode}</span>`;
+				#sumup-pix-qr-code {
+					max-width: 100%;
+					height: auto;
 				}
-			};
-
-			if (document.readyState === 'complete') {
-				loadPix();
-				loadBoleto();
-			} else {
-				window.addEventListener('load', () => {
-					loadPix();
-					loadBoleto();
-				});
-			}
-		</script>
+			</style>
+			<h2 class="woocommerce-order-details__title">
+				<?php esc_html_e('Payment instructions', 'sumup-payment-gateway-for-woocommerce'); ?></h2>
+			<p><?php esc_html_e('PIX code: ', 'sumup-payment-gateway-for-woocommerce'); ?> <span
+					id="sumup-boleto-code"><?php echo esc_html($pending_pix_code); ?></span></p>
+			<img id="sumup-pix-qr-code" src="<?php echo esc_url($pending_qr_code_image); ?>" alt="sumup-pix-qr-code">
 		<?php
+		}
 
-		if (!empty($pix_code) && !empty($pix_image)) {
+		if (
+			'boleto' === $pending_payment_method &&
+			'' !== $pending_boleto_barcode &&
+			'' !== $pending_boleto_download_url
+		) {
+			$has_rendered_pending_instructions = true;
+		?>
+			<style>
+				#sumup-boleto-code {
+					background: #ececec;
+					padding: 4px;
+					font-weight: 700
+				}
+			</style>
+			<h2 class="woocommerce-order-details__title">
+				<?php esc_html_e('Payment instructions', 'sumup-payment-gateway-for-woocommerce'); ?></h2>
+			<p><?php esc_html_e('Code to pay: ', 'sumup-payment-gateway-for-woocommerce'); ?> <span
+					id="sumup-boleto-code"><?php echo esc_html($pending_boleto_barcode); ?></span></p>
+			<a class="button" href="<?php echo esc_url($pending_boleto_download_url); ?>"
+				target="_blank"><?php esc_html_e('Download Boleto', 'sumup-payment-gateway-for-woocommerce'); ?></a>
+		<?php
+		}
+
+		if (!$has_rendered_pending_instructions && !empty($pix_code) && !empty($pix_image)) {
 		?>
 			<style>
 				#sumup-boleto-code {
@@ -2045,14 +2900,14 @@ class WC_Gateway_SumUp extends \WC_Payment_Gateway
 				<?php esc_html_e('Payment instructions', 'sumup-payment-gateway-for-woocommerce'); ?></h2>
 			<p><?php esc_html_e('PIX code: ', 'sumup-payment-gateway-for-woocommerce'); ?> <span
 					id="sumup-boleto-code"><?php echo esc_html($pix_code); ?></span></p>
-			<img id="sumup-pix-qr-code" src="<?php echo esc_attr($pix_image); ?>" alt="sumup-pix-qr-code" style="">
+			<img id="sumup-pix-qr-code" src="<?php echo esc_url($pix_image); ?>" alt="sumup-pix-qr-code" style="">
 		<?php
 		}
 
-		$boleto_code = sanitize_text_field($_GET['boleto-code'] ?? '');
-		$boleto_link = sanitize_text_field($_GET['boleto-link'] ?? '');
+		$boleto_code = isset($_GET['boleto-code']) ? sanitize_text_field(wp_unslash($_GET['boleto-code'])) : '';
+		$boleto_link = isset($_GET['boleto-link']) ? esc_url_raw(wp_unslash($_GET['boleto-link'])) : '';
 
-		if (!empty($boleto_code) && !empty($boleto_link)) {
+		if (!$has_rendered_pending_instructions && !empty($boleto_code) && !empty($boleto_link)) {
 		?>
 			<style>
 				#sumup-boleto-code {
@@ -2065,7 +2920,7 @@ class WC_Gateway_SumUp extends \WC_Payment_Gateway
 				<?php esc_html_e('Payment instructions', 'sumup-payment-gateway-for-woocommerce'); ?></h2>
 			<p><?php esc_html_e('Code to pay: ', 'sumup-payment-gateway-for-woocommerce'); ?> <span
 					id="sumup-boleto-code"><?php echo esc_html($boleto_code); ?></span></p>
-			<a class="button" href="<?php echo esc_attr($boleto_link); ?>"
+			<a class="button" href="<?php echo esc_url($boleto_link); ?>"
 				target="_blank"><?php esc_html_e('Download Boleto', 'sumup-payment-gateway-for-woocommerce'); ?></a>
 <?php
 		}
