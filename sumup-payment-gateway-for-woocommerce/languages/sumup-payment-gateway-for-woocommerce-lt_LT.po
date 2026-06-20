@@ -1,3 +1,4 @@
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: SumUp Payment Gateway For WooCommerce 2.5.5\n"
@@ -10,8 +11,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 3.5\n"
 "X-Domain: sumup-payment-gateway-for-woocommerce\n"
+"X-Generator: Poedit 3.5\n"
 
 #. Plugin Name of the plugin
 msgid "SumUp Payment Gateway For WooCommerce"
@@ -23,7 +24,9 @@ msgstr "https://wordpress.org/plugins/sumup-payment-gateway-for-woocommerce/"
 
 #. Description of the plugin
 msgid "Take credit card payments on your store using SumUp."
-msgstr "Priimkite mokėjimus kreditinėmis kortelėmis savo parduotuvėje, naudodami SumUp."
+msgstr ""
+"Priimkite mokėjimus kreditinėmis kortelėmis savo parduotuvėje, naudodami "
+"SumUp."
 
 #. Author of the plugin
 #: includes/class-wc-sumup-gateway.php:115
@@ -35,25 +38,41 @@ msgid "https://sumup.com"
 msgstr "https://sumup.com"
 
 #: includes/api/handlers/class-sumup-create-checkout.php:57
-msgid "Merchant account settings are incorrectly configured. Check the plugin settings page."
-msgstr "Prekybininko sąskaitos nustatymai sukonfigūruoti neteisingai. Patikrinkite įskiepio nustatymų puslapį."
+msgid ""
+"Merchant account settings are incorrectly configured. Check the plugin "
+"settings page."
+msgstr ""
+"Prekybininko sąskaitos nustatymai sukonfigūruoti neteisingai. Patikrinkite "
+"įskiepio nustatymų puslapį."
 
 #: includes/api/handlers/class-sumup-create-checkout.php:67
-msgid "Sumup is temporarily unavailable. Please contact site admin for more information."
-msgstr "„Sumup“ laikinai nepasiekiamas. Norėdami gauti daugiau informacijos, susisiekite su svetainės administratoriumi."
+msgid ""
+"Sumup is temporarily unavailable. Please contact site admin for more "
+"information."
+msgstr ""
+"„Sumup“ laikinai nepasiekiamas. Norėdami gauti daugiau informacijos, "
+"susisiekite su svetainės administratoriumi."
 
 #: includes/api/handlers/class-sumup-create-checkout.php:107
-#: includes/class-wc-sumup-gateway.php:538
-msgid "Order ID is not available to make the payment. Try again soon or contact the website support."
-msgstr "Užsakymo ID nėra, kad būtų galima atlikti mokėjimą. Pabandykite dar kartą vėliau arba susisiekite su svetainės palaikymo tarnyba."
+#: includes/class-wc-sumup-gateway.php:533
+msgid ""
+"Order ID is not available to make the payment. Try again soon or contact the"
+" website support."
+msgstr ""
+"Užsakymo ID nėra, kad būtų galima atlikti mokėjimą. Pabandykite dar kartą "
+"vėliau arba susisiekite su svetainės palaikymo tarnyba."
 
-#: includes/class-wc-sumup-block-gateway.php:146
-#: includes/class-wc-sumup-gateway.php:747
-msgid "Transaction was unsuccessful. Please check the minimum amount or use another valid card."
-msgstr "Sandoris nepavyko. Patikrinkite minimalią sumą arba naudokite kitą galiojančią kortelę."
+#: includes/class-wc-sumup-block-gateway.php:138
+#: includes/class-wc-sumup-gateway.php:740
+msgid ""
+"Transaction was unsuccessful. Please check the minimum amount or use another"
+" valid card."
+msgstr ""
+"Sandoris nepavyko. Patikrinkite minimalią sumą arba naudokite kitą "
+"galiojančią kortelę."
 
-#: includes/class-wc-sumup-block-gateway.php:147
-#: includes/class-wc-sumup-gateway.php:748
+#: includes/class-wc-sumup-block-gateway.php:139
+#: includes/class-wc-sumup-gateway.php:741
 msgid "Fill in all required details."
 msgstr "Užpildykite visus būtinus duomenis."
 
@@ -63,11 +82,14 @@ msgstr "Netinkamas kliento ID, kliento paslaptis arba API raktas."
 
 #: includes/class-wc-sumup-credentials.php:75
 msgid "Missing scope: payments. Please contact support team."
-msgstr "Trūksta veikimo srities: mokėjimai. Prašome susisiekti su palaikymo komanda."
+msgstr ""
+"Trūksta veikimo srities: mokėjimai. Prašome susisiekti su palaikymo komanda."
 
 #: includes/class-wc-sumup-credentials.php:77
 msgid "Credentials are not valid. Please check the plugin log and try again."
-msgstr "Prisijungimo duomenys netinkami. Patikrinkite įskiepio žurnalą ir bandykite dar kartą."
+msgstr ""
+"Prisijungimo duomenys netinkami. Patikrinkite įskiepio žurnalą ir bandykite "
+"dar kartą."
 
 #: includes/class-wc-sumup-credentials.php:92
 msgid "Credentials are not valid. Please check and try again."
@@ -77,54 +99,67 @@ msgstr "Prisijungimo duomenys netinkami. Patikrinkite ir bandykite dar kartą."
 msgid "Your credentials are valid and you are ready to use the plugin."
 msgstr "Jūsų prisijungimo duomenys galioja ir galite naudoti įskiepį."
 
-#. translators: %1$s = https://me.sumup.com/, %2$s = https://me.sumup.com/developers
+#. translators: %1$s = https://me.sumup.com/, %2$s =
+#. https://me.sumup.com/developers
 #: includes/class-wc-sumup-gateway.php:203
-msgid "Accept credit and debit cards with SumUp, plus eligible payment methods such as Apple Pay, PayPal, Bancontact, and iDEAL."
-msgstr "Priimkite kredito ir debeto korteles su SumUp, taip pat palaikomus mokėjimo būdus, tokius kaip Apple Pay, PayPal, Bancontact ir iDEAL."
+msgid ""
+"Accept credit and debit cards with SumUp, plus eligible payment methods such"
+" as Apple Pay, PayPal, Bancontact, and iDEAL."
+msgstr ""
+"Priimkite kredito ir debeto korteles su SumUp, taip pat palaikomus mokėjimo "
+"būdus, tokius kaip Apple Pay, PayPal, Bancontact ir iDEAL."
 
-#: includes/class-wc-sumup-gateway.php:227
+#: includes/class-wc-sumup-gateway.php:222
 msgid "SumUp charge complete. Transaction Code: %s"
 msgstr "„SumUp“ mokestis baigtas. Sandorio kodas: %s"
 
-#: includes/class-wc-sumup-gateway.php:240
+#: includes/class-wc-sumup-gateway.php:235
 msgid "SumUp payment failed."
 msgstr "„SumUp“ mokėjimas nepavyko."
 
-#: includes/class-wc-sumup-gateway.php:319
+#: includes/class-wc-sumup-gateway.php:314
 msgid "Payment failed, please try again."
 msgstr "Mokėjimas nepavyko, bandykite dar kartą."
 
-#: includes/class-wc-sumup-gateway.php:474
-msgid "Error: Merchant account settings are incorrectly configured. Check the plugin settings page."
-msgstr "Klaida: prekybininko sąskaitos nustatymai sukonfigūruoti neteisingai. Patikrinkite įskiepio nustatymų puslapį."
+#: includes/class-wc-sumup-gateway.php:469
+msgid ""
+"Error: Merchant account settings are incorrectly configured. Check the "
+"plugin settings page."
+msgstr ""
+"Klaida: prekybininko sąskaitos nustatymai sukonfigūruoti neteisingai. "
+"Patikrinkite įskiepio nustatymų puslapį."
 
-#: includes/class-wc-sumup-gateway.php:516
-msgid "Sum up is temporarily unavailable. Please contact site admin for more information."
-msgstr "„Sumup“ laikinai nepasiekiamas. Norėdami gauti daugiau informacijos, susisiekite su svetainės administratoriumi."
+#: includes/class-wc-sumup-gateway.php:511
+msgid ""
+"Sum up is temporarily unavailable. Please contact site admin for more "
+"information."
+msgstr ""
+"„Sumup“ laikinai nepasiekiamas. Norėdami gauti daugiau informacijos, "
+"susisiekite su svetainės administratoriumi."
 
-#: includes/class-wc-sumup-gateway.php:832
+#: includes/class-wc-sumup-gateway.php:825
 msgid "Payment Status: "
 msgstr "Mokėjimo būsena: "
 
-#: includes/class-wc-sumup-gateway.php:856
-#: includes/class-wc-sumup-gateway.php:872
-#: includes/class-wc-sumup-gateway.php:897
-#: includes/class-wc-sumup-gateway.php:909
+#: includes/class-wc-sumup-gateway.php:849
+#: includes/class-wc-sumup-gateway.php:865
+#: includes/class-wc-sumup-gateway.php:890
+#: includes/class-wc-sumup-gateway.php:902
 msgid "Payment instructions"
 msgstr "Mokėjimo instrukcijos"
 
-#: includes/class-wc-sumup-gateway.php:857
-#: includes/class-wc-sumup-gateway.php:898
+#: includes/class-wc-sumup-gateway.php:850
+#: includes/class-wc-sumup-gateway.php:891
 msgid "PIX code: "
 msgstr "PIX code: "
 
-#: includes/class-wc-sumup-gateway.php:874
-#: includes/class-wc-sumup-gateway.php:911
+#: includes/class-wc-sumup-gateway.php:867
+#: includes/class-wc-sumup-gateway.php:904
 msgid "Download Boleto"
 msgstr "Atsisiųsti Boleto"
 
-#: includes/class-wc-sumup-gateway.php:878
-#: includes/class-wc-sumup-gateway.php:910
+#: includes/class-wc-sumup-gateway.php:871
+#: includes/class-wc-sumup-gateway.php:903
 msgid "Code to pay: "
 msgstr "Koduoti mokėjimą: "
 
@@ -157,8 +192,12 @@ msgid "This controls the description the user sees during checkout."
 msgstr "Tai valdo aprašymą, kurį vartotojas mato atsiskaitymo metu."
 
 #: includes/class-wc-sumup-settings.php:32
-msgid "Pay securely with your credit or debit card, or use other available payment methods."
-msgstr "Pay securely with your credit or debit card, or use other available payment methods."
+msgid ""
+"Pay securely with your credit or debit card, or use other available payment "
+"methods."
+msgstr ""
+"Pay securely with your credit or debit card, or use other available payment "
+"methods."
 
 #: includes/class-wc-sumup-settings.php:36
 msgid "Merchant ID"
@@ -267,22 +306,46 @@ msgid "Docs"
 msgstr "Dokumentai"
 
 #: sumup-payment-gateway-for-woocommerce.php:77
-msgid "SumUp requires WooCommerce to be installed and active. You can download %s here."
-msgstr "SumUp reikalauja, kad „WooCommerce“ būtų įdiegtas ir aktyvus. Galite atsisiųsti %s čia."
+msgid ""
+"SumUp requires WooCommerce to be installed and active. You can download %s "
+"here."
+msgstr ""
+"SumUp reikalauja, kad „WooCommerce“ būtų įdiegtas ir aktyvus. Galite "
+"atsisiųsti %s čia."
 
 #. translators: %s = admin.php?page=wc-settings&tab=checkout&section=sumup
 #: sumup-payment-gateway-for-woocommerce.php:109
-msgid "SumUp Gateway is almost ready. To get started, <a href=\"%s\">set your SumUp account keys</a>."
-msgstr "SumUp vartai beveik paruošti. Norėdami pradėti, <a href=\"%s\">nustatykite savo SumUp paskyros raktus</a>."
+msgid ""
+"SumUp Gateway is almost ready. To get started, <a href=\"%s\">set your SumUp"
+" account keys</a>."
+msgstr ""
+"SumUp vartai beveik paruošti. Norėdami pradėti, <a href=\"%s\">nustatykite "
+"savo SumUp paskyros raktus</a>."
 
 #. translators: %s = admin.php?page=wc-settings&tab=checkout&section=sumup
 #: sumup-payment-gateway-for-woocommerce.php:116
-msgid "SumUp Gateway is not configured properly. You can fix this from <a href=\"%s\">here</a>."
-msgstr "SumUp vartai nėra tinkamai sukonfigūruoti. Tai galite išspręsti <a href=\"%s\">čia</a>."
+msgid ""
+"SumUp Gateway is not configured properly. You can fix this from <a "
+"href=\"%s\">here</a>."
+msgstr ""
+"SumUp vartai nėra tinkamai sukonfigūruoti. Tai galite išspręsti <a "
+"href=\"%s\">čia</a>."
 
 #: sumup-payment-gateway-for-woocommerce.php:120
-msgid "SumUp Gateway needs your attention. Currency is different from WooCommerce currency (WooCommerce->Settings->General->Currency)."
-msgstr "SumUp vartai reikalauja jūsų dėmesio. Valiuta skiriasi nuo WooCommerce valiutos (WooCommerce->Nustatymai->Bendrieji->Valiuta)."
+msgid ""
+"SumUp Gateway needs your attention. Currency is different from WooCommerce "
+"currency (WooCommerce->Settings->General->Currency)."
+msgstr ""
+"SumUp vartai reikalauja jūsų dėmesio. Valiuta skiriasi nuo WooCommerce "
+"valiutos (WooCommerce->Nustatymai->Bendrieji->Valiuta)."
+
+#: sumup-payment-gateway-for-woocommerce.php:126
+#, fuzzy
+msgid ""
+"SumUp Gateway is not configured properly. Please fill the field Merchant ID."
+msgstr ""
+"SumUp vartai nėra tinkamai sukonfigūruoti. Tai galite išspręsti <a "
+"href=\"%s\">čia</a>."
 
 #: sumup-payment-gateway-for-woocommerce.php:145
 msgid "Settings"
@@ -313,8 +376,14 @@ msgid "WooCommerce can now accept payments via SumUp"
 msgstr "WooCommerce dabar gali priimti mokėjimus per SumUp"
 
 #: templates/onboarding.php:28
-msgid "Accept payments through your SumUp account in WooCommerce. Take all payments in your online store with an easy and quick integration. No coding required."
-msgstr "Priimkite mokėjimus per savo SumUp paskyrą WooCommerce. Priimkite visus mokėjimus savo internetinėje parduotuvėje su lengva ir greita integracija. Programavimo nereikia."
+msgid ""
+"Accept payments through your SumUp account in WooCommerce. Take all payments"
+" in your online store with an easy and quick integration. No coding "
+"required."
+msgstr ""
+"Priimkite mokėjimus per savo SumUp paskyrą WooCommerce. Priimkite visus "
+"mokėjimus savo internetinėje parduotuvėje su lengva ir greita integracija. "
+"Programavimo nereikia."
 
 #: templates/onboarding.php:32
 msgid "Connect in 4 steps:"
@@ -344,6 +413,80 @@ msgstr "Išplėstinė versija"
 msgid "Connect Account"
 msgstr "Prisijungti paskyrą"
 
-#: sumup-payment-gateway-for-woocommerce.php:126
+#: /Users/matousdzivjak/code/github.com/sumup/sumup-plugin-woocommerce/sumup-payment-gateway-for-woocommerce.php:130
+msgid ""
+"Use a publicly reachable HTTPS domain before connecting SumUp. If you are "
+"testing locally, use a tunnel such as ngrok or Cloudflare Tunnel and update "
+"WordPress Home and Site URL first."
+msgstr ""
+"Prieš prijungdami „SumUp“ naudokite viešai pasiekiamą HTTPS domeną. Jei "
+"bandote vietoje, naudokite tunelį, pvz., ngrok arba Cloudflare Tunnel, ir "
+"pirmiausia atnaujinkite „WordPress Home“ ir „Site URL“."
+
+#: /Users/matousdzivjak/code/github.com/sumup/sumup-plugin-woocommerce/sumup-payment-gateway-for-woocommerce.php:138
+#, php-format
+msgid ""
+"Your store is currently using %1$s, which is not publicly reachable. Use a "
+"public HTTPS domain before connecting SumUp. If you are testing locally, use"
+" a tunnel such as ngrok or Cloudflare Tunnel and update WordPress Home and "
+"Site URL first."
+msgstr ""
+"Jūsų parduotuvė šiuo metu naudoja %1$s, kuris nėra viešai pasiekiamas. Prieš"
+" prijungdami „SumUp“ naudokite viešą HTTPS domeną. Jei bandote vietoje, "
+"naudokite tunelį, pvz., ngrok arba Cloudflare Tunnel, ir pirmiausia "
+"atnaujinkite „WordPress Home“ ir „Site URL“."
+
+#: /Users/matousdzivjak/code/github.com/sumup/sumup-plugin-woocommerce/sumup-payment-gateway-for-woocommerce.php:421
 msgid "Please use the “Connect Account” button to start the configuration."
-msgstr "Prašome naudoti mygtuką „Prijungti paskyrą“, kad pradėtumėte konfigūravimą."
+msgstr ""
+"Prašome naudoti mygtuką „Prijungti paskyrą“, kad pradėtumėte konfigūravimą."
+
+#: /Users/matousdzivjak/code/github.com/sumup/sumup-plugin-woocommerce/sumup-payment-gateway-for-woocommerce.php:539
+msgid "Unable to start the SumUp connection."
+msgstr "Nepavyko pradėti „SumUp“ prijungimo."
+
+#: /Users/matousdzivjak/code/github.com/sumup/sumup-plugin-woocommerce/sumup-payment-gateway-for-woocommerce.php:540
+msgid "Unable to validate this website."
+msgstr "Nepavyko patvirtinti šios svetainės."
+
+#: /Users/matousdzivjak/code/github.com/sumup/sumup-plugin-woocommerce/sumup-payment-gateway-for-woocommerce.php:541
+msgid "Unable to start the SumUp connection. Please try again."
+msgstr "Nepavyko pradėti „SumUp“ prijungimo. Bandykite dar kartą."
+
+#: /Users/matousdzivjak/code/github.com/sumup/sumup-plugin-woocommerce/sumup-payment-gateway-for-woocommerce.php:542
+msgid "Unable to disconnect the SumUp account."
+msgstr "Nepavyko atjungti „SumUp“ paskyros."
+
+#: /Users/matousdzivjak/code/github.com/sumup/sumup-plugin-woocommerce/sumup-payment-gateway-for-woocommerce.php:543
+msgid "Unknown error occurred."
+msgstr "Įvyko nežinoma klaida."
+
+#: /Users/matousdzivjak/code/github.com/sumup/sumup-plugin-woocommerce/includes/api/class-sumup-disconnect.php:44
+msgid "Account already disconnected"
+msgstr "Paskyra jau atjungta"
+
+#: /Users/matousdzivjak/code/github.com/sumup/sumup-plugin-woocommerce/templates/onboarding.php:21
+msgid "Complete setup to accept payments with SumUp"
+msgstr "Užbaikite sąranką, kad galėtumėte priimti mokėjimus su „SumUp“"
+
+#: /Users/matousdzivjak/code/github.com/sumup/sumup-plugin-woocommerce/templates/onboarding.php:25
+msgid ""
+"Connect your SumUp account to start accepting credit and debit card payments"
+" in WooCommerce."
+msgstr ""
+"Prijunkite savo „SumUp“ paskyrą, kad „WooCommerce“ pradėtumėte priimti "
+"mokėjimus kredito ir debeto kortelėmis."
+
+#: /Users/matousdzivjak/code/github.com/sumup/sumup-plugin-woocommerce/templates/onboarding.php:29
+msgid "Setup takes 4 steps:"
+msgstr "Sąranką sudaro 4 žingsniai:"
+
+#: /Users/matousdzivjak/code/github.com/sumup/sumup-plugin-woocommerce/templates/onboarding.php:43
+msgid "After approval, we will return you to WooCommerce automatically."
+msgstr "Po patvirtinimo automatiškai grįšite į „WooCommerce“."
+
+#: /Users/matousdzivjak/code/github.com/sumup/sumup-plugin-woocommerce/templates/onboarding.php:53
+#: /Users/matousdzivjak/code/github.com/sumup/sumup-plugin-woocommerce/templates/onboarding.php:56
+#: /Users/matousdzivjak/code/github.com/sumup/sumup-plugin-woocommerce/templates/onboarding.php:63
+msgid "Complete setup"
+msgstr "Užbaikite sąranką"

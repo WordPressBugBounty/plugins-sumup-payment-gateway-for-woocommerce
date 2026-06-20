@@ -6,7 +6,7 @@
  * Description: Take credit card payments on your store using SumUp.
  * Author: SumUp
  * Author URI: https://sumup.com
- * Version: 2.13.0
+ * Version: 2.14.0
  * Requires at least: 6.9
  * Requires PHP: 7.4
  * Text Domain: sumup-payment-gateway-for-woocommerce
@@ -22,7 +22,7 @@ if (! defined('ABSPATH')) {
 define('WC_SUMUP_MAIN_FILE', __FILE__);
 define('WC_SUMUP_PLUGIN_PATH', untrailingslashit(plugin_dir_path(__FILE__)));
 define('WC_SUMUP_PLUGIN_URL', plugin_dir_url(__FILE__));
-define('WC_SUMUP_VERSION', '2.13.0');
+define('WC_SUMUP_VERSION', '2.14.0');
 define('WC_SUMUP_MINIMUM_PHP_VERSION', '7.4');
 define('WC_SUMUP_MINIMUM_WP_VERSION', '6.9');
 define('WC_SUMUP_PLUGIN_SLUG', 'sumup-payment-gateway-for-woocommerce');
@@ -55,6 +55,91 @@ function sumup_gateway_has_connection_details($settings = null)
 	$has_account_reference = ! empty($settings['merchant_id']) || ! empty($settings['pay_to_email']);
 
 	return $has_auth_material && $has_account_reference;
+}
+
+/**
+ * Get the hostname WordPress is currently configured to use.
+ *
+ * @return string
+ */
+function sumup_get_site_hostname()
+{
+	$site_url = home_url();
+	$parsed_url = wp_parse_url($site_url);
+
+	if (! is_array($parsed_url) || empty($parsed_url['host'])) {
+		return '';
+	}
+
+	return strtolower(rtrim($parsed_url['host'], '.'));
+}
+
+/**
+ * Determine whether a hostname is public enough for the hosted onboarding flow.
+ *
+ * @param string|null $hostname Optional hostname override for tests.
+ * @return bool
+ */
+function sumup_is_public_hostname($hostname = null)
+{
+	if (null === $hostname) {
+		$hostname = sumup_get_site_hostname();
+	}
+
+	$hostname = strtolower(trim((string) $hostname));
+	if ('' === $hostname) {
+		return false;
+	}
+
+	if ('localhost' === $hostname || 'localhost.localdomain' === $hostname) {
+		return false;
+	}
+
+	if (false === strpos($hostname, '.')) {
+		return false;
+	}
+
+	if (
+		'.localhost' === substr($hostname, -10) ||
+		'.local' === substr($hostname, -6) ||
+		'.test' === substr($hostname, -5) ||
+		'.invalid' === substr($hostname, -8) ||
+		'.example' === substr($hostname, -8)
+	) {
+		return false;
+	}
+
+	if (filter_var($hostname, FILTER_VALIDATE_IP)) {
+		return (bool) filter_var($hostname, FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE);
+	}
+
+	return true;
+}
+
+/**
+ * Explain how to make the store reachable for onboarding.
+ *
+ * @return string
+ */
+function sumup_get_onboarding_host_warning_message()
+{
+	$site_host = sumup_get_site_hostname();
+
+	if ('' === $site_host) {
+		return __(
+			'Use a publicly reachable HTTPS domain before connecting SumUp. If you are testing locally, use a tunnel such as ngrok or Cloudflare Tunnel and update WordPress Home and Site URL first.',
+			'sumup-payment-gateway-for-woocommerce'
+		);
+	}
+
+	return sprintf(
+		/* translators: %s = current WordPress host */
+		__(
+			'Your store is currently using %1$s, which is not publicly reachable. Use a public HTTPS domain before connecting SumUp. If you are testing locally, use a tunnel such as ngrok or Cloudflare Tunnel and update WordPress Home and Site URL first.',
+			'sumup-payment-gateway-for-woocommerce'
+		),
+		'<code>' . esc_html( $site_host ) . '</code>'
+	);
 }
 
 /**
@@ -440,7 +525,23 @@ function sumup_enqueue_admin_scripts()
 		array(
 			'ajax_url' => admin_url('admin-ajax.php'),
 			'nonce' => wp_create_nonce('sumup-settings-nonce'),
-			'rest_api_url_disconnect' => home_url("wp-json/sumup_disconnection/v1/disconnect")
+			'rest_api_url_disconnect' => rest_url('sumup_disconnection/v1/disconnect'),
+			'rest_nonce' => wp_create_nonce('wp_rest'),
+			'return_url' => add_query_arg(
+				'validate_settings',
+				'true',
+				get_sumup_gateway_setup_link()
+			),
+			'flow_version' => 2,
+			'is_public_hostname' => sumup_is_public_hostname(),
+			'onboarding_host_warning' => sumup_get_onboarding_host_warning_message(),
+			'messages' => array(
+				'connect_error' => __( 'Unable to start the SumUp connection.', 'sumup-payment-gateway-for-woocommerce' ),
+				'connect_validation_error' => __( 'Unable to validate this website.', 'sumup-payment-gateway-for-woocommerce' ),
+				'connect_retry_error' => __( 'Unable to start the SumUp connection. Please try again.', 'sumup-payment-gateway-for-woocommerce' ),
+				'disconnect_error' => __( 'Unable to disconnect the SumUp account.', 'sumup-payment-gateway-for-woocommerce' ),
+				'unknown_error' => __( 'Unknown error occurred.', 'sumup-payment-gateway-for-woocommerce' ),
+			),
 		)
 	);
 

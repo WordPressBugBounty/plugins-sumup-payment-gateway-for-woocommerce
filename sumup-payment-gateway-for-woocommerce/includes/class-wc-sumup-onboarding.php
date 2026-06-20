@@ -9,6 +9,13 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 class WC_Sumup_Onboarding {
 	/**
+	 * Request timeout in seconds for onboarding API calls.
+	 *
+	 * @var int
+	 */
+	private const REQUEST_TIMEOUT = 30;
+
+	/**
 	 * Undocumented variable
 	 *
 	 * @var string
@@ -33,7 +40,7 @@ class WC_Sumup_Onboarding {
 	 * Construct.
 	 */
 	public function __construct() {
-		$this->website_url = untrailingslashit( get_bloginfo( 'url' ) );
+		$this->website_url = untrailingslashit( home_url() );
 		$this->business_name = get_bloginfo( 'name' );
 	}
 
@@ -58,6 +65,15 @@ class WC_Sumup_Onboarding {
 					'detail' => __( 'Sorry, you are not allowed to manage SumUp settings.', 'sumup-payment-gateway-for-woocommerce' ),
 				),
 				403
+			);
+		}
+
+		if ( ! sumup_is_public_hostname() ) {
+			wp_send_json_error(
+				array(
+					'detail' => sumup_get_onboarding_host_warning_message(),
+				),
+				422
 			);
 		}
 
@@ -91,11 +107,18 @@ class WC_Sumup_Onboarding {
 	 */
 	public function request_connection()
 	{
+		$return_url = add_query_arg(
+			'validate_settings',
+			'true',
+			get_sumup_gateway_setup_link()
+		);
 
 		$data = array(
 			'plugin_type' => 'WOOCOMMERCE_V1',
 			'plugin_version' => WC_SUMUP_VERSION,
 			'website' => $this->website_url,
+			'return_url' => $return_url,
+			'flow_version' => 2,
 			'business_data' => array(
 				'business_name' => $this->business_name,
 			),
@@ -105,62 +128,70 @@ class WC_Sumup_Onboarding {
 
 		WC_SUMUP_LOGGER::log("Onboarding - function request_connection - request: " . $data);
 
-		try {
-			$ch = curl_init();
-			curl_setopt_array(
-				$ch,
+		$response = wp_remote_post(
+			'https://api.sumup.com/online-payments-plugin/connections',
+			array(
+				'timeout' => self::REQUEST_TIMEOUT,
+				'redirection' => 0,
+				'headers' => array(
+					'Idempotency-Key' => $this->uuidv4(),
+					'Content-Type' => 'application/json',
+					'Accept' => 'application/json',
+				),
+				'body' => $data,
+			)
+		);
+
+		if (is_wp_error($response)) {
+			WC_SUMUP_LOGGER::log(
+				'Onboarding request_connection failed.',
 				array(
-					CURLOPT_URL => 'https://api.sumup.com/online-payments-plugin/connections',
-					CURLOPT_RETURNTRANSFER => true,
-					CURLOPT_POST => true,
-					CURLOPT_POSTFIELDS => $data,
-					CURLOPT_HTTPHEADER => array(
-						'Idempotency-Key: ' . $this->uuidv4(),
-						'Content-Type: application/json',
-					),
-				)
+					'error' => sanitize_text_field($response->get_error_message()),
+				),
+				'error'
 			);
-			$response = curl_exec($ch);
-			$response_http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-			curl_close($ch);
-
-			$responseFiltered = json_decode($response, true);
-
-			if (!is_array($responseFiltered)) {
-				$responseFiltered = [];
-			}
-
-			if (in_array($response_http_code, [200, 201])) {
-
-
-				$encondedResponse = json_encode($this->maskuuidForLogs($responseFiltered), JSON_UNESCAPED_SLASHES);
-
-				WC_SUMUP_LOGGER::log("Onboarding function request_connection - response: " . $encondedResponse);
-
-			} else {
-				$encondedResponse = array(
-					"http_response_code" => $response_http_code,
-					"title" => isset($responseFiltered['title']) ? $responseFiltered['title'] : "",
-					"status" => isset($responseFiltered['status']) ? $responseFiltered['status'] : "",
-					"detail" => isset($responseFiltered['detail']) ? $responseFiltered['detail'] : "",
-				);
-
-				$encondedResponse = json_encode($encondedResponse, JSON_UNESCAPED_SLASHES);
-
-				WC_SUMUP_LOGGER::log("Onboarding function request_connection - response: " . $encondedResponse);
-			}
-
-			return $response;
-		} catch (Exception $e) {
-			WC_SUMUP_LOGGER::log("An error occurred during onboarding - message: " . $e->getMessage());
 
 			return wp_send_json_error(
 				array(
 					'detail' => 'An error occurred during onboarding.',
 				),
-				422
+				502
 			);
 		}
+
+		$response_http_code = wp_remote_retrieve_response_code($response);
+		$response_body = wp_remote_retrieve_body($response);
+		$response_filtered = json_decode($response_body, true);
+
+		if (!is_array($response_filtered)) {
+			$response_filtered = array();
+		}
+
+		if (in_array($response_http_code, array(200, 201), true)) {
+			$encoded_response = json_encode($this->maskuuidForLogs($response_filtered), JSON_UNESCAPED_SLASHES);
+			WC_SUMUP_LOGGER::log("Onboarding function request_connection - response: " . $encoded_response);
+			return $response_body;
+		}
+
+		$encoded_response = array(
+			'http_response_code' => $response_http_code,
+			'title' => isset($response_filtered['title']) ? $response_filtered['title'] : '',
+			'status' => isset($response_filtered['status']) ? $response_filtered['status'] : '',
+			'detail' => isset($response_filtered['detail']) ? $response_filtered['detail'] : '',
+		);
+
+		WC_SUMUP_LOGGER::log(
+			'Onboarding function request_connection - response: ' . json_encode($encoded_response, JSON_UNESCAPED_SLASHES),
+			array(),
+			'warning'
+		);
+
+		return wp_send_json_error(
+			array(
+				'detail' => ! empty($encoded_response['detail']) ? $encoded_response['detail'] : 'An error occurred during onboarding.',
+			),
+			$response_http_code > 0 ? $response_http_code : 502
+		);
 	}
 
 	/**

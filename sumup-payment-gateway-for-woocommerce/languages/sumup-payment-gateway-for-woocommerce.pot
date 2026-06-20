@@ -3,7 +3,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: SumUp Payment Gateway For WooCommerce 2.5.5\n"
-"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/sumup-plugin-for-woocommerce\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/sumup-plugin-for-"
+"woocommerce\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -36,21 +37,29 @@ msgid "https://sumup.com"
 msgstr ""
 
 #: includes/api/handlers/class-sumup-create-checkout.php:57
-msgid "Merchant account settings are incorrectly configured. Check the plugin settings page."
+msgid ""
+"Merchant account settings are incorrectly configured. Check the plugin "
+"settings page."
 msgstr ""
 
 #: includes/api/handlers/class-sumup-create-checkout.php:67
-msgid "Sumup is temporarily unavailable. Please contact site admin for more information."
+msgid ""
+"Sumup is temporarily unavailable. Please contact site admin for more "
+"information."
 msgstr ""
 
 #: includes/api/handlers/class-sumup-create-checkout.php:107
 #: includes/class-wc-sumup-gateway.php:533
-msgid "Order ID is not available to make the payment. Try again soon or contact the website support."
+msgid ""
+"Order ID is not available to make the payment. Try again soon or contact the "
+"website support."
 msgstr ""
 
 #: includes/class-wc-sumup-block-gateway.php:138
 #: includes/class-wc-sumup-gateway.php:740
-msgid "Transaction was unsuccessful. Please check the minimum amount or use another valid card."
+msgid ""
+"Transaction was unsuccessful. Please check the minimum amount or use another "
+"valid card."
 msgstr ""
 
 #: includes/class-wc-sumup-block-gateway.php:139
@@ -80,7 +89,9 @@ msgstr ""
 
 #. translators: %1$s = https://me.sumup.com/, %2$s = https://me.sumup.com/developers
 #: includes/class-wc-sumup-gateway.php:203
-msgid "Accept credit and debit cards with SumUp, plus eligible payment methods such as Apple Pay, PayPal, Bancontact, and iDEAL."
+msgid ""
+"Accept credit and debit cards with SumUp, plus eligible payment methods such "
+"as Apple Pay, PayPal, Bancontact, and iDEAL."
 msgstr ""
 
 #: includes/class-wc-sumup-gateway.php:222
@@ -96,11 +107,15 @@ msgid "Payment failed, please try again."
 msgstr ""
 
 #: includes/class-wc-sumup-gateway.php:469
-msgid "Error: Merchant account settings are incorrectly configured. Check the plugin settings page."
+msgid ""
+"Error: Merchant account settings are incorrectly configured. Check the "
+"plugin settings page."
 msgstr ""
 
 #: includes/class-wc-sumup-gateway.php:511
-msgid "Sum up is temporarily unavailable. Please contact site admin for more information."
+msgid ""
+"Sum up is temporarily unavailable. Please contact site admin for more "
+"information."
 msgstr ""
 
 #: includes/class-wc-sumup-gateway.php:825
@@ -158,7 +173,9 @@ msgid "This controls the description the user sees during checkout."
 msgstr ""
 
 #: includes/class-wc-sumup-settings.php:32
-msgid "Pay securely with your credit or debit card, or use other available payment methods."
+msgid ""
+"Pay securely with your credit or debit card, or use other available payment "
+"methods."
 msgstr ""
 
 #: includes/class-wc-sumup-settings.php:36
@@ -268,25 +285,34 @@ msgid "Docs"
 msgstr ""
 
 #: sumup-payment-gateway-for-woocommerce.php:77
-msgid "SumUp requires WooCommerce to be installed and active. You can download %s here."
+msgid ""
+"SumUp requires WooCommerce to be installed and active. You can download %s "
+"here."
 msgstr ""
 
 #. translators: %s = admin.php?page=wc-settings&tab=checkout&section=sumup
 #: sumup-payment-gateway-for-woocommerce.php:109
-msgid "SumUp Gateway is almost ready. To get started, <a href=\"%s\">set your SumUp account keys</a>."
+msgid ""
+"SumUp Gateway is almost ready. To get started, <a href=\"%s\">set your SumUp "
+"account keys</a>."
 msgstr ""
 
 #. translators: %s = admin.php?page=wc-settings&tab=checkout&section=sumup
 #: sumup-payment-gateway-for-woocommerce.php:116
-msgid "SumUp Gateway is not configured properly. You can fix this from <a href=\"%s\">here</a>."
+msgid ""
+"SumUp Gateway is not configured properly. You can fix this from <a "
+"href=\"%s\">here</a>."
 msgstr ""
 
 #: sumup-payment-gateway-for-woocommerce.php:120
-msgid "SumUp Gateway needs your attention. Currency is different from WooCommerce currency (WooCommerce->Settings->General->Currency)."
+msgid ""
+"SumUp Gateway needs your attention. Currency is different from WooCommerce "
+"currency (WooCommerce->Settings->General->Currency)."
 msgstr ""
 
 #: sumup-payment-gateway-for-woocommerce.php:126
-msgid "SumUp Gateway is not configured properly. Please fill the field Merchant ID."
+msgid ""
+"SumUp Gateway is not configured properly. Please fill the field Merchant ID."
 msgstr ""
 
 #: sumup-payment-gateway-for-woocommerce.php:145
@@ -318,7 +344,9 @@ msgid "WooCommerce can now accept payments via SumUp"
 msgstr ""
 
 #: templates/onboarding.php:28
-msgid "Accept payments through your SumUp account in WooCommerce. Take all payments in your online store with an easy and quick integration. No coding required."
+msgid ""
+"Accept payments through your SumUp account in WooCommerce. Take all payments "
+"in your online store with an easy and quick integration. No coding required."
 msgstr ""
 
 #: templates/onboarding.php:32
@@ -345,7 +373,74 @@ msgstr ""
 msgid "Advanced Version"
 msgstr ""
 
-#: templates/onboarding.php:55
-#: templates/onboarding.php:56
+#: templates/onboarding.php:55 templates/onboarding.php:56
 msgid "Connect Account"
+msgstr ""
+
+#: /Users/matousdzivjak/code/github.com/sumup/sumup-plugin-woocommerce/sumup-payment-gateway-for-woocommerce.php:130
+msgid ""
+"Use a publicly reachable HTTPS domain before connecting SumUp. If you are "
+"testing locally, use a tunnel such as ngrok or Cloudflare Tunnel and update "
+"WordPress Home and Site URL first."
+msgstr ""
+
+#: /Users/matousdzivjak/code/github.com/sumup/sumup-plugin-woocommerce/sumup-payment-gateway-for-woocommerce.php:138
+#, php-format
+msgid ""
+"Your store is currently using %1$s, which is not publicly reachable. Use a "
+"public HTTPS domain before connecting SumUp. If you are testing locally, use "
+"a tunnel such as ngrok or Cloudflare Tunnel and update WordPress Home and "
+"Site URL first."
+msgstr ""
+
+#: /Users/matousdzivjak/code/github.com/sumup/sumup-plugin-woocommerce/sumup-payment-gateway-for-woocommerce.php:421
+msgid "Please use the “Connect Account” button to start the configuration."
+msgstr ""
+
+#: /Users/matousdzivjak/code/github.com/sumup/sumup-plugin-woocommerce/sumup-payment-gateway-for-woocommerce.php:539
+msgid "Unable to start the SumUp connection."
+msgstr ""
+
+#: /Users/matousdzivjak/code/github.com/sumup/sumup-plugin-woocommerce/sumup-payment-gateway-for-woocommerce.php:540
+msgid "Unable to validate this website."
+msgstr ""
+
+#: /Users/matousdzivjak/code/github.com/sumup/sumup-plugin-woocommerce/sumup-payment-gateway-for-woocommerce.php:541
+msgid "Unable to start the SumUp connection. Please try again."
+msgstr ""
+
+#: /Users/matousdzivjak/code/github.com/sumup/sumup-plugin-woocommerce/sumup-payment-gateway-for-woocommerce.php:542
+msgid "Unable to disconnect the SumUp account."
+msgstr ""
+
+#: /Users/matousdzivjak/code/github.com/sumup/sumup-plugin-woocommerce/sumup-payment-gateway-for-woocommerce.php:543
+msgid "Unknown error occurred."
+msgstr ""
+
+#: /Users/matousdzivjak/code/github.com/sumup/sumup-plugin-woocommerce/includes/api/class-sumup-disconnect.php:44
+msgid "Account already disconnected"
+msgstr ""
+
+#: /Users/matousdzivjak/code/github.com/sumup/sumup-plugin-woocommerce/templates/onboarding.php:21
+msgid "Complete setup to accept payments with SumUp"
+msgstr ""
+
+#: /Users/matousdzivjak/code/github.com/sumup/sumup-plugin-woocommerce/templates/onboarding.php:25
+msgid ""
+"Connect your SumUp account to start accepting credit and debit card payments "
+"in WooCommerce."
+msgstr ""
+
+#: /Users/matousdzivjak/code/github.com/sumup/sumup-plugin-woocommerce/templates/onboarding.php:29
+msgid "Setup takes 4 steps:"
+msgstr ""
+
+#: /Users/matousdzivjak/code/github.com/sumup/sumup-plugin-woocommerce/templates/onboarding.php:43
+msgid "After approval, we will return you to WooCommerce automatically."
+msgstr ""
+
+#: /Users/matousdzivjak/code/github.com/sumup/sumup-plugin-woocommerce/templates/onboarding.php:53
+#: /Users/matousdzivjak/code/github.com/sumup/sumup-plugin-woocommerce/templates/onboarding.php:56
+#: /Users/matousdzivjak/code/github.com/sumup/sumup-plugin-woocommerce/templates/onboarding.php:63
+msgid "Complete setup"
 msgstr ""

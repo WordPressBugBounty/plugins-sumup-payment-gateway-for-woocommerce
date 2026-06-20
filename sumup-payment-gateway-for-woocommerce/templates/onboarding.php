@@ -40,21 +40,30 @@ if ( ! defined( 'ABSPATH' ) ) {
 			<?php esc_html_e( 'Select the “Connect” button to begin.', 'sumup-payment-gateway-for-woocommerce' ); ?>
 		</li>
 		<li>
-			<?php esc_html_e( 'Return to WooCommerce by selecting the “View plugin” button.', 'sumup-payment-gateway-for-woocommerce' ); ?>
+			<?php esc_html_e( 'After approval, we will return you to WooCommerce automatically.', 'sumup-payment-gateway-for-woocommerce' ); ?>
 		</li>
 	</ol>
 
 	<p class="sumup-onboarding__actions">
-		<button
-			id="sumup-payment-settings-connect"
-			type="button"
-			class="components-button is-primary"
-			data-text="<?php esc_attr_e( 'Complete setup', 'sumup-payment-gateway-for-woocommerce' ); ?>"
-		>
-			<span class="sumup-button-label">
-				<?php esc_html_e( 'Complete setup', 'sumup-payment-gateway-for-woocommerce' ); ?>
+		<?php if ( sumup_is_public_hostname() ) : ?>
+			<button
+				id="sumup-payment-settings-connect"
+				type="button"
+				class="components-button is-primary"
+				data-text="<?php esc_attr_e( 'Complete setup', 'sumup-payment-gateway-for-woocommerce' ); ?>"
+			>
+				<span class="sumup-button-label">
+					<?php esc_html_e( 'Complete setup', 'sumup-payment-gateway-for-woocommerce' ); ?>
+				</span>
+				<span class="sumup-button-loading" aria-hidden="true"></span>
+			</button>
+		<?php else : ?>
+			<span class="sumup-onboarding__warning">
+				<span class="button button-disabled" aria-disabled="true">
+					<?php esc_html_e( 'Complete setup', 'sumup-payment-gateway-for-woocommerce' ); ?>
+					<?php echo wp_kses_post( wc_help_tip( sumup_get_onboarding_host_warning_message() ) ); ?>
+				</span>
 			</span>
-			<span class="sumup-button-loading" aria-hidden="true"></span>
-		</button>
+		<?php endif; ?>
 	</p>
 </div>

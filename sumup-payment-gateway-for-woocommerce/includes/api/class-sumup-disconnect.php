@@ -16,7 +16,7 @@ add_action('rest_api_init', function () {
 			'methods' => array('POST'),
 			'callback' => 'sumup_disconnect',
 			'permission_callback' => function () {
-				return current_user_can('manage_options');
+				return current_user_can('manage_woocommerce') || current_user_can('manage_options');
 			},
 		)
 	);
@@ -29,13 +29,22 @@ add_action('rest_api_init', function () {
 function sumup_disconnect(): WP_REST_Response
 {
 
-	$settings = get_option('woocommerce_sumup_settings');
+	$settings = get_option('woocommerce_sumup_settings', array());
+	if (!is_array($settings)) {
+		$settings = array();
+	}
 
 	/**
 	 * Verify if already excluded the credentials
 	 */
 	if (empty($settings['api_key']) && empty($settings['client_id']) && empty($settings['client_secret'])) {
-		return new WP_REST_Response(['status' => 'error', 'message' => 'Account already disconnected'], 400);
+		return new WP_REST_Response(
+			array(
+				'status' => 'error',
+				'message' => __('Account already disconnected', 'sumup-payment-gateway-for-woocommerce'),
+			),
+			400
+		);
 	}
 
 	/**
@@ -63,5 +72,11 @@ function sumup_disconnect(): WP_REST_Response
 	/*
 	 * Redirect to sumup payment admin page
 	 */
-	return new WP_REST_Response(['status' => 'disconnected', 'redirect_url' => admin_url("admin.php?page=wc-settings&tab=checkout&section=sumup")], 200);
+	return new WP_REST_Response(
+		array(
+			'status' => 'disconnected',
+			'redirect_url' => admin_url('admin.php?page=wc-settings&tab=checkout&section=sumup'),
+		),
+		200
+	);
 }

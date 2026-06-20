@@ -4,7 +4,7 @@ Tags: sumup, payment gateway, woocommerce, payments, ecommerce
 Requires at least: 6.9
 Tested up to: 7.0
 Requires PHP: 7.4
-Stable tag: 2.13.0
+Stable tag: 2.14.0
 License: Apache-2.0
 License URI: https://www.apache.org/licenses/LICENSE-2.0
 
@@ -94,6 +94,10 @@ If you need help with setup or testing, contact SumUp support through the offici
 Yes. Test the integration fully before enabling live payments.
 
 == Changelog ==
+= 2.14.0 =
+* Improvements: The plugin now requires a public site hostname before starting the hosted onboarding flow, which avoids failed connections on local or private addresses.
+* Fixed: Improved the account connection and disconnect flow, including correct website URL handling during setup.
+
 = 2.13.0 =
 * Improvements: Added more detailed observability and debugging logs across checkout and connection flows.
 * Improvements: Hardened the order-pay widget initialization and flow so stored orders reopen more reliably.
@@ -305,5 +309,5 @@ Yes. Test the integration fully before enabling live payments.
 
 == Upgrade Notice ==
 
-= 2.13.0 =
-* Improves observability, payment flow resilience, and webhook handling.
+= 2.14.0 =
+* Requires a public site hostname for hosted onboarding and improves the account connection and disconnect flow.
