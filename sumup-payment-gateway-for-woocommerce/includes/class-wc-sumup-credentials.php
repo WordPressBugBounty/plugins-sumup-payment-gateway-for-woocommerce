@@ -64,10 +64,15 @@ class Wc_Sumup_Credentials {
 			'amount' => 1.00,
 			'currency' => get_woocommerce_currency(),
 			'description' => 'WooCommerce settings validate ' . time(),
-			'merchant_code' => $settings['merchant_id'],
 			'redirect_url' => wc_get_checkout_url(),
 			'return_url' => wc_get_checkout_url(),
 		);
+
+		if (!empty($settings['merchant_id'])) {
+			$checkout_data['merchant_code'] = $settings['merchant_id'];
+		} elseif (!empty($settings['pay_to_email'])) {
+			$checkout_data['pay_to_email'] = $settings['pay_to_email'];
+		}
 
 		$sumup_checkout = Wc_Sumup_Checkout::create( $access_token['access_token'], $checkout_data, $log_context );
 		if ( empty( $sumup_checkout ) || ! isset( $sumup_checkout['id'] ) ) {

@@ -6,7 +6,7 @@
  * Description: Take credit card payments on your store using SumUp.
  * Author: SumUp
  * Author URI: https://sumup.com
- * Version: 2.15.0
+ * Version: 2.15.1
  * Requires at least: 6.9
  * Requires PHP: 7.4
  * Text Domain: sumup-payment-gateway-for-woocommerce
@@ -22,7 +22,7 @@ if (! defined('ABSPATH')) {
 define('WC_SUMUP_MAIN_FILE', __FILE__);
 define('WC_SUMUP_PLUGIN_PATH', untrailingslashit(plugin_dir_path(__FILE__)));
 define('WC_SUMUP_PLUGIN_URL', plugin_dir_url(__FILE__));
-define('WC_SUMUP_VERSION', '2.15.0');
+define('WC_SUMUP_VERSION', '2.15.1');
 define('WC_SUMUP_MINIMUM_PHP_VERSION', '7.4');
 define('WC_SUMUP_MINIMUM_WP_VERSION', '6.9');
 define('WC_SUMUP_PLUGIN_SLUG', 'sumup-payment-gateway-for-woocommerce');
@@ -51,10 +51,82 @@ function sumup_gateway_has_connection_details($settings = null)
 		$settings = sumup_get_gateway_settings();
 	}
 
+	$settings = sumup_maybe_migrate_merchant_code($settings);
+
 	$has_auth_material = ! empty($settings['api_key']) || (! empty($settings['client_id']) && ! empty($settings['client_secret']));
-	$has_account_reference = ! empty($settings['merchant_id']);
+	$has_account_reference = ! empty($settings['merchant_id']) || ! empty($settings['pay_to_email']);
 
 	return $has_auth_material && $has_account_reference;
+}
+
+/**
+ * Migrate legacy pay_to_email-only settings to merchant_code.
+ *
+ * @param array|null $settings Optional settings array.
+ * @return array
+ */
+function sumup_maybe_migrate_merchant_code($settings = null)
+{
+	if (! is_array($settings)) {
+		$settings = sumup_get_gateway_settings();
+	}
+
+	if (
+		empty($settings['pay_to_email']) ||
+		! empty($settings['merchant_id'])
+	) {
+		return $settings;
+	}
+
+	$access_token = '';
+	if (class_exists('Wc_Sumup_Access_Token')) {
+		$access_token_data = Wc_Sumup_Access_Token::get(
+			$settings['client_id'] ?? '',
+			$settings['client_secret'] ?? '',
+			$settings['api_key'] ?? '',
+			false
+		);
+		$access_token = isset($access_token_data['access_token']) ? (string) $access_token_data['access_token'] : '';
+	} elseif (! empty($settings['api_key'])) {
+		$access_token = (string) $settings['api_key'];
+	}
+
+	if ('' === $access_token) {
+		return $settings;
+	}
+
+	$response = wp_remote_get(
+		'https://api.sumup.com/userinfo',
+		array(
+			'timeout' => 15,
+			'redirection' => 0,
+			'headers' => array(
+				'Accept' => 'application/json',
+				'Authorization' => 'Bearer ' . $access_token,
+			),
+		)
+	);
+
+	if (is_wp_error($response)) {
+		return $settings;
+	}
+
+	if (200 !== wp_remote_retrieve_response_code($response)) {
+		return $settings;
+	}
+
+	$payload = json_decode(wp_remote_retrieve_body($response), true);
+	$merchant_code = is_array($payload) ? sanitize_text_field((string) ($payload['merchant_code'] ?? '')) : '';
+
+	if ('' === $merchant_code) {
+		return $settings;
+	}
+
+	$settings['merchant_id'] = $merchant_code;
+	update_option('woocommerce_sumup_settings', $settings);
+	update_option('sumup_connection_status', 'connected', false);
+
+	return $settings;
 }
 
 /**
@@ -334,8 +406,6 @@ if (! version_compare(get_bloginfo('version'), WC_SUMUP_MINIMUM_WP_VERSION, '>='
  */
 function sumup_payment_gateway_for_woocommerce_init()
 {
-	sumup_sync_gateway_enabled_state();
-
 	/**
 	 * Display links next to the plugin's version.
 	 *
@@ -456,6 +526,8 @@ function sumup_payment_gateway_for_woocommerce_init()
 	include_once WC_SUMUP_PLUGIN_PATH . '/includes/api/class-sumup-disconnect.php';
 	include_once WC_SUMUP_PLUGIN_PATH . '/includes/class-wc-sumup-onboarding.php';
 	include_once WC_SUMUP_PLUGIN_PATH . '/includes/api/class-sumup-api-handler.php';
+
+	sumup_sync_gateway_enabled_state();
 
 	$sumup_onbording = new WC_Sumup_Onboarding();
 	$sumup_onbording->init_ajax_request();

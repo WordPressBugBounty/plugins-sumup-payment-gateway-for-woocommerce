@@ -4,7 +4,7 @@ Tags: sumup, payment gateway, woocommerce, payments, ecommerce
 Requires at least: 6.9
 Tested up to: 7.0
 Requires PHP: 7.4
-Stable tag: 2.15.0
+Stable tag: 2.15.1
 License: Apache-2.0
 License URI: https://www.apache.org/licenses/LICENSE-2.0
 
@@ -94,6 +94,10 @@ If you need help with setup or testing, contact SumUp support through the offici
 Yes. Test the integration fully before enabling live payments.
 
 == Changelog ==
+= 2.15.1 =
+* Fixed: Automatically migrate legacy stores that still have `pay_to_email` but no `merchant_code` by fetching the merchant code from SumUp user info.
+* Fixed: Restored widget and checkout compatibility for older connections during the 2.15.0 migration.
+
 = 2.15.0 =
 * Fixed: Stopped sending `pay_to_email` to the SumUp widget and now use `merchant_code` consistently.
 * Improvements: Updated setup copy and localized strings to refer to “Merchant code” everywhere.
@@ -312,6 +316,9 @@ Yes. Test the integration fully before enabling live payments.
 * Initial release.
 
 == Upgrade Notice ==
+
+= 2.15.1 =
+* Patch release that keeps 2.15.0's merchant-code migration, while restoring compatibility for legacy `pay_to_email` connections.
 
 = 2.15.0 =
 * A minor release that standardizes on Merchant code and removes the legacy `pay_to_email` widget payload.

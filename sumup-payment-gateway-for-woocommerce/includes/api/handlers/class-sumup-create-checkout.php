@@ -87,7 +87,7 @@ class Sumup_API_Create_Chekout_Handler extends Sumup_Api_Handler
 			);
 		}
 
-		if (empty($sumup_settings['merchant_id'])) {
+		if (empty($sumup_settings['merchant_id']) && empty($sumup_settings['pay_to_email'])) {
 			WC_SUMUP_LOGGER::log(
 				'Gateway configuration is incomplete: missing Merchant code.',
 				array(

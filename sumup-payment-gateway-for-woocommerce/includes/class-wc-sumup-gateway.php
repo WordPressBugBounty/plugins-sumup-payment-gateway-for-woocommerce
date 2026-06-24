@@ -638,6 +638,8 @@ class WC_Gateway_SumUp extends \WC_Payment_Gateway
 
 		if (!empty($this->merchant_id)) {
 			$checkout_data['merchant_code'] = $this->merchant_id;
+		} elseif (!empty($this->pay_to_email)) {
+			$checkout_data['pay_to_email'] = $this->pay_to_email;
 		}
 
 		return $checkout_data;
@@ -2201,7 +2203,7 @@ class WC_Gateway_SumUp extends \WC_Payment_Gateway
 		/**
 		 * Required fileds to request somethings to SumUp - Refator to meke the first verification more complete.
 		 */
-		if (empty($this->merchant_id)) {
+		if (empty($this->merchant_id) && empty($this->pay_to_email)) {
 			WC_SUMUP_LOGGER::log(
 				'Gateway configuration is incomplete: missing Merchant code.',
 				$this->get_gateway_log_context(array('flow' => 'order_pay')),
