@@ -74,6 +74,16 @@ msgstr ""
 msgid "Fill in all required details."
 msgstr "Wypełnij wszystkie wymagane szczegóły."
 
+#: includes/api/handlers/class-sumup-create-checkout.php:100
+#: includes/class-wc-sumup-gateway.php:2211
+msgid "Please fill \"Merchant code\" on the plugin settings."
+msgstr ""
+
+#: includes/api/handlers/class-sumup-create-checkout.php:101
+#: includes/class-wc-sumup-gateway.php:2212
+msgid "Sorry, SumUp is not available. Try again soon."
+msgstr ""
+
 #: includes/class-wc-sumup-credentials.php:52
 msgid "Invalid Client ID, Client Secret or API Key."
 msgstr "Nieprawidłowy identyfikator klienta, tajemnica klienta lub klucz API."
@@ -197,11 +207,11 @@ msgstr ""
 "methods."
 
 #: includes/class-wc-sumup-settings.php:36
-msgid "Merchant ID"
+msgid "Merchant code"
 msgstr "Identyfikator sprzedawcy"
 
 #: includes/class-wc-sumup-settings.php:38
-msgid "Get your Merchant ID from your SumUp account:"
+msgid "Get your Merchant code from your SumUp account:"
 msgstr "Pobierz identyfikator sprzedawcy z konta SumUp:"
 
 #: includes/class-wc-sumup-settings.php:42
@@ -338,7 +348,8 @@ msgstr ""
 #: sumup-payment-gateway-for-woocommerce.php:126
 #, fuzzy
 msgid ""
-"SumUp Gateway is not configured properly. Please fill the field Merchant ID."
+"SumUp Gateway is not configured properly. Please fill the field Merchant "
+"code."
 msgstr ""
 "Bramka SumUp nie jest poprawnie skonfigurowana. Możesz to naprawić <a "
 "href=\"%s\">tutaj</a>."

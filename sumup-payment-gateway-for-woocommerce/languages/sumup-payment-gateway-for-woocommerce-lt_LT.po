@@ -2,7 +2,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: SumUp Payment Gateway For WooCommerce 2.5.5\n"
-"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/sumup-plugin-for-woocommerce\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/sumup-plugin-for-"
+"woocommerce\n"
 "POT-Creation-Date: 2024-07-09T02:16:27+00:00\n"
 "PO-Revision-Date: 2024-10-21 16:56-0300\n"
 "Last-Translator: \n"
@@ -56,8 +57,8 @@ msgstr ""
 #: includes/api/handlers/class-sumup-create-checkout.php:107
 #: includes/class-wc-sumup-gateway.php:533
 msgid ""
-"Order ID is not available to make the payment. Try again soon or contact the"
-" website support."
+"Order ID is not available to make the payment. Try again soon or contact the "
+"website support."
 msgstr ""
 "Užsakymo ID nėra, kad būtų galima atlikti mokėjimą. Pabandykite dar kartą "
 "vėliau arba susisiekite su svetainės palaikymo tarnyba."
@@ -65,8 +66,8 @@ msgstr ""
 #: includes/class-wc-sumup-block-gateway.php:138
 #: includes/class-wc-sumup-gateway.php:740
 msgid ""
-"Transaction was unsuccessful. Please check the minimum amount or use another"
-" valid card."
+"Transaction was unsuccessful. Please check the minimum amount or use another "
+"valid card."
 msgstr ""
 "Sandoris nepavyko. Patikrinkite minimalią sumą arba naudokite kitą "
 "galiojančią kortelę."
@@ -75,6 +76,16 @@ msgstr ""
 #: includes/class-wc-sumup-gateway.php:741
 msgid "Fill in all required details."
 msgstr "Užpildykite visus būtinus duomenis."
+
+#: includes/api/handlers/class-sumup-create-checkout.php:100
+#: includes/class-wc-sumup-gateway.php:2211
+msgid "Please fill \"Merchant code\" on the plugin settings."
+msgstr ""
+
+#: includes/api/handlers/class-sumup-create-checkout.php:101
+#: includes/class-wc-sumup-gateway.php:2212
+msgid "Sorry, SumUp is not available. Try again soon."
+msgstr ""
 
 #: includes/class-wc-sumup-credentials.php:52
 msgid "Invalid Client ID, Client Secret or API Key."
@@ -99,12 +110,11 @@ msgstr "Prisijungimo duomenys netinkami. Patikrinkite ir bandykite dar kartą."
 msgid "Your credentials are valid and you are ready to use the plugin."
 msgstr "Jūsų prisijungimo duomenys galioja ir galite naudoti įskiepį."
 
-#. translators: %1$s = https://me.sumup.com/, %2$s =
-#. https://me.sumup.com/developers
+#. translators: %1$s = https://me.sumup.com/, %2$s = https://me.sumup.com/developers
 #: includes/class-wc-sumup-gateway.php:203
 msgid ""
-"Accept credit and debit cards with SumUp, plus eligible payment methods such"
-" as Apple Pay, PayPal, Bancontact, and iDEAL."
+"Accept credit and debit cards with SumUp, plus eligible payment methods such "
+"as Apple Pay, PayPal, Bancontact, and iDEAL."
 msgstr ""
 "Priimkite kredito ir debeto korteles su SumUp, taip pat palaikomus mokėjimo "
 "būdus, tokius kaip Apple Pay, PayPal, Bancontact ir iDEAL."
@@ -200,11 +210,11 @@ msgstr ""
 "methods."
 
 #: includes/class-wc-sumup-settings.php:36
-msgid "Merchant ID"
+msgid "Merchant code"
 msgstr "Prekybininko ID"
 
 #: includes/class-wc-sumup-settings.php:38
-msgid "Get your Merchant ID from your SumUp account:"
+msgid "Get your Merchant code from your SumUp account:"
 msgstr "Gaukite savo prekybininko ID iš SumUp paskyros:"
 
 #: includes/class-wc-sumup-settings.php:42
@@ -316,8 +326,8 @@ msgstr ""
 #. translators: %s = admin.php?page=wc-settings&tab=checkout&section=sumup
 #: sumup-payment-gateway-for-woocommerce.php:109
 msgid ""
-"SumUp Gateway is almost ready. To get started, <a href=\"%s\">set your SumUp"
-" account keys</a>."
+"SumUp Gateway is almost ready. To get started, <a href=\"%s\">set your SumUp "
+"account keys</a>."
 msgstr ""
 "SumUp vartai beveik paruošti. Norėdami pradėti, <a href=\"%s\">nustatykite "
 "savo SumUp paskyros raktus</a>."
@@ -342,7 +352,8 @@ msgstr ""
 #: sumup-payment-gateway-for-woocommerce.php:126
 #, fuzzy
 msgid ""
-"SumUp Gateway is not configured properly. Please fill the field Merchant ID."
+"SumUp Gateway is not configured properly. Please fill the field Merchant "
+"code."
 msgstr ""
 "SumUp vartai nėra tinkamai sukonfigūruoti. Tai galite išspręsti <a "
 "href=\"%s\">čia</a>."
@@ -377,9 +388,8 @@ msgstr "WooCommerce dabar gali priimti mokėjimus per SumUp"
 
 #: templates/onboarding.php:28
 msgid ""
-"Accept payments through your SumUp account in WooCommerce. Take all payments"
-" in your online store with an easy and quick integration. No coding "
-"required."
+"Accept payments through your SumUp account in WooCommerce. Take all payments "
+"in your online store with an easy and quick integration. No coding required."
 msgstr ""
 "Priimkite mokėjimus per savo SumUp paskyrą WooCommerce. Priimkite visus "
 "mokėjimus savo internetinėje parduotuvėje su lengva ir greita integracija. "
@@ -427,12 +437,12 @@ msgstr ""
 #, php-format
 msgid ""
 "Your store is currently using %1$s, which is not publicly reachable. Use a "
-"public HTTPS domain before connecting SumUp. If you are testing locally, use"
-" a tunnel such as ngrok or Cloudflare Tunnel and update WordPress Home and "
+"public HTTPS domain before connecting SumUp. If you are testing locally, use "
+"a tunnel such as ngrok or Cloudflare Tunnel and update WordPress Home and "
 "Site URL first."
 msgstr ""
-"Jūsų parduotuvė šiuo metu naudoja %1$s, kuris nėra viešai pasiekiamas. Prieš"
-" prijungdami „SumUp“ naudokite viešą HTTPS domeną. Jei bandote vietoje, "
+"Jūsų parduotuvė šiuo metu naudoja %1$s, kuris nėra viešai pasiekiamas. Prieš "
+"prijungdami „SumUp“ naudokite viešą HTTPS domeną. Jei bandote vietoje, "
 "naudokite tunelį, pvz., ngrok arba Cloudflare Tunnel, ir pirmiausia "
 "atnaujinkite „WordPress Home“ ir „Site URL“."
 
@@ -471,8 +481,8 @@ msgstr "Užbaikite sąranką, kad galėtumėte priimti mokėjimus su „SumUp“
 
 #: /Users/matousdzivjak/code/github.com/sumup/sumup-plugin-woocommerce/templates/onboarding.php:25
 msgid ""
-"Connect your SumUp account to start accepting credit and debit card payments"
-" in WooCommerce."
+"Connect your SumUp account to start accepting credit and debit card payments "
+"in WooCommerce."
 msgstr ""
 "Prijunkite savo „SumUp“ paskyrą, kad „WooCommerce“ pradėtumėte priimti "
 "mokėjimus kredito ir debeto kortelėmis."

@@ -6,7 +6,7 @@
  * Description: Take credit card payments on your store using SumUp.
  * Author: SumUp
  * Author URI: https://sumup.com
- * Version: 2.14.0
+ * Version: 2.15.0
  * Requires at least: 6.9
  * Requires PHP: 7.4
  * Text Domain: sumup-payment-gateway-for-woocommerce
@@ -22,7 +22,7 @@ if (! defined('ABSPATH')) {
 define('WC_SUMUP_MAIN_FILE', __FILE__);
 define('WC_SUMUP_PLUGIN_PATH', untrailingslashit(plugin_dir_path(__FILE__)));
 define('WC_SUMUP_PLUGIN_URL', plugin_dir_url(__FILE__));
-define('WC_SUMUP_VERSION', '2.14.0');
+define('WC_SUMUP_VERSION', '2.15.0');
 define('WC_SUMUP_MINIMUM_PHP_VERSION', '7.4');
 define('WC_SUMUP_MINIMUM_WP_VERSION', '6.9');
 define('WC_SUMUP_PLUGIN_SLUG', 'sumup-payment-gateway-for-woocommerce');
@@ -52,7 +52,7 @@ function sumup_gateway_has_connection_details($settings = null)
 	}
 
 	$has_auth_material = ! empty($settings['api_key']) || (! empty($settings['client_id']) && ! empty($settings['client_secret']));
-	$has_account_reference = ! empty($settings['merchant_id']) || ! empty($settings['pay_to_email']);
+	$has_account_reference = ! empty($settings['merchant_id']);
 
 	return $has_auth_material && $has_account_reference;
 }

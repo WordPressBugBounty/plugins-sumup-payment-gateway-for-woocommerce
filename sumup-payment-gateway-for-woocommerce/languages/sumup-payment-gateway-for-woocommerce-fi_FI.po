@@ -2,7 +2,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: SumUp Payment Gateway For WooCommerce 2.5.5\n"
-"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/sumup-plugin-for-woocommerce\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/sumup-plugin-for-"
+"woocommerce\n"
 "POT-Creation-Date: 2024-07-09T02:16:27+00:00\n"
 "PO-Revision-Date: 2024-10-21 16:53-0300\n"
 "Last-Translator: \n"
@@ -54,8 +55,8 @@ msgstr ""
 #: includes/api/handlers/class-sumup-create-checkout.php:107
 #: includes/class-wc-sumup-gateway.php:533
 msgid ""
-"Order ID is not available to make the payment. Try again soon or contact the"
-" website support."
+"Order ID is not available to make the payment. Try again soon or contact the "
+"website support."
 msgstr ""
 "Tilaus-ID ei ole käytettävissä maksun suorittamiseen. Yritä myöhemmin "
 "uudelleen tai ota yhteyttä verkkosivuston tukeen."
@@ -63,8 +64,8 @@ msgstr ""
 #: includes/class-wc-sumup-block-gateway.php:138
 #: includes/class-wc-sumup-gateway.php:740
 msgid ""
-"Transaction was unsuccessful. Please check the minimum amount or use another"
-" valid card."
+"Transaction was unsuccessful. Please check the minimum amount or use another "
+"valid card."
 msgstr ""
 "Tapahtuma epäonnistui. Tarkista vähimmäismäärä tai käytä toista voimassa "
 "olevaa korttia."
@@ -73,6 +74,16 @@ msgstr ""
 #: includes/class-wc-sumup-gateway.php:741
 msgid "Fill in all required details."
 msgstr "Täytä kaikki vaaditut tiedot."
+
+#: includes/api/handlers/class-sumup-create-checkout.php:100
+#: includes/class-wc-sumup-gateway.php:2211
+msgid "Please fill \"Merchant code\" on the plugin settings."
+msgstr ""
+
+#: includes/api/handlers/class-sumup-create-checkout.php:101
+#: includes/class-wc-sumup-gateway.php:2212
+msgid "Sorry, SumUp is not available. Try again soon."
+msgstr ""
 
 #: includes/class-wc-sumup-credentials.php:52
 msgid "Invalid Client ID, Client Secret or API Key."
@@ -96,12 +107,11 @@ msgstr "Tunnistetiedot eivät ole voimassa. Tarkista ja yritä uudelleen."
 msgid "Your credentials are valid and you are ready to use the plugin."
 msgstr "Tunnistetietosi ovat voimassa ja olet valmis käyttämään laajennusta."
 
-#. translators: %1$s = https://me.sumup.com/, %2$s =
-#. https://me.sumup.com/developers
+#. translators: %1$s = https://me.sumup.com/, %2$s = https://me.sumup.com/developers
 #: includes/class-wc-sumup-gateway.php:203
 msgid ""
-"Accept credit and debit cards with SumUp, plus eligible payment methods such"
-" as Apple Pay, PayPal, Bancontact, and iDEAL."
+"Accept credit and debit cards with SumUp, plus eligible payment methods such "
+"as Apple Pay, PayPal, Bancontact, and iDEAL."
 msgstr ""
 "Hyväksy luotto- ja pankkikortit SumUpilla sekä tuetut maksutavat, kuten "
 "Apple Pay, PayPal, Bancontact ja iDEAL."
@@ -197,11 +207,11 @@ msgstr ""
 "methods."
 
 #: includes/class-wc-sumup-settings.php:36
-msgid "Merchant ID"
+msgid "Merchant code"
 msgstr "Kauppiastunnus"
 
 #: includes/class-wc-sumup-settings.php:38
-msgid "Get your Merchant ID from your SumUp account:"
+msgid "Get your Merchant code from your SumUp account:"
 msgstr "Hanki kauppiastunnuksesi SumUp-tililtäsi:"
 
 #: includes/class-wc-sumup-settings.php:42
@@ -252,8 +262,7 @@ msgstr "Kirjaa virheenkorjausviestit"
 
 #: includes/class-wc-sumup-settings.php:73
 msgid "Save debug messages to the WooCommerce System Status log."
-msgstr ""
-"Tallenna virheenkorjausviestit WooCommercen järjestelmän tilan lokiin."
+msgstr "Tallenna virheenkorjausviestit WooCommercen järjestelmän tilan lokiin."
 
 #: includes/class-wc-sumup-settings.php:97
 msgid "Installments"
@@ -314,8 +323,8 @@ msgstr ""
 #. translators: %s = admin.php?page=wc-settings&tab=checkout&section=sumup
 #: sumup-payment-gateway-for-woocommerce.php:109
 msgid ""
-"SumUp Gateway is almost ready. To get started, <a href=\"%s\">set your SumUp"
-" account keys</a>."
+"SumUp Gateway is almost ready. To get started, <a href=\"%s\">set your SumUp "
+"account keys</a>."
 msgstr ""
 "SumUp-yhdyskäytävä on melkein valmis. Aloittaaksesi <a href=\"%s\">määritä "
 "SumUp-tiliavaimesi</a>."
@@ -340,7 +349,8 @@ msgstr ""
 #: sumup-payment-gateway-for-woocommerce.php:126
 #, fuzzy
 msgid ""
-"SumUp Gateway is not configured properly. Please fill the field Merchant ID."
+"SumUp Gateway is not configured properly. Please fill the field Merchant "
+"code."
 msgstr ""
 "SumUp-yhdyskäytävää ei ole määritetty oikein. Voit korjata tämän <a "
 "href=\"%s\">tästä</a>."
@@ -375,9 +385,8 @@ msgstr "WooCommerce voi nyt hyväksyä maksuja SumUpin kautta"
 
 #: templates/onboarding.php:28
 msgid ""
-"Accept payments through your SumUp account in WooCommerce. Take all payments"
-" in your online store with an easy and quick integration. No coding "
-"required."
+"Accept payments through your SumUp account in WooCommerce. Take all payments "
+"in your online store with an easy and quick integration. No coding required."
 msgstr ""
 "Hyväksy maksuja SumUp-tilisi kautta WooCommercessa. Hyväksy kaikki suuret "
 "pankki- ja luottokortit, käteinen, laskutus ja paljon muuta eri valuutoissa."
@@ -424,8 +433,8 @@ msgstr ""
 #, php-format
 msgid ""
 "Your store is currently using %1$s, which is not publicly reachable. Use a "
-"public HTTPS domain before connecting SumUp. If you are testing locally, use"
-" a tunnel such as ngrok or Cloudflare Tunnel and update WordPress Home and "
+"public HTTPS domain before connecting SumUp. If you are testing locally, use "
+"a tunnel such as ngrok or Cloudflare Tunnel and update WordPress Home and "
 "Site URL first."
 msgstr ""
 "Kauppasi käyttää tällä hetkellä osoitetta %1$s, joka ei ole julkisesti "
@@ -467,8 +476,8 @@ msgstr "Viimeistele asennus, jotta voit ottaa maksuja vastaan SumUpilla"
 
 #: /Users/matousdzivjak/code/github.com/sumup/sumup-plugin-woocommerce/templates/onboarding.php:25
 msgid ""
-"Connect your SumUp account to start accepting credit and debit card payments"
-" in WooCommerce."
+"Connect your SumUp account to start accepting credit and debit card payments "
+"in WooCommerce."
 msgstr ""
 "Yhdistä SumUp-tilisi, jotta voit alkaa vastaanottaa luotto- ja "
 "pankkikorttimaksuja WooCommercessa."

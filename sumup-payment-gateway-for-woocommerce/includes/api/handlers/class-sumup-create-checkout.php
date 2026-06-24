@@ -87,16 +87,18 @@ class Sumup_API_Create_Chekout_Handler extends Sumup_Api_Handler
 			);
 		}
 
-		if (empty($sumup_settings['pay_to_email']) && empty($sumup_settings['merchant_id'])) {
+		if (empty($sumup_settings['merchant_id'])) {
 			WC_SUMUP_LOGGER::log(
-				'Gateway configuration is incomplete: missing Login Email and Merchant ID.',
+				'Gateway configuration is incomplete: missing Merchant code.',
 				array(
 					'flow' => 'blocks_checkout_create',
 					'merchant_code' => $sumup_settings['merchant_id'] ?? '',
 				),
 				'error'
 			);
-			$message = current_user_can('manage_options') ? 'Please fill "Login Email" and "Merchant ID" on the plugin settings.' : 'Sorry, SumUp is not available. Try again soon.';
+			$message = current_user_can('manage_options')
+				? __('Please fill "Merchant code" on the plugin settings.', 'sumup-payment-gateway-for-woocommerce')
+				: __('Sorry, SumUp is not available. Try again soon.', 'sumup-payment-gateway-for-woocommerce');
 			return 	array(
 				'status' => 'error',
 				'message' => $message,

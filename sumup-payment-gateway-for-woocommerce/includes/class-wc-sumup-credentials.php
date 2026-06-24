@@ -65,7 +65,6 @@ class Wc_Sumup_Credentials {
 			'currency' => get_woocommerce_currency(),
 			'description' => 'WooCommerce settings validate ' . time(),
 			'merchant_code' => $settings['merchant_id'],
-			'pay_to_email' => $settings['pay_to_email'],
 			'redirect_url' => wc_get_checkout_url(),
 			'return_url' => wc_get_checkout_url(),
 		);

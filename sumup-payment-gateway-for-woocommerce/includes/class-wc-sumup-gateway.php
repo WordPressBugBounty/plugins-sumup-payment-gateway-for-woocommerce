@@ -67,7 +67,7 @@ class WC_Gateway_SumUp extends \WC_Payment_Gateway
 	<?php
 	}
 	/**
-	 * Merchant ID
+	 * Merchant code
 	 *
 	 * @since 2.0
 	 */
@@ -376,7 +376,7 @@ class WC_Gateway_SumUp extends \WC_Payment_Gateway
 							<?php echo esc_html( $account_email ); ?>
 						</p>
 						<p class="sumup-connection-summary__row">
-							<strong><?php echo esc_html__( 'Merchant ID', 'sumup-payment-gateway-for-woocommerce' ); ?>:</strong>
+							<strong><?php echo esc_html__( 'Merchant code', 'sumup-payment-gateway-for-woocommerce' ); ?>:</strong>
 							<?php echo esc_html( $merchant_id ); ?>
 						</p>
 					</div>
@@ -638,8 +638,6 @@ class WC_Gateway_SumUp extends \WC_Payment_Gateway
 
 		if (!empty($this->merchant_id)) {
 			$checkout_data['merchant_code'] = $this->merchant_id;
-		} elseif (!empty($this->pay_to_email)) {
-			$checkout_data['pay_to_email'] = $this->pay_to_email;
 		}
 
 		return $checkout_data;
@@ -2203,13 +2201,15 @@ class WC_Gateway_SumUp extends \WC_Payment_Gateway
 		/**
 		 * Required fileds to request somethings to SumUp - Refator to meke the first verification more complete.
 		 */
-		if (empty($this->pay_to_email) && empty($this->merchant_id)) {
+		if (empty($this->merchant_id)) {
 			WC_SUMUP_LOGGER::log(
-				'Gateway configuration is incomplete: missing Login Email and Merchant ID.',
+				'Gateway configuration is incomplete: missing Merchant code.',
 				$this->get_gateway_log_context(array('flow' => 'order_pay')),
 				'error'
 			);
-			$message = current_user_can('manage_options') ? 'Please fill "Login Email" and "Merchant ID" on the plugin settings.' : 'Sorry, SumUp is not available. Try again soon.';
+			$message = current_user_can('manage_options')
+				? __('Please fill "Merchant code" on the plugin settings.', 'sumup-payment-gateway-for-woocommerce')
+				: __('Sorry, SumUp is not available. Try again soon.', 'sumup-payment-gateway-for-woocommerce');
 			echo $this->print_error_message($message);
 			return;
 		}

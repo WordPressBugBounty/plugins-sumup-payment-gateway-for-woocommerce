@@ -2,7 +2,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: SumUp Payment Gateway For WooCommerce 2.5.5\n"
-"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/sumup-plugin-for-woocommerce\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/sumup-plugin-for-"
+"woocommerce\n"
 "POT-Creation-Date: 2024-07-09T02:16:27+00:00\n"
 "PO-Revision-Date: 2024-10-21 16:55-0300\n"
 "Last-Translator: \n"
@@ -40,39 +41,49 @@ msgid ""
 "Merchant account settings are incorrectly configured. Check the plugin "
 "settings page."
 msgstr ""
-"A kereskedői fiók beállításai helytelenül vannak konfigurálva. Ellenőrizze a"
-" bővítmény beállítások oldalát."
+"A kereskedői fiók beállításai helytelenül vannak konfigurálva. Ellenőrizze a "
+"bővítmény beállítások oldalát."
 
 #: includes/api/handlers/class-sumup-create-checkout.php:67
 msgid ""
 "Sumup is temporarily unavailable. Please contact site admin for more "
 "information."
 msgstr ""
-"A Sumup átmenetileg nem elérhető. További információkért forduljon a webhely"
-" adminisztrátorához."
+"A Sumup átmenetileg nem elérhető. További információkért forduljon a webhely "
+"adminisztrátorához."
 
 #: includes/api/handlers/class-sumup-create-checkout.php:107
 #: includes/class-wc-sumup-gateway.php:533
 msgid ""
-"Order ID is not available to make the payment. Try again soon or contact the"
-" website support."
+"Order ID is not available to make the payment. Try again soon or contact the "
+"website support."
 msgstr ""
-"A rendelési azonosító nem érhető el a fizetéshez. Próbálja újra később, vagy"
-" lépjen kapcsolatba a weboldal támogatásával."
+"A rendelési azonosító nem érhető el a fizetéshez. Próbálja újra később, vagy "
+"lépjen kapcsolatba a weboldal támogatásával."
 
 #: includes/class-wc-sumup-block-gateway.php:138
 #: includes/class-wc-sumup-gateway.php:740
 msgid ""
-"Transaction was unsuccessful. Please check the minimum amount or use another"
-" valid card."
+"Transaction was unsuccessful. Please check the minimum amount or use another "
+"valid card."
 msgstr ""
-"A tranzakció sikertelen volt. Kérjük, ellenőrizze a minimális összeget, vagy"
-" használjon más érvényes kártyát."
+"A tranzakció sikertelen volt. Kérjük, ellenőrizze a minimális összeget, vagy "
+"használjon más érvényes kártyát."
 
 #: includes/class-wc-sumup-block-gateway.php:139
 #: includes/class-wc-sumup-gateway.php:741
 msgid "Fill in all required details."
 msgstr "Töltse ki az összes szükséges adatot."
+
+#: includes/api/handlers/class-sumup-create-checkout.php:100
+#: includes/class-wc-sumup-gateway.php:2211
+msgid "Please fill \"Merchant code\" on the plugin settings."
+msgstr ""
+
+#: includes/api/handlers/class-sumup-create-checkout.php:101
+#: includes/class-wc-sumup-gateway.php:2212
+msgid "Sorry, SumUp is not available. Try again soon."
+msgstr ""
 
 #: includes/class-wc-sumup-credentials.php:52
 msgid "Invalid Client ID, Client Secret or API Key."
@@ -87,8 +98,8 @@ msgstr ""
 #: includes/class-wc-sumup-credentials.php:77
 msgid "Credentials are not valid. Please check the plugin log and try again."
 msgstr ""
-"A hitelesítő adatok érvénytelenek. Kérjük, ellenőrizze a bővítmény naplóját,"
-" és próbálja újra."
+"A hitelesítő adatok érvénytelenek. Kérjük, ellenőrizze a bővítmény naplóját, "
+"és próbálja újra."
 
 #: includes/class-wc-sumup-credentials.php:92
 msgid "Credentials are not valid. Please check and try again."
@@ -100,12 +111,11 @@ msgid "Your credentials are valid and you are ready to use the plugin."
 msgstr ""
 "Az Ön hitelesítő adatai érvényesek, és készen áll a bővítmény használatára."
 
-#. translators: %1$s = https://me.sumup.com/, %2$s =
-#. https://me.sumup.com/developers
+#. translators: %1$s = https://me.sumup.com/, %2$s = https://me.sumup.com/developers
 #: includes/class-wc-sumup-gateway.php:203
 msgid ""
-"Accept credit and debit cards with SumUp, plus eligible payment methods such"
-" as Apple Pay, PayPal, Bancontact, and iDEAL."
+"Accept credit and debit cards with SumUp, plus eligible payment methods such "
+"as Apple Pay, PayPal, Bancontact, and iDEAL."
 msgstr ""
 "Fogadjon el hitel- és betéti kártyákat a SumUp segítségével, valamint "
 "támogatott fizetési módokat, például Apple Pay, PayPal, Bancontact és iDEAL."
@@ -135,8 +145,8 @@ msgid ""
 "Sum up is temporarily unavailable. Please contact site admin for more "
 "information."
 msgstr ""
-"A SumUp átmenetileg nem elérhető. További információkért forduljon a webhely"
-" adminisztrátorához."
+"A SumUp átmenetileg nem elérhető. További információkért forduljon a webhely "
+"adminisztrátorához."
 
 #: includes/class-wc-sumup-gateway.php:825
 msgid "Payment Status: "
@@ -201,11 +211,11 @@ msgstr ""
 "methods."
 
 #: includes/class-wc-sumup-settings.php:36
-msgid "Merchant ID"
+msgid "Merchant code"
 msgstr "Kereskedői azonosító"
 
 #: includes/class-wc-sumup-settings.php:38
-msgid "Get your Merchant ID from your SumUp account:"
+msgid "Get your Merchant code from your SumUp account:"
 msgstr "Szerezze be kereskedői azonosítóját a SumUp fiókjából:"
 
 #: includes/class-wc-sumup-settings.php:42
@@ -318,11 +328,11 @@ msgstr ""
 #. translators: %s = admin.php?page=wc-settings&tab=checkout&section=sumup
 #: sumup-payment-gateway-for-woocommerce.php:109
 msgid ""
-"SumUp Gateway is almost ready. To get started, <a href=\"%s\">set your SumUp"
-" account keys</a>."
+"SumUp Gateway is almost ready. To get started, <a href=\"%s\">set your SumUp "
+"account keys</a>."
 msgstr ""
-"A SumUp kapu majdnem készen áll. A kezdéshez <a href=\"%s\">állítsa be SumUp"
-" fiókja kulcsait</a>."
+"A SumUp kapu majdnem készen áll. A kezdéshez <a href=\"%s\">állítsa be SumUp "
+"fiókja kulcsait</a>."
 
 #. translators: %s = admin.php?page=wc-settings&tab=checkout&section=sumup
 #: sumup-payment-gateway-for-woocommerce.php:116
@@ -344,7 +354,8 @@ msgstr ""
 #: sumup-payment-gateway-for-woocommerce.php:126
 #, fuzzy
 msgid ""
-"SumUp Gateway is not configured properly. Please fill the field Merchant ID."
+"SumUp Gateway is not configured properly. Please fill the field Merchant "
+"code."
 msgstr ""
 "A SumUp kapu nincs megfelelően konfigurálva. Javíthatja ezt <a "
 "href=\"%s\">itt</a>."
@@ -379,9 +390,8 @@ msgstr "A WooCommerce mostantól elfogad fizetéseket a SumUp segítségével"
 
 #: templates/onboarding.php:28
 msgid ""
-"Accept payments through your SumUp account in WooCommerce. Take all payments"
-" in your online store with an easy and quick integration. No coding "
-"required."
+"Accept payments through your SumUp account in WooCommerce. Take all payments "
+"in your online store with an easy and quick integration. No coding required."
 msgstr ""
 "Fogadjon el fizetéseket SumUp fiókján keresztül a WooCommerce-ben. Fogadjon "
 "el minden fizetést online áruházában könnyű és gyors integrációval. Nem "
@@ -424,21 +434,21 @@ msgid ""
 "WordPress Home and Site URL first."
 msgstr ""
 "Használjon nyilvánosan elérhető HTTPS domainnevet a SumUp csatlakoztatása "
-"előtt. Ha helyben tesztel, használjon például ngrokot vagy Cloudflare "
-"Tunnel-t, és először frissítse a WordPress Home és Site URL-t."
+"előtt. Ha helyben tesztel, használjon például ngrokot vagy Cloudflare Tunnel-"
+"t, és először frissítse a WordPress Home és Site URL-t."
 
 #: /Users/matousdzivjak/code/github.com/sumup/sumup-plugin-woocommerce/sumup-payment-gateway-for-woocommerce.php:138
 #, php-format
 msgid ""
 "Your store is currently using %1$s, which is not publicly reachable. Use a "
-"public HTTPS domain before connecting SumUp. If you are testing locally, use"
-" a tunnel such as ngrok or Cloudflare Tunnel and update WordPress Home and "
+"public HTTPS domain before connecting SumUp. If you are testing locally, use "
+"a tunnel such as ngrok or Cloudflare Tunnel and update WordPress Home and "
 "Site URL first."
 msgstr ""
 "Az Ön áruháza jelenleg a(z) %1$s címet használja, amely nem érhető el "
 "nyilvánosan. Használjon nyilvános HTTPS domaint a SumUp csatlakoztatása "
-"előtt. Ha helyben tesztel, használjon például ngrokot vagy Cloudflare "
-"Tunnel-t, és először frissítse a WordPress Home és Site URL-t."
+"előtt. Ha helyben tesztel, használjon például ngrokot vagy Cloudflare Tunnel-"
+"t, és először frissítse a WordPress Home és Site URL-t."
 
 #: /Users/matousdzivjak/code/github.com/sumup/sumup-plugin-woocommerce/sumup-payment-gateway-for-woocommerce.php:421
 msgid "Please use the “Connect Account” button to start the configuration."
@@ -476,11 +486,11 @@ msgstr "Fejezze be a beállítást, hogy SumUp-pal fogadhasson fizetéseket"
 
 #: /Users/matousdzivjak/code/github.com/sumup/sumup-plugin-woocommerce/templates/onboarding.php:25
 msgid ""
-"Connect your SumUp account to start accepting credit and debit card payments"
-" in WooCommerce."
+"Connect your SumUp account to start accepting credit and debit card payments "
+"in WooCommerce."
 msgstr ""
-"Csatlakoztassa SumUp-fiókját, hogy a WooCommerce-ben elkezdhesse elfogadni a"
-" hitel- és betéti kártyás fizetéseket."
+"Csatlakoztassa SumUp-fiókját, hogy a WooCommerce-ben elkezdhesse elfogadni a "
+"hitel- és betéti kártyás fizetéseket."
 
 #: /Users/matousdzivjak/code/github.com/sumup/sumup-plugin-woocommerce/templates/onboarding.php:29
 msgid "Setup takes 4 steps:"

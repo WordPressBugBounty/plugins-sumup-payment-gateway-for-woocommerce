@@ -2,7 +2,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: SumUp Payment Gateway For WooCommerce 2.5.5\n"
-"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/sumup-plugin-for-woocommerce\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/sumup-plugin-for-"
+"woocommerce\n"
 "POT-Creation-Date: 2024-07-09T02:16:27+00:00\n"
 "PO-Revision-Date: 2024-10-21 16:56-0300\n"
 "Last-Translator: \n"
@@ -48,14 +49,14 @@ msgid ""
 "Sumup is temporarily unavailable. Please contact site admin for more "
 "information."
 msgstr ""
-"SumUp ir īslaicīgi nepieejams. Lūdzu, sazinieties ar vietnes administratoru,"
-" lai iegūtu vairāk informācijas."
+"SumUp ir īslaicīgi nepieejams. Lūdzu, sazinieties ar vietnes administratoru, "
+"lai iegūtu vairāk informācijas."
 
 #: includes/api/handlers/class-sumup-create-checkout.php:107
 #: includes/class-wc-sumup-gateway.php:533
 msgid ""
-"Order ID is not available to make the payment. Try again soon or contact the"
-" website support."
+"Order ID is not available to make the payment. Try again soon or contact the "
+"website support."
 msgstr ""
 "Pasūtījuma ID nav pieejams, lai veiktu maksājumu. Mēģiniet vēlreiz drīz vai "
 "sazinieties ar vietnes atbalstu."
@@ -63,16 +64,26 @@ msgstr ""
 #: includes/class-wc-sumup-block-gateway.php:138
 #: includes/class-wc-sumup-gateway.php:740
 msgid ""
-"Transaction was unsuccessful. Please check the minimum amount or use another"
-" valid card."
+"Transaction was unsuccessful. Please check the minimum amount or use another "
+"valid card."
 msgstr ""
-"Transakcija neizdevās. Lūdzu, pārbaudiet minimālo summu vai izmantojiet citu"
-" derīgu karti."
+"Transakcija neizdevās. Lūdzu, pārbaudiet minimālo summu vai izmantojiet citu "
+"derīgu karti."
 
 #: includes/class-wc-sumup-block-gateway.php:139
 #: includes/class-wc-sumup-gateway.php:741
 msgid "Fill in all required details."
 msgstr "Aizpildiet visus nepieciešamos datus."
+
+#: includes/api/handlers/class-sumup-create-checkout.php:100
+#: includes/class-wc-sumup-gateway.php:2211
+msgid "Please fill \"Merchant code\" on the plugin settings."
+msgstr ""
+
+#: includes/api/handlers/class-sumup-create-checkout.php:101
+#: includes/class-wc-sumup-gateway.php:2212
+msgid "Sorry, SumUp is not available. Try again soon."
+msgstr ""
 
 #: includes/class-wc-sumup-credentials.php:52
 msgid "Invalid Client ID, Client Secret or API Key."
@@ -98,15 +109,14 @@ msgid "Your credentials are valid and you are ready to use the plugin."
 msgstr ""
 "Jūsu akreditācijas dati ir derīgi, un jūs esat gatavs izmantot spraudni."
 
-#. translators: %1$s = https://me.sumup.com/, %2$s =
-#. https://me.sumup.com/developers
+#. translators: %1$s = https://me.sumup.com/, %2$s = https://me.sumup.com/developers
 #: includes/class-wc-sumup-gateway.php:203
 msgid ""
-"Accept credit and debit cards with SumUp, plus eligible payment methods such"
-" as Apple Pay, PayPal, Bancontact, and iDEAL."
+"Accept credit and debit cards with SumUp, plus eligible payment methods such "
+"as Apple Pay, PayPal, Bancontact, and iDEAL."
 msgstr ""
-"Pieņemiet kredītkartes un debetkartes ar SumUp, kā arī atbalstītas maksājumu"
-" metodes, piemēram, Apple Pay, PayPal, Bancontact un iDEAL."
+"Pieņemiet kredītkartes un debetkartes ar SumUp, kā arī atbalstītas maksājumu "
+"metodes, piemēram, Apple Pay, PayPal, Bancontact un iDEAL."
 
 #: includes/class-wc-sumup-gateway.php:222
 msgid "SumUp charge complete. Transaction Code: %s"
@@ -133,8 +143,8 @@ msgid ""
 "Sum up is temporarily unavailable. Please contact site admin for more "
 "information."
 msgstr ""
-"SumUp ir īslaicīgi nepieejams. Lūdzu, sazinieties ar vietnes administratoru,"
-" lai iegūtu vairāk informācijas."
+"SumUp ir īslaicīgi nepieejams. Lūdzu, sazinieties ar vietnes administratoru, "
+"lai iegūtu vairāk informācijas."
 
 #: includes/class-wc-sumup-gateway.php:825
 msgid "Payment Status: "
@@ -199,11 +209,11 @@ msgstr ""
 "methods."
 
 #: includes/class-wc-sumup-settings.php:36
-msgid "Merchant ID"
+msgid "Merchant code"
 msgstr "Tirgotāja ID"
 
 #: includes/class-wc-sumup-settings.php:38
-msgid "Get your Merchant ID from your SumUp account:"
+msgid "Get your Merchant code from your SumUp account:"
 msgstr "Iegūstiet savu Tirgotāja ID no sava SumUp konta:"
 
 #: includes/class-wc-sumup-settings.php:42
@@ -316,8 +326,8 @@ msgstr ""
 #. translators: %s = admin.php?page=wc-settings&tab=checkout&section=sumup
 #: sumup-payment-gateway-for-woocommerce.php:109
 msgid ""
-"SumUp Gateway is almost ready. To get started, <a href=\"%s\">set your SumUp"
-" account keys</a>."
+"SumUp Gateway is almost ready. To get started, <a href=\"%s\">set your SumUp "
+"account keys</a>."
 msgstr ""
 "SumUp vārteja ir gandrīz gatava. Lai sāktu, <a href=\"%s\">iestatiet savas "
 "SumUp konta atslēgas</a>."
@@ -341,7 +351,8 @@ msgstr ""
 #: sumup-payment-gateway-for-woocommerce.php:126
 #, fuzzy
 msgid ""
-"SumUp Gateway is not configured properly. Please fill the field Merchant ID."
+"SumUp Gateway is not configured properly. Please fill the field Merchant "
+"code."
 msgstr ""
 "SumUp vārteja nav pareizi konfigurēta. To var labot <a href=\"%s\">šeit</a>."
 
@@ -375,9 +386,8 @@ msgstr "WooCommerce tagad var pieņemt maksājumus ar SumUp"
 
 #: templates/onboarding.php:28
 msgid ""
-"Accept payments through your SumUp account in WooCommerce. Take all payments"
-" in your online store with an easy and quick integration. No coding "
-"required."
+"Accept payments through your SumUp account in WooCommerce. Take all payments "
+"in your online store with an easy and quick integration. No coding required."
 msgstr ""
 "Pieņemiet maksājumus caur savu SumUp kontu WooCommerce. Pieņemiet visus "
 "maksājumus savā tiešsaistes veikalā ar vieglu un ātru integrāciju. Kods nav "
@@ -425,8 +435,8 @@ msgstr ""
 #, php-format
 msgid ""
 "Your store is currently using %1$s, which is not publicly reachable. Use a "
-"public HTTPS domain before connecting SumUp. If you are testing locally, use"
-" a tunnel such as ngrok or Cloudflare Tunnel and update WordPress Home and "
+"public HTTPS domain before connecting SumUp. If you are testing locally, use "
+"a tunnel such as ngrok or Cloudflare Tunnel and update WordPress Home and "
 "Site URL first."
 msgstr ""
 "Jūsu veikals pašlaik izmanto %1$s, kas nav publiski pieejams. Pirms SumUp "
@@ -468,8 +478,8 @@ msgstr "Pabeidziet iestatīšanu, lai pieņemtu maksājumus ar SumUp"
 
 #: /Users/matousdzivjak/code/github.com/sumup/sumup-plugin-woocommerce/templates/onboarding.php:25
 msgid ""
-"Connect your SumUp account to start accepting credit and debit card payments"
-" in WooCommerce."
+"Connect your SumUp account to start accepting credit and debit card payments "
+"in WooCommerce."
 msgstr ""
 "Pievienojiet savu SumUp kontu, lai WooCommerce sāktu pieņemt maksājumus ar "
 "kredītkartēm un debetkartēm."
