@@ -6,7 +6,7 @@
  * Description: Take credit card payments on your store using SumUp.
  * Author: SumUp
  * Author URI: https://sumup.com
- * Version: 2.16.1
+ * Version: 2.16.2
  * Requires at least: 6.9
  * Requires PHP: 7.4
  * Text Domain: sumup-payment-gateway-for-woocommerce
@@ -22,10 +22,106 @@ if (! defined('ABSPATH')) {
 define('WC_SUMUP_MAIN_FILE', __FILE__);
 define('WC_SUMUP_PLUGIN_PATH', untrailingslashit(plugin_dir_path(__FILE__)));
 define('WC_SUMUP_PLUGIN_URL', plugin_dir_url(__FILE__));
-define('WC_SUMUP_VERSION', '2.16.1');
+define('WC_SUMUP_VERSION', '2.16.2');
 define('WC_SUMUP_MINIMUM_PHP_VERSION', '7.4');
 define('WC_SUMUP_MINIMUM_WP_VERSION', '6.9');
 define('WC_SUMUP_PLUGIN_SLUG', 'sumup-payment-gateway-for-woocommerce');
+
+/**
+ * Normalize the detected operating system name for request headers.
+ *
+ * @return string
+ */
+function sumup_get_runtime_os_name()
+{
+	$os = strtolower((string) php_uname('s'));
+
+	if (0 === strpos($os, 'win')) {
+		return 'windows';
+	}
+
+	if (0 === strpos($os, 'linux')) {
+		return 'linux';
+	}
+
+	if (0 === strpos($os, 'darwin')) {
+		return 'darwin';
+	}
+
+	return '' !== $os ? $os : 'unknown';
+}
+
+/**
+ * Normalize the detected CPU architecture name for request headers.
+ *
+ * @return string
+ */
+function sumup_get_runtime_arch_name()
+{
+	$arch = strtolower((string) php_uname('m'));
+	$map = array(
+		'x86_64' => 'x86_64',
+		'x64' => 'x86_64',
+		'amd64' => 'x86_64',
+		'x86' => 'x86',
+		'i386' => 'x86',
+		'i686' => 'x86',
+		'ia32' => 'x86',
+		'x32' => 'x86',
+		'aarch64' => 'arm64',
+		'arm64' => 'arm64',
+		'arm' => 'arm',
+	);
+
+	if (isset($map[$arch])) {
+		return $map[$arch];
+	}
+
+	return '' !== $arch ? $arch : 'unknown';
+}
+
+/**
+ * Build the shared SumUp request headers used for outbound API calls.
+ *
+ * @param array $headers Additional headers to merge into the request.
+ * @param string $access_token Optional bearer token.
+ * @return array
+ */
+function sumup_get_api_request_headers($headers = array(), $access_token = '')
+{
+	static $runtime_headers = null;
+
+	if (null === $runtime_headers) {
+		$runtime_headers = array(
+			'User-Agent' => sprintf(
+				'%s/v%s (WordPress/%s)',
+				WC_SUMUP_PLUGIN_SLUG,
+				WC_SUMUP_VERSION,
+				get_bloginfo('version')
+			),
+			'X-Sumup-Lang' => 'php',
+			'X-Sumup-Plugin-Version' => WC_SUMUP_VERSION,
+			'X-Sumup-OS' => sumup_get_runtime_os_name(),
+			'X-Sumup-Arch' => sumup_get_runtime_arch_name(),
+			'X-Sumup-Runtime' => 'wordpress',
+			'X-Sumup-Runtime-Version' => PHP_VERSION,
+		);
+	}
+
+	$request_headers = array_merge(
+		array(
+			'Accept' => 'application/json',
+		),
+		$runtime_headers,
+		is_array($headers) ? $headers : array()
+	);
+
+	if ('' !== $access_token) {
+		$request_headers['Authorization'] = 'Bearer ' . $access_token;
+	}
+
+	return $request_headers;
+}
 
 /**
  * Get the stored SumUp gateway settings.
@@ -100,10 +196,7 @@ function sumup_maybe_migrate_merchant_code($settings = null)
 		array(
 			'timeout' => 15,
 			'redirection' => 0,
-			'headers' => array(
-				'Accept' => 'application/json',
-				'Authorization' => 'Bearer ' . $access_token,
-			),
+			'headers' => sumup_get_api_request_headers(array(), $access_token),
 		)
 	);
 

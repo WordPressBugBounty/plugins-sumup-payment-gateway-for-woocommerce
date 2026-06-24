@@ -81,8 +81,10 @@ class Wc_Sumup_Access_Token {
 			array(
 				'timeout' => self::REQUEST_TIMEOUT,
 				'redirection' => 0,
-				'headers' => array(
-					'Content-Type' => 'application/x-www-form-urlencoded',
+				'headers' => sumup_get_api_request_headers(
+					array(
+						'Content-Type' => 'application/x-www-form-urlencoded',
+					)
 				),
 				'body' => array(
 					'grant_type' => 'client_credentials',

@@ -133,11 +133,10 @@ class WC_Sumup_Onboarding {
 			array(
 				'timeout' => self::REQUEST_TIMEOUT,
 				'redirection' => 0,
-				'headers' => array(
+				'headers' => sumup_get_api_request_headers(array(
 					'Idempotency-Key' => $this->uuidv4(),
 					'Content-Type' => 'application/json',
-					'Accept' => 'application/json',
-				),
+				)),
 				'body' => $data,
 			)
 		);

@@ -27,10 +27,7 @@ class Wc_Sumup_Checkout
 		return array(
 			'timeout' => self::REQUEST_TIMEOUT,
 			'redirection' => 0,
-			'headers' => array(
-				'Accept' => 'application/json',
-				'Authorization' => 'Bearer ' . $access_token,
-			),
+			'headers' => sumup_get_api_request_headers(array(), $access_token),
 		);
 	}
 

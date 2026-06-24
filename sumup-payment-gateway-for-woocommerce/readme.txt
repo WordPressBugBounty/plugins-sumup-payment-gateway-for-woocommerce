@@ -4,7 +4,7 @@ Tags: sumup, payment gateway, woocommerce, payments, ecommerce
 Requires at least: 6.9
 Tested up to: 7.0
 Requires PHP: 7.4
-Stable tag: 2.16.1
+Stable tag: 2.16.2
 License: Apache-2.0
 License URI: https://www.apache.org/licenses/LICENSE-2.0
 
@@ -94,6 +94,11 @@ If you need help with setup or testing, contact SumUp support through the offici
 Yes. Test the integration fully before enabling live payments.
 
 == Changelog ==
+= 2.16.2 =
+* Fixed: Made modal payment handling more reliable.
+* Fixed: Saved settings now persist correctly after updates.
+* Improvements: Added extra request headers for checkout and onboarding requests.
+
 = 2.16.1 =
 * Fixed: Made checkout form resolution prefer the current WooCommerce helper first, while keeping compatibility with legacy checkout event payloads.
 
@@ -319,6 +324,9 @@ Yes. Test the integration fully before enabling live payments.
 * Initial release.
 
 == Upgrade Notice ==
+
+= 2.16.2 =
+* Patch release that improves modal payment handling, keeps updated settings from being lost, and adds extra request headers.
 
 = 2.16.1 =
 * Patch release for WooCommerce checkout compatibility. It now prefers the current helper object while falling back to the legacy event argument.
