@@ -218,7 +218,7 @@ class WC_Gateway_SumUp extends \WC_Payment_Gateway
 		$this->enable_pix = $this->get_option('enable_pix');
 		$this->currency = get_woocommerce_currency();
 		$this->return_url = WC()->api_request_url('wc_gateway_sumup');
-		$this->open_payment_in_modal = $this->get_option('open_payment_modal');
+		$this->open_payment_in_modal = $this->get_option('open_payment_modal', 'yes');
 
 		// Advanced webhook settings
 		$this->enable_webhook_priority = "yes";
@@ -2090,106 +2090,11 @@ class WC_Gateway_SumUp extends \WC_Payment_Gateway
 			$extra_class = $this->open_payment_in_modal === 'yes' ? 'modal' : 'no-modal';
 
 		?>
-			<style>
-				.wc-sumup-modal {
-					position: fixed;
-					top: 0;
-					bottom: auto;
-					left: 0;
-					right: 0;
-					height: 100%;
-					background: #000000bd;
-					display: flex;
-					justify-content: center;
-					align-items: center;
-					z-index: 9999;
-					overflow: auto
-				}
-
-				.wc-sumup-modal.disabled {
-					display: none
-				}
-
-				.wc-sumup-modal #sumup-card {
-					width: 700px;
-					max-width: 90%;
-					position: relative;
-					max-height: 95%;
-					background: #fff;
-					border-radius: 16px;
-					min-height: 140px
-				}
-
-				.wc-sumup-modal #wc-sumup-payment-modal-close {
-					position: absolute;
-					top: -10px;
-					right: -5px;
-					border-radius: 100%;
-					height: 28px;
-					width: 28px;
-					display: flex;
-					justify-content: center;
-					align-items: center;
-					color: #000;
-					background: #fff;
-					border: 1px solid #d8dde1;
-					cursor: pointer;
-					font-weight: 700
-				}
-
-				.wc-sumup-modal div[data-sumup-id=payment_option]>label {
-					display: flex !important
-				}
-
-				.sumup-boleto-pending-screen {
-					border: 1px dashed #000;
-					padding: 10px;
-					border-radius: 12px
-				}
-
-				div[data-testid=scannable-barcode]>img {
-					height: 250px !important;
-					max-height: 100% !important
-				}
-
-				.wc-sumup-modal.no-modal {
-					position: relative;
-					display: block;
-					height: auto;
-					background: transparent;
-					overflow: visible;
-					z-index: auto
-				}
-
-				.wc-sumup-modal.no-modal #sumup-card {
-					width: 100%;
-					max-width: none;
-					max-height: none;
-					border-radius: 0;
-					min-height: 140px;
-					padding: 0
-				}
-
-				.wc-sumup-modal.no-modal #sumup-card form {
-					padding: 0 16px 16px
-				}
-
-				.wc-sumup-modal.no-modal #wc-sumup-payment-modal-close {
-					display: none
-				}
-
-				.wc-sumup-modal section img[class*=' sumup-payment'],
-				.wc-sumup-modal section img[class^=sumup-payment] {
-					width: auto;
-					top: 50%;
-					transform: translateY(-55%)
-				}
-			</style>
 			<div id="wc-sumup-payment-modal" class="wc-sumup-modal disabled <?php echo esc_attr($extra_class); ?>">
 				<div id="sumup-card">
-					<div id="wc-sumup-payment-modal-close">
-						<span id="wc-sumup-payment-modal-close-btn">X</span>
-					</div>
+					<button id="wc-sumup-payment-modal-close" type="button" aria-label="<?php esc_attr_e( 'Close payment modal', 'sumup-payment-gateway-for-woocommerce' ); ?>">
+						<span id="wc-sumup-payment-modal-close-btn" aria-hidden="true"></span>
+					</button>
 				</div>
 			</div>
 		<?php
@@ -2329,114 +2234,17 @@ class WC_Gateway_SumUp extends \WC_Payment_Gateway
 			$widget_context = $this->get_widget_context_for_order($order);
 
 		?>
-			<style>
-				.wc-sumup-modal {
-					position: fixed;
-					top: 0;
-					bottom: auto;
-					left: 0;
-					right: 0;
-					height: 100%;
-					background: #000000bd;
-					display: flex;
-					justify-content: center;
-					align-items: center;
-					z-index: 9999;
-					overflow: auto
-				}
-
-				.wc-sumup-modal.disabled {
-					display: none
-				}
-
-				.wc-sumup-modal #sumup-card {
-					width: 700px;
-					max-width: 90%;
-					position: relative;
-					max-height: 95%;
-					background: #fff;
-					border-radius: 16px;
-					min-height: 140px
-				}
-
-				.wc-sumup-modal #wc-sumup-payment-modal-close {
-					position: absolute;
-					top: -10px;
-					right: -5px;
-					border-radius: 100%;
-					height: 28px;
-					width: 28px;
-					display: flex;
-					justify-content: center;
-					align-items: center;
-					color: #000;
-					background: #fff;
-					border: 1px solid #d8dde1;
-					cursor: pointer;
-					font-weight: 700
-				}
-
-				.wc-sumup-modal div[data-sumup-id=payment_option]>label {
-					display: flex !important
-				}
-
-				.sumup-boleto-pending-screen {
-					border: 1px dashed #000;
-					padding: 10px;
-					border-radius: 12px
-				}
-
-				div[data-testid=scannable-barcode]>img {
-					height: 250px !important;
-					max-height: 100% !important
-				}
-
-				.wc-sumup-modal.no-modal {
-					position: relative;
-					display: block;
-					height: auto;
-					background: transparent;
-					overflow: visible;
-					z-index: auto
-				}
-
-				.wc-sumup-modal.no-modal #sumup-card {
-					width: 100%;
-					max-width: none;
-					max-height: none;
-					border-radius: 0;
-					min-height: 140px;
-					padding: 0
-				}
-
-				.wc-sumup-modal.no-modal #sumup-card form {
-					padding: 0 16px 16px
-				}
-
-				.wc-sumup-modal.no-modal #wc-sumup-payment-modal-close {
-					display: none
-				}
-
-				.wc-sumup-modal section img[class*=' sumup-payment'],
-				.wc-sumup-modal section img[class^=sumup-payment] {
-					width: auto;
-					top: 50%;
-					transform: translateY(-55%)
-				}
-			</style>
 			<div id="wc-sumup-payment-modal" class="wc-sumup-modal disabled <?php echo esc_attr($extra_class); ?>">
 				<div id="sumup-card">
-					<div id="wc-sumup-payment-modal-close">
-						<span id="wc-sumup-payment-modal-close-btn">X</span>
-					</div>
+					<button id="wc-sumup-payment-modal-close" type="button" aria-label="<?php esc_attr_e( 'Close payment modal', 'sumup-payment-gateway-for-woocommerce' ); ?>">
+						<span id="wc-sumup-payment-modal-close-btn" aria-hidden="true"></span>
+					</button>
 				</div>
 			</div>
 
 			<script type="text/javascript">
 				let orderPayWidgetOptions = {
 					checkoutId: '<?php echo esc_js($sumup_checkout['id']); ?>',
-					amount: '<?php echo esc_js($widget_context['amount']); ?>',
-					currency: '<?php echo esc_js($widget_context['currency']); ?>',
 					country: '<?php echo esc_js($widget_context['country']); ?>',
 					firstName: '<?php echo esc_js($widget_context['firstName']); ?>',
 					lastName: '<?php echo esc_js($widget_context['lastName']); ?>',
@@ -2453,8 +2261,6 @@ class WC_Gateway_SumUp extends \WC_Payment_Gateway
 				};
 
 				if (typeof sumup_gateway_params !== 'undefined') {
-					sumup_gateway_params.amount = orderPayWidgetOptions.amount;
-					sumup_gateway_params.currency = orderPayWidgetOptions.currency;
 					sumup_gateway_params.checkoutId = orderPayWidgetOptions.checkoutId;
 					sumup_gateway_params.orderId = orderPayWidgetOptions.orderId;
 					sumup_gateway_params.orderKey = orderPayWidgetOptions.orderKey;

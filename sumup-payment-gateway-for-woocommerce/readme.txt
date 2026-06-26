@@ -4,7 +4,7 @@ Tags: sumup, payment gateway, woocommerce, payments, ecommerce
 Requires at least: 6.9
 Tested up to: 7.0
 Requires PHP: 7.4
-Stable tag: 2.16.3
+Stable tag: 2.17.0
 License: Apache-2.0
 License URI: https://www.apache.org/licenses/LICENSE-2.0
 
@@ -94,6 +94,16 @@ If you need help with setup or testing, contact SumUp support through the offici
 Yes. Test the integration fully before enabling live payments.
 
 == Changelog ==
+= 2.17.0 =
+* Improved: Used the WordPress modal component for Checkout Blocks.
+* Improved: Refined the classic checkout modal styling and accessibility.
+* Fixed: Restored classic checkout modal initialization with bundled scripts.
+
+= 2.16.4 =
+* Fixed: Stopped passing deprecated amount and currency configuration to the SumUp Card Widget and now rely on showAmount with checkout data fetched by checkout ID.
+* Fixed: Made fresh installations honor the default "Open Payment in modal?" setting before the settings page is saved.
+* Fixed: Kept the inline SumUp checkout widget hidden after checkout creation failures so customers do not see an empty payment box.
+
 = 2.16.3 =
 * Fixed: Restored amount and currency in SumUp Card Widget initialization to prevent blank card fields on checkout.
 
@@ -327,6 +337,12 @@ Yes. Test the integration fully before enabling live payments.
 * Initial release.
 
 == Upgrade Notice ==
+
+= 2.17.0 =
+* Minor release improving modal behavior and checkout compatibility.
+
+= 2.16.4 =
+* Patch release that uses showAmount for card payments, honors modal defaults on fresh installs, and hides failed inline payment fields.
 
 = 2.16.3 =
 * Patch release that restores checkout widget initialization for card payments.

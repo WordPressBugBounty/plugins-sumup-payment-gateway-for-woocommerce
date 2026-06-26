@@ -130,6 +130,7 @@ final class WC_Sumup_Blocks_Support extends AbstractPaymentMethodType
 					'wc-blocks-registry',
 					'wc-settings',
 					'wc-blocks-data-store',
+					'wp-components',
 					'sumup_gateway_card_sdk',
 				)
 			);
@@ -147,7 +148,9 @@ final class WC_Sumup_Blocks_Support extends AbstractPaymentMethodType
 				true
 			);
 
-			wp_register_style("wc_sumup_checkout", plugin_dir_url(__DIR__) . 'build/index.css', array(), $asset_data['version']);
+			wp_register_style("wc_sumup_checkout", plugin_dir_url(__DIR__) . 'build/index.css', array( 'wp-components' ), $asset_data['version']);
+			wp_enqueue_style('wp-components');
+			wp_enqueue_style('wc_sumup_checkout');
 		}
 		/**
 		 * Translators: the following error messages are shown to the end user
@@ -181,7 +184,7 @@ final class WC_Sumup_Blocks_Support extends AbstractPaymentMethodType
 				'payment_error' => ""
 			),
 			'enablePix' => isset($this->settings["enable_pix"]) ? $this->settings["enable_pix"] : 'no',
-			'openPaymentInModal' => isset($this->settings["open_payment_modal"]) ? $this->settings['open_payment_modal'] : 'no',
+			'openPaymentInModal' => isset($this->settings["open_payment_modal"]) ? $this->settings['open_payment_modal'] : 'yes',
 			'redirectUrl' => '',
 		));
 
