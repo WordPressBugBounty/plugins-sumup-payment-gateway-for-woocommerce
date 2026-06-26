@@ -2008,16 +2008,12 @@ class WC_Gateway_SumUp extends \WC_Payment_Gateway
 
 				$message = current_user_can('manage_options') ? 'Error to generate SumUp checkout ID.' : 'Sorry, SumUp is not available. Try again soon.';
 				if (!empty($sumup_checkout) && isset($sumup_checkout['id'])) {
-					return [
+					return array_merge($this->get_widget_context_for_order($order), [
 						'result' => 'success',
 						'redirect' => $this->get_return_url($order),
 						'openModal' => true,
 						'checkoutId' => $sumup_checkout['id'],
-						'orderId' => $order->get_id(),
-						'orderKey' => $order->get_order_key(),
-						'redirectUrl' => $this->get_return_url($order),
-						'country' => $order->get_billing_country(),
-					];
+					]);
 				}
 
 				if (!empty($sumup_checkout) && isset($sumup_checkout['isCheckoutBlocks']) && $sumup_checkout['isCheckoutBlocks']) {

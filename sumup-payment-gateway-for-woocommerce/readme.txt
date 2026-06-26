@@ -4,7 +4,7 @@ Tags: sumup, payment gateway, woocommerce, payments, ecommerce
 Requires at least: 6.9
 Tested up to: 7.0
 Requires PHP: 7.4
-Stable tag: 2.16.2
+Stable tag: 2.16.3
 License: Apache-2.0
 License URI: https://www.apache.org/licenses/LICENSE-2.0
 
@@ -94,6 +94,9 @@ If you need help with setup or testing, contact SumUp support through the offici
 Yes. Test the integration fully before enabling live payments.
 
 == Changelog ==
+= 2.16.3 =
+* Fixed: Restored amount and currency in SumUp Card Widget initialization to prevent blank card fields on checkout.
+
 = 2.16.2 =
 * Fixed: Made modal payment handling more reliable.
 * Fixed: Saved settings now persist correctly after updates.
@@ -324,6 +327,9 @@ Yes. Test the integration fully before enabling live payments.
 * Initial release.
 
 == Upgrade Notice ==
+
+= 2.16.3 =
+* Patch release that restores checkout widget initialization for card payments.
 
 = 2.16.2 =
 * Patch release that improves modal payment handling, keeps updated settings from being lost, and adds extra request headers.
