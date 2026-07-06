@@ -718,6 +718,25 @@ class WC_Gateway_SumUp extends \WC_Payment_Gateway
 	}
 
 	/**
+	 * Whether the current payment request comes from Cart/Checkout Blocks.
+	 *
+	 * WooCommerce Store API exposes Blocks payment_method_data via $_POST while
+	 * process_payment() runs.
+	 *
+	 * @param array $sumup_checkout Stored checkout payload.
+	 * @return bool
+	 */
+	private function is_blocks_checkout_request($sumup_checkout = array())
+	{
+		if (is_array($sumup_checkout) && !empty($sumup_checkout['isCheckoutBlocks'])) {
+			return true;
+		}
+
+		// phpcs:ignore WordPress.Security.NonceVerification.Missing
+		return isset($_POST['isCheckoutBlocks']) && wc_string_to_bool(wp_unslash($_POST['isCheckoutBlocks']));
+	}
+
+	/**
 	 * Attach local order context to stored checkout data.
 	 *
 	 * @param WC_Order $order WooCommerce order.
@@ -1768,10 +1787,6 @@ class WC_Gateway_SumUp extends \WC_Payment_Gateway
 	 */
 	public function check_redirect_flow()
 	{
-		if (!is_checkout()) {
-			return;
-		}
-
 		if (!isset($_GET['sumup-validate-order'])) {
 			return;
 		}
@@ -1779,6 +1794,37 @@ class WC_Gateway_SumUp extends \WC_Payment_Gateway
 		$order_id = isset($_GET['sumup-validate-order']) ? absint(wp_unslash($_GET['sumup-validate-order'])) : 0;
 		if (!$order_id) {
 			return;
+		}
+
+		$url_checkout_id = isset($_GET['checkout_id']) ? sanitize_text_field(wp_unslash($_GET['checkout_id'])) : '';
+
+		$this->resolve_payment_redirect_validation($order_id, $url_checkout_id, true);
+	}
+
+	/**
+	 * Resolve payment status after SumUp redirect (3DS and similar flows).
+	 *
+	 * @param int    $order_id Order ID from the redirect query string.
+	 * @param string $url_checkout_id Optional checkout ID from the redirect query string.
+	 * @param bool   $redirect Whether to redirect or return a result array.
+	 * @return array<string, mixed>
+	 */
+	public function resolve_payment_redirect_validation($order_id, $url_checkout_id = '', $redirect = true)
+	{
+		$order_id = absint($order_id);
+		$url_checkout_id = sanitize_text_field((string) $url_checkout_id);
+		$result = array(
+			'status' => '',
+			'message' => '',
+			'redirect_url' => '',
+			'is_blocks' => false,
+			'cart_restored' => false,
+			'error' => '',
+		);
+
+		if (!$order_id) {
+			$result['error'] = __('Invalid order ID.', 'sumup-payment-gateway-for-woocommerce');
+			return $result;
 		}
 
 		$order = wc_get_order($order_id);
@@ -1793,7 +1839,8 @@ class WC_Gateway_SumUp extends \WC_Payment_Gateway
 				),
 				'error'
 			);
-			return;
+			$result['error'] = __('Order not found.', 'sumup-payment-gateway-for-woocommerce');
+			return $result;
 		}
 
 		$log_context = $this->get_order_log_context($order, array('flow' => 'redirect_validation'));
@@ -1801,57 +1848,182 @@ class WC_Gateway_SumUp extends \WC_Payment_Gateway
 		$checkout_data = $order->get_meta('_sumup_checkout_data');
 		if (!is_array($checkout_data) || empty($checkout_data['id'])) {
 			WC_SUMUP_LOGGER::log('Stored checkout data is missing during payment redirect validation.', $log_context, 'warning');
-			return;
+			$result['error'] = __('Payment details are missing for this order.', 'sumup-payment-gateway-for-woocommerce');
+			return $result;
 		}
-		$checkout_id = sanitize_text_field((string) $checkout_data['id']);
+
+		$result['is_blocks'] = !empty($checkout_data['isCheckoutBlocks']);
+		$checkout_id = '' !== $url_checkout_id ? $url_checkout_id : sanitize_text_field((string) $checkout_data['id']);
 
 		$access_token = Wc_Sumup_Access_Token::get($this->client_id, $this->client_secret, $this->api_key, false, array_merge($log_context, array('checkout_id' => $checkout_id)));
 		$access_token = $access_token['access_token'] ?? '';
 		if (empty($access_token)) {
 			WC_SUMUP_LOGGER::log('Error while retrieving access token during payment redirect validation.', array_merge($log_context, array('checkout_id' => $checkout_id)), 'error');
-			return;
+			$result['error'] = __('SumUp is temporarily unavailable. Please try again.', 'sumup-payment-gateway-for-woocommerce');
+			return $result;
 		}
 
 		$sumup_checkout = Wc_Sumup_Checkout::get($checkout_id, $access_token, array_merge($log_context, array('checkout_id' => $checkout_id)));
 		if (empty($sumup_checkout)) {
 			WC_SUMUP_LOGGER::log('Error while retrieving checkout during payment redirect validation.', array_merge($log_context, array('checkout_id' => $checkout_id)), 'error');
-			return;
+			$result['error'] = __('Unable to verify payment status. Please try again.', 'sumup-payment-gateway-for-woocommerce');
+			return $result;
 		}
 
 		$validation_result = $this->validate_checkout_for_order($order, $sumup_checkout, $checkout_id);
 		if (!$validation_result['valid']) {
 			$this->log_checkout_validation_error($order_id, $checkout_id, $validation_result['error']);
-			wp_safe_redirect($this->get_return_url($order));
-			exit;
+			if ($redirect) {
+				wp_safe_redirect($this->get_return_url($order));
+				exit;
+			}
+			$result['error'] = __('Payment validation failed.', 'sumup-payment-gateway-for-woocommerce');
+			return $result;
 		}
 
 		$payment_status = $sumup_checkout['status'] ?? '';
+		$result['status'] = strtolower((string) $payment_status);
 
 		if ($payment_status === 'PENDING') {
-			add_action('woocommerce_before_checkout_form', array($this, 'redirect_validation_pending_message'));
-			return;
+			$result['message'] = __('We are still waiting for SumUp to confirm this payment. Please wait a moment and refresh the page if the order is not updated automatically.', 'sumup-payment-gateway-for-woocommerce');
+
+			if ($result['is_blocks']) {
+				if ($redirect) {
+					wp_safe_redirect(
+						add_query_arg('sumup_payment', 'pending', wc_get_checkout_url())
+					);
+					exit;
+				}
+				return $result;
+			}
+
+			if ($redirect) {
+				add_action('woocommerce_before_checkout_form', array($this, 'redirect_validation_pending_message'));
+			}
+			return $result;
 		}
 
 		if ($payment_status === 'FAILED') {
 			$order->update_status('failed');
-			add_action('woocommerce_before_checkout_form', array($this, 'redirect_validation_failed_message'));
-			return;
+			$result['message'] = __('Payment failed, please try again.', 'sumup-payment-gateway-for-woocommerce');
+
+			if ($result['is_blocks']) {
+				$result['cart_restored'] = $this->restore_cart_from_order($order);
+
+				if ($redirect) {
+					wp_safe_redirect(
+						add_query_arg('sumup_payment', 'failed', wc_get_checkout_url())
+					);
+					exit;
+				}
+
+				return $result;
+			}
+
+			if ($redirect) {
+				add_action('woocommerce_before_checkout_form', array($this, 'redirect_validation_failed_message'));
+			}
+			return $result;
 		}
 
-		//Verify if the transaction is correct before check status PAID
 		$transaction_code = $this->extract_transaction_code($sumup_checkout);
 
 		if ($payment_status === 'PAID' && empty($transaction_code)) {
 			WC_SUMUP_LOGGER::log('Missing transaction code during payment redirect validation.', array_merge($log_context, array('checkout_id' => $checkout_id)), 'warning');
-			add_action('woocommerce_before_checkout_form', array($this, 'redirect_validation_pending_message'));
-			return;
+			$result['status'] = 'pending';
+			$result['message'] = __('We are still waiting for SumUp to confirm this payment. Please wait a moment and refresh the page if the order is not updated automatically.', 'sumup-payment-gateway-for-woocommerce');
+
+			if ($result['is_blocks']) {
+				if ($redirect) {
+					wp_safe_redirect(
+						add_query_arg('sumup_payment', 'pending', wc_get_checkout_url())
+					);
+					exit;
+				}
+				return $result;
+			}
+
+			if ($redirect) {
+				add_action('woocommerce_before_checkout_form', array($this, 'redirect_validation_pending_message'));
+			}
+			return $result;
 		}
 
 		if ($payment_status === 'PAID') {
 			$this->update_order_status($order, $sumup_checkout, $transaction_code);
-			wp_safe_redirect($this->get_return_url($order));
-			exit;
+			$result['status'] = 'paid';
+			$result['redirect_url'] = $this->get_return_url($order);
+
+			if ($redirect) {
+				wp_safe_redirect($result['redirect_url']);
+				exit;
+			}
+
+			return $result;
 		}
+
+		return $result;
+	}
+
+	/**
+	 * Restore the current cart from a WooCommerce order.
+	 *
+	 * @param WC_Order $order WooCommerce order.
+	 * @return bool
+	 */
+	public function restore_cart_from_order($order)
+	{
+		if (!$order instanceof WC_Order) {
+			return false;
+		}
+
+		if (null === WC()->cart) {
+			wc_load_cart();
+		}
+
+		if (!WC()->cart) {
+			return false;
+		}
+
+		WC()->cart->empty_cart();
+
+		foreach ($order->get_items('line_item') as $item) {
+			if (!$item instanceof WC_Order_Item_Product) {
+				continue;
+			}
+
+			$product_id = (int) $item->get_product_id();
+			$variation_id = (int) $item->get_variation_id();
+			$quantity = $item->get_quantity();
+
+			if ($product_id <= 0 || $quantity <= 0) {
+				continue;
+			}
+
+			$variation_attributes = array();
+
+			if ($variation_id > 0) {
+				$variation = wc_get_product($variation_id);
+				if ($variation instanceof WC_Product_Variation) {
+					$variation_attributes = $variation->get_variation_attributes();
+				}
+			}
+
+			WC()->cart->add_to_cart(
+				$product_id,
+				$quantity,
+				$variation_id,
+				$variation_attributes
+			);
+		}
+
+		foreach ($order->get_coupon_codes() as $code) {
+			WC()->cart->apply_coupon($code);
+		}
+
+		WC()->cart->calculate_totals();
+
+		return true;
 	}
 
 	/**
@@ -1933,6 +2105,8 @@ class WC_Gateway_SumUp extends \WC_Payment_Gateway
 
 		$sumup_checkout = $order->get_meta('_sumup_checkout_data');
 		$previous_sumup_checkout = is_array($sumup_checkout) ? $sumup_checkout : array();
+		$is_checkout_blocks = $this->is_blocks_checkout_request($sumup_checkout);
+
 		if ($this->should_refresh_checkout_for_order($order, $sumup_checkout)) {
 			if (!empty($sumup_checkout['id'])) {
 				WC_SUMUP_LOGGER::log('Refreshing stored SumUp checkout because the order context changed.', $this->get_checkout_log_context($sumup_checkout, $log_context), 'info');
@@ -1942,7 +2116,7 @@ class WC_Gateway_SumUp extends \WC_Payment_Gateway
 			$sumup_checkout = $this->enrich_checkout_data_for_order(
 				$order,
 				$sumup_checkout,
-				!empty($sumup_checkout['isCheckoutBlocks'])
+				$is_checkout_blocks
 			);
 		}
 
@@ -1952,7 +2126,7 @@ class WC_Gateway_SumUp extends \WC_Payment_Gateway
 			$message = current_user_can('manage_options') ? 'Error to generate SumUp access token.' : 'Sorry, SumUp is not available. Try again soon.';
 
 			if (!sumup_gateway_is_configured($this->settings)) {
-				if (!empty($sumup_checkout) && isset($sumup_checkout['isCheckoutBlocks']) && $sumup_checkout['isCheckoutBlocks']) {
+				if ($is_checkout_blocks) {
 					throw new Exception($message);
 				} else {
 					return [
@@ -1999,7 +2173,7 @@ class WC_Gateway_SumUp extends \WC_Payment_Gateway
 					$sumup_checkout = $this->enrich_checkout_data_for_order(
 						$order,
 						$previous_sumup_checkout,
-						!empty($previous_sumup_checkout['isCheckoutBlocks'])
+						$is_checkout_blocks || !empty($previous_sumup_checkout['isCheckoutBlocks'])
 					);
 					$order->update_meta_data('_sumup_checkout_data', $sumup_checkout);
 					$order->save();
@@ -2016,7 +2190,7 @@ class WC_Gateway_SumUp extends \WC_Payment_Gateway
 					]);
 				}
 
-				if (!empty($sumup_checkout) && isset($sumup_checkout['isCheckoutBlocks']) && $sumup_checkout['isCheckoutBlocks']) {
+				if ($is_checkout_blocks) {
 					throw new Exception($message);
 				} else {
 					return [
@@ -2031,7 +2205,7 @@ class WC_Gateway_SumUp extends \WC_Payment_Gateway
 			$sumup_checkout = $this->enrich_checkout_data_for_order(
 				$order,
 				$sumup_checkout,
-				!empty($sumup_checkout['isCheckoutBlocks'])
+				$is_checkout_blocks
 			);
 			$order->add_order_note('SumUp checkout ID: ' . $sumup_checkout['id']);
 			$order->update_meta_data('_sumup_checkout_data', $sumup_checkout);
@@ -2056,7 +2230,7 @@ class WC_Gateway_SumUp extends \WC_Payment_Gateway
 		}
 
 		$message = 'Error to get checkout ID. Check plugin logs.';
-		if (!empty($sumup_checkout) && isset($sumup_checkout['isCheckoutBlocks']) && $sumup_checkout['isCheckoutBlocks']) {
+		if ($is_checkout_blocks) {
 			throw new Exception($message);
 		}
 

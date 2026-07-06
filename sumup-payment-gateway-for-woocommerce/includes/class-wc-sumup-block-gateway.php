@@ -158,11 +158,16 @@ final class WC_Sumup_Blocks_Support extends AbstractPaymentMethodType
 		$error_general = __('Transaction was unsuccessful. Please check the minimum amount or use another valid card.', 'sumup-payment-gateway-for-woocommerce');
 		$error_invalid_form = __('Fill in all required details.', 'sumup-payment-gateway-for-woocommerce');
 		$error_instructions = __('Unable to save payment instructions. Please try again.', 'sumup-payment-gateway-for-woocommerce');
+		$error_payment_failed = __('Payment failed, please try again.', 'sumup-payment-gateway-for-woocommerce');
+		$error_payment_pending = __('We are still waiting for SumUp to confirm this payment. Please wait a moment and refresh the page if the order is not updated automatically.', 'sumup-payment-gateway-for-woocommerce');
+		$error_payment_cancelled = __('Payment was cancelled.', 'sumup-payment-gateway-for-woocommerce');
+		$error_checkout_init = __('Unable to initialize SumUp checkout.', 'sumup-payment-gateway-for-woocommerce');
 
 		wp_localize_script('wc-sumup-blocks-integration', 'sumup_gateway_params', array(
 
 			'showInstallments' => $show_installments,
 			'checkoutNonce' => wp_create_nonce('sumup-create-checkout'),
+			'validateRedirectNonce' => wp_create_nonce('sumup-validate-redirect'),
 			'paymentInstructionsNonce' => wp_create_nonce('sumup-store-payment-instructions'),
 			'wcStoreApiNonce' => wp_create_nonce('wc_store_api'),
 			'sumup_handler_url' => add_query_arg(
@@ -181,6 +186,10 @@ final class WC_Sumup_Blocks_Support extends AbstractPaymentMethodType
 				'general_error' => "$error_general",
 				'invalid_form' => "$error_invalid_form",
 				'instructions_error' => "$error_instructions",
+				'payment_failed' => "$error_payment_failed",
+				'payment_pending' => "$error_payment_pending",
+				'payment_cancelled' => "$error_payment_cancelled",
+				'checkout_init_error' => "$error_checkout_init",
 				'payment_error' => ""
 			),
 			'enablePix' => isset($this->settings["enable_pix"]) ? $this->settings["enable_pix"] : 'no',

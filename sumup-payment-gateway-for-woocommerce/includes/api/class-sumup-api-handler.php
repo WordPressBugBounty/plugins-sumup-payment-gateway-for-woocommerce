@@ -31,6 +31,7 @@ class Sumup_Api_Handler
 		include_once dirname(__FILE__) . '/handlers/class-sumup-store-payment-instructions.php';
 		include_once dirname(__FILE__) . '/handlers/class-sumup-validation-website-handler.php';
 		include_once dirname(__FILE__) . '/handlers/class-sumup-connect-website-handler.php';
+		include_once dirname(__FILE__) . '/handlers/class-sumup-validate-redirect.php';
 	}
 
 	/**

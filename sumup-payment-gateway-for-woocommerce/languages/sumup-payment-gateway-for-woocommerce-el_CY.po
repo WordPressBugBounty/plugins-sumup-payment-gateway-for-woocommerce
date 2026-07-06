@@ -510,3 +510,55 @@ msgstr "Μετά την έγκριση, θα επιστρέψουμε αυτόμ
 #: /Users/matousdzivjak/code/github.com/sumup/sumup-plugin-woocommerce/templates/onboarding.php:63
 msgid "Complete setup"
 msgstr "Ολοκλήρωση ρύθμισης"
+
+#: includes/api/handlers/class-sumup-validate-redirect.php:37
+msgid "Invalid request payload."
+msgstr "Μη έγκυρο περιεχόμενο αιτήματος."
+
+#: includes/api/handlers/class-sumup-validate-redirect.php:42
+msgid "Invalid request nonce."
+msgstr "Μη έγκυρο nonce αιτήματος."
+
+#: includes/api/handlers/class-sumup-validate-redirect.php:47
+#: includes/class-wc-sumup-gateway.php:1826
+msgid "Invalid order ID."
+msgstr "Μη έγκυρο ID παραγγελίας."
+
+#: includes/class-wc-sumup-gateway.php:1842
+msgid "Order not found."
+msgstr "Η παραγγελία δεν βρέθηκε."
+
+#: includes/class-wc-sumup-gateway.php:1851
+msgid "Payment details are missing for this order."
+msgstr "Λείπουν τα στοιχεία πληρωμής για αυτήν την παραγγελία."
+
+#: includes/class-wc-sumup-gateway.php:1862
+msgid "SumUp is temporarily unavailable. Please try again."
+msgstr "Η SumUp δεν είναι προσωρινά διαθέσιμη. Παρακαλώ δοκιμάστε ξανά."
+
+#: includes/class-wc-sumup-gateway.php:1869
+msgid "Unable to verify payment status. Please try again."
+msgstr "Δεν ήταν δυνατή η επαλήθευση της κατάστασης πληρωμής. Παρακαλώ δοκιμάστε ξανά."
+
+#: includes/class-wc-sumup-gateway.php:1880
+msgid "Payment validation failed."
+msgstr "Η επικύρωση της πληρωμής απέτυχε."
+
+#: includes/api/handlers/class-sumup-validate-redirect.php:56
+msgid "SumUp gateway is unavailable."
+msgstr "Η πύλη πληρωμών SumUp δεν είναι διαθέσιμη."
+
+#: includes/class-wc-sumup-block-gateway.php:162
+#: includes/class-wc-sumup-gateway.php:1888
+#: includes/class-wc-sumup-gateway.php:1934
+#: includes/class-wc-sumup-gateway.php:2069
+msgid "We are still waiting for SumUp to confirm this payment. Please wait a moment and refresh the page if the order is not updated automatically."
+msgstr "Εξακολουθούμε να περιμένουμε την SumUp να επιβεβαιώσει αυτήν την πληρωμή. Περιμένετε λίγο και ανανεώστε τη σελίδα αν η παραγγελία δεν ενημερωθεί αυτόματα."
+
+#: includes/class-wc-sumup-block-gateway.php:163
+msgid "Payment was cancelled."
+msgstr "Η πληρωμή ακυρώθηκε."
+
+#: includes/class-wc-sumup-block-gateway.php:164
+msgid "Unable to initialize SumUp checkout."
+msgstr "Δεν ήταν δυνατή η αρχικοποίηση του checkout SumUp."

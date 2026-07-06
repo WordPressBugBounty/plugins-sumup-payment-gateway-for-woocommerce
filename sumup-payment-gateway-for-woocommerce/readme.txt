@@ -4,7 +4,7 @@ Tags: sumup, payment gateway, woocommerce, payments, ecommerce
 Requires at least: 6.9
 Tested up to: 7.0
 Requires PHP: 7.4
-Stable tag: 2.17.0
+Stable tag: 2.17.1
 License: Apache-2.0
 License URI: https://www.apache.org/licenses/LICENSE-2.0
 
@@ -94,6 +94,12 @@ If you need help with setup or testing, contact SumUp support through the offici
 Yes. Test the integration fully before enabling live payments.
 
 == Changelog ==
+= 2.17.1 =
+* Fixed: Restored payment failure and pending messaging after redirect flows in both classic checkout and Checkout Blocks.
+* Fixed: Prevented classic checkout redirect validation from being misclassified as Blocks checkout.
+* Fixed: Checkout Blocks now uses localized payment error messages from plugin translations.
+* Fixed: Improved SumUp widget handling for invalid, failed, and error payment responses.
+
 = 2.17.0 =
 * Improved: Used the WordPress modal component for Checkout Blocks.
 * Improved: Refined the classic checkout modal styling and accessibility.
@@ -337,6 +343,9 @@ Yes. Test the integration fully before enabling live payments.
 * Initial release.
 
 == Upgrade Notice ==
+
+= 2.17.1 =
+* Patch release that fixes redirect payment messaging and checkout failure handling for classic and Blocks checkout.
 
 = 2.17.0 =
 * Minor release improving modal behavior and checkout compatibility.
