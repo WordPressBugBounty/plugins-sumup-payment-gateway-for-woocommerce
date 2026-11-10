@@ -45,6 +45,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 	</ol>
 
 	<p class="sumup-onboarding__actions">
+		<?php if ( $has_connection_details ) : ?>
+			<a class="button button-primary" href="<?php echo esc_url( wp_nonce_url( admin_url( 'admin-post.php?action=sumup_check_connection' ), 'sumup_check_connection' ) ); ?>">
+				<?php esc_html_e( 'Check connection', 'sumup-payment-gateway-for-woocommerce' ); ?>
+			</a>
+		<?php endif; ?>
 		<?php if ( sumup_is_public_hostname() ) : ?>
 			<button
 				id="sumup-payment-settings-connect"

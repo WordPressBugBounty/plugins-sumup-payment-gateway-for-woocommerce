@@ -1,0 +1,154 @@
+.sumup-onboarding.card {
+	box-sizing: border-box;
+	margin: 20px auto;
+	max-width: 520px;
+}
+
+.sumup-onboarding__notice {
+	margin: 0 0 16px;
+}
+
+.sumup-connection-summary__row {
+	margin: 0 0 8px;
+}
+
+.sumup-connection-summary__row:last-child {
+	margin-bottom: 0;
+}
+
+.sumup-connection-actions {
+	margin: 0;
+}
+
+.sumup-connection-actions__notice {
+	margin: 0 0 16px;
+}
+
+.sumup-google-pay-setup {
+	display: grid;
+	gap: 12px;
+}
+
+.sumup-google-pay-setup__intro {
+	margin: 0;
+}
+
+.sumup-google-pay-setup__steps {
+	margin: 0 0 0 20px;
+}
+
+.sumup-google-pay-setup__actions {
+	margin: 0;
+}
+
+.sumup-google-pay-setup__notice {
+	margin: 0;
+}
+
+.sumup-google-pay-setup__description {
+	margin: 0;
+}
+
+.sumup-onboarding__logo {
+	display: block;
+	margin-bottom: 16px;
+}
+
+.sumup-onboarding__title {
+	margin: 0 0 8px;
+}
+
+.sumup-onboarding__description {
+	margin-top: 0;
+}
+
+.sumup-onboarding__steps {
+	margin: 0 0 0 20px;
+}
+
+.sumup-onboarding__actions {
+	margin-bottom: 0;
+	margin-top: 16px;
+}
+
+.sumup-onboarding__warning {
+	display: inline-flex;
+	align-items: center;
+	gap: 8px;
+	margin: 0 0 16px;
+}
+
+.components-button .sumup-button-label {
+	display: inline-block;
+}
+
+.components-button .sumup-button-loading {
+	display: none;
+	left: 50%;
+	opacity: 0;
+	pointer-events: none;
+	position: absolute;
+	top: 50%;
+	transform: translate(-50%, -50%);
+}
+
+.components-button.is-busy {
+	position: relative;
+}
+
+.components-button.is-busy .sumup-button-label {
+	visibility: hidden;
+}
+
+.components-button.is-busy .sumup-button-loading {
+	display: inline-block;
+	opacity: 1;
+}
+
+.sumup-button-loading {
+	position: relative;
+	width: 10px;
+	height: 10px;
+	border-radius: 5px;
+	background-color: currentColor;
+	color: currentColor;
+	display: inline-block;
+	animation: sumup-button-loading 1s infinite linear alternate;
+	animation-delay: 0.5s;
+}
+
+.sumup-button-loading::before,
+.sumup-button-loading::after {
+	content: "";
+	display: inline-block;
+	position: absolute;
+	top: 0;
+	width: 10px;
+	height: 10px;
+	border-radius: 5px;
+	background-color: currentColor;
+	color: currentColor;
+}
+
+.sumup-button-loading::before {
+	left: -15px;
+	animation: sumup-button-loading 1s infinite alternate;
+	animation-delay: 0s;
+}
+
+.sumup-button-loading::after {
+	left: 15px;
+	animation: sumup-button-loading 1s infinite alternate;
+	animation-delay: 1s;
+}
+
+@keyframes sumup-button-loading {
+	0% {
+		opacity: 1;
+	}
+
+	50%,
+	100% {
+		opacity: 0.25;
+	}
+}

@@ -1,0 +1,660 @@
+# Translations for the SumUp WooCommerce plugin.
+# Edit this PO file, then run scripts/i18n.py update to rebuild its MO file.
+msgid ""
+msgstr ""
+"Project-Id-Version: SumUp Payment Gateway For WooCommerce\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/sumup-payment-gateway-for-woocommerce/\n"
+"Language: et\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Domain: sumup-payment-gateway-for-woocommerce\n"
+
+#. translators: 1: plugin name, 2: minimum PHP version.
+#: sumup-payment-gateway-for-woocommerce.php:711
+#, php-format
+msgid "%1$s requires PHP version %2$s or greater."
+msgstr "%1$s nõuab PHP versiooni %2$s või uuemat."
+
+#. translators: 1: plugin name, 2: minimum WordPress version.
+#: sumup-payment-gateway-for-woocommerce.php:730
+#, php-format
+msgid "%1$s requires WordPress version %2$s or greater."
+msgstr "%1$s nõuab WordPressi versiooni %2$s või uuemat."
+
+#: includes/class-wc-sumup-settings.php:144
+msgid "Accept PIX as your payment method."
+msgstr "Võtke PIXi vastu makseviisina."
+
+#: includes/class-wc-sumup-gateway.php:95
+msgid "Accept credit and debit cards with SumUp, plus eligible payment methods such as Apple Pay, Google Pay, PayPal, Bancontact, and iDEAL."
+msgstr "Võtke SumUpiga vastu krediit- ja deebetkaarte ning pakkuge saadaolevaid makseviise, nagu Apple Pay, Google Pay, PayPal, Bancontact ja iDEAL."
+
+#: includes/class-wc-sumup-settings.php:112
+msgid "Accept installments in your card payment method."
+msgstr "Nõustuge osamaksetega oma kaardimakse meetodis."
+
+#: includes/api/class-sumup-disconnect.php:46
+msgid "Account already disconnected"
+msgstr "Konto on juba lahti ühendatud"
+
+#: includes/class-wc-sumup-connection-diagnostics.php:92
+msgid "Account check"
+msgstr "Konto kontroll"
+
+#: includes/class-wc-sumup-gateway.php:221
+msgid "Account details"
+msgstr "Konto andmed"
+
+#: includes/class-wc-sumup-gateway.php:231
+msgid "Account email"
+msgstr "Konto e-posti aadress"
+
+#: includes/class-wc-sumup-gateway.php:261
+msgid "Actions"
+msgstr "Toimingud"
+
+#: templates/onboarding.php:43
+msgid "After approval, we will return you to WooCommerce automatically."
+msgstr "Pärast kinnitamist suuname teid automaatselt tagasi WooCommerce’i."
+
+#: includes/class-wc-sumup-settings.php:70
+msgid "Apple Pay"
+msgstr "Apple Pay"
+
+#: includes/class-wc-sumup-apple-pay.php:151
+msgid "Apple Pay association file is missing or unreadable."
+msgstr "Apple Pay seostamisfail puudub või pole loetav."
+
+#: includes/class-wc-sumup-apple-pay.php:297
+msgid "Apple Pay domain registration completed."
+msgstr "Apple Pay domeeni registreerimine on lõpetatud."
+
+#: includes/class-wc-sumup-gateway.php:1902
+msgid "Apple Pay domain registration could not be completed. Make sure your store is publicly accessible over HTTPS, check domain setup in SumUp Dashboard > Settings > For developers > Payment wallets, then save these settings to retry. Other SumUp payment settings have been saved."
+msgstr "Apple Pay domeeni registreerimist ei saanud lõpule viia. Veenduge, et pood oleks avalikult HTTPS-i kaudu ligipääsetav, kontrollige domeeni seadistust jaotises SumUp Dashboard > Settings > For developers > Payment wallets ja salvestage need sätted uuesti proovimiseks. Muud SumUpi makseseaded on salvestatud."
+
+#: includes/class-wc-sumup-apple-pay.php:288
+msgid "Apple Pay domain registration request failed."
+msgstr "Apple Pay domeeni registreerimispäring ebaõnnestus."
+
+#: includes/class-wc-sumup-apple-pay.php:305
+msgid "Apple Pay domain registration returned a non-success response."
+msgstr "Apple Pay domeeni registreerimine tagastas ebaõnnestunud vastuse."
+
+#: includes/class-wc-sumup-gateway.php:341
+msgid "At the top of the page, click Submit for approval."
+msgstr "Klõpsake lehe ülaosas Submit for approval."
+
+#: includes/class-wc-sumup-connection-diagnostics.php:96 templates/onboarding.php:50
+msgid "Check connection"
+msgstr "Kontrolli ühendust"
+
+#: includes/class-wc-sumup-connection-diagnostics.php:92
+msgid "Check connection and permissions"
+msgstr "Kontrolli ühendust ja õigusi"
+
+#: includes/class-wc-sumup-settings.php:32
+msgid "Checkout"
+msgstr "Kassa"
+
+#: includes/class-wc-sumup-gateway.php:1710 includes/class-wc-sumup-gateway.php:1804 includes/class-wc-sumup-widget-settings.php:46
+msgid "Close payment modal"
+msgstr "Sulge makseaken"
+
+#: includes/class-wc-sumup-gateway.php:328
+#, php-format
+msgid "Complete Google approval in the %s, then register your domain with SumUp using the button below. Registration with SumUp does not submit your website to Google for approval."
+msgstr "Lõpetage Google’i heakskiitmine teenuses %s ja registreerige seejärel domeen SumUpis alloleva nupu abil. SumUpis registreerimine ei saada veebisaiti Google’ile heakskiitmiseks."
+
+#: templates/onboarding.php:58 templates/onboarding.php:61 templates/onboarding.php:68
+msgid "Complete setup"
+msgstr "Lõpeta seadistamine"
+
+#: templates/onboarding.php:21
+msgid "Complete setup to accept payments with SumUp"
+msgstr "Lõpetage seadistamine, et võtta SumUpiga makseid vastu"
+
+#: includes/class-wc-sumup-gateway.php:345 includes/class-wc-sumup-onboarding.php:125
+msgid "Connect your SumUp account before continuing with Google Pay."
+msgstr "Enne Google Payga jätkamist ühendage oma SumUpi konto."
+
+#: templates/onboarding.php:25
+msgid "Connect your SumUp account to start accepting credit and debit card payments in WooCommerce."
+msgstr "Ühendage oma SumUpi konto, et alustada WooCommerce’is krediit- ja deebetkaardimaksete vastuvõtmist."
+
+#: includes/class-wc-sumup-gateway.php:212
+msgid "Connected"
+msgstr "Ühendatud"
+
+#: includes/class-wc-sumup-settings.php:15
+msgid "Connection"
+msgstr "Ühendus"
+
+#: includes/class-wc-sumup-gateway.php:337
+msgid "Create an account in the Google Pay console."
+msgstr "Looge Google Pay konsoolis konto."
+
+#: includes/class-wc-sumup-credentials.php:132
+msgid "Credentials are not valid. Please check the plugin log and try again."
+msgstr "Mandaat ei ole kehtiv. Kontrollige plugina logi ja proovige uuesti."
+
+#: templates/onboarding-failed-message.php:18
+msgid "Credentials are not valid. Please try again."
+msgstr "Mandaat ei kehti. Palun proovi uuesti."
+
+#: includes/class-wc-sumup-block-gateway.php:65 includes/class-wc-sumup-settings.php:46
+msgid "Credit / Debit Card"
+msgstr "Krediit- / deebetkaart"
+
+#: includes/class-wc-sumup-settings.php:120
+msgid "Define the number of installments you will accept."
+msgstr "Määrake osamaksete arv, mida te aktsepteerite."
+
+#: includes/class-wc-sumup-settings.php:50
+msgid "Description"
+msgstr "Kirjeldus"
+
+#: includes/class-wc-sumup-settings.php:154
+msgid "Diagnostics"
+msgstr "Diagnostika"
+
+#: includes/class-wc-sumup-gateway.php:285 includes/class-wc-sumup-gateway.php:288
+msgid "Disconnect account"
+msgstr "Katkesta konto ühendus"
+
+#: sumup-payment-gateway-for-woocommerce.php:532
+msgid "Docs"
+msgstr "Dokumendid"
+
+#: includes/class-wc-sumup-settings.php:142
+msgid "Enable"
+msgstr "Luba"
+
+#: includes/class-wc-sumup-settings.php:73
+msgid "Enable Apple Pay at checkout."
+msgstr "Luba Apple Pay kassas."
+
+#: includes/class-wc-sumup-settings.php:57 includes/class-wc-sumup-settings.php:58
+msgid "Enable Google Pay"
+msgstr "Luba Google Pay"
+
+#: includes/class-wc-sumup-onboarding.php:128
+msgid "Enable Google Pay and save your changes before continuing."
+msgstr "Enne jätkamist lubage Google Pay ja salvestage muudatused."
+
+#: includes/class-wc-sumup-gateway.php:352
+msgid "Enable Google Pay and save your changes, then return here to register your domain with SumUp."
+msgstr "Lubage Google Pay ja salvestage muudatused, seejärel naaske siia domeeni registreerimiseks SumUpis."
+
+#: includes/class-wc-sumup-settings.php:110
+msgid "Enable Installments?"
+msgstr "Lubada osamaksed?"
+
+#: includes/class-wc-sumup-settings.php:141
+msgid "Enable PIX?"
+msgstr "Lubada PIX?"
+
+#: includes/class-wc-sumup-settings.php:37
+msgid "Enable SumUp"
+msgstr "Luba SumUp"
+
+#: includes/class-wc-sumup-settings.php:36
+msgid "Enable/Disable"
+msgstr "Lubamine/Keelamine"
+
+#: includes/class-wc-sumup-gateway.php:1699
+msgid "Error: Merchant account settings are incorrectly configured. Check the plugin settings page."
+msgstr "Viga: kaupmehe konto seaded on valesti konfigureeritud. Kontrollige plugina seadete lehte."
+
+#: includes/class-wc-sumup-widget-settings.php:50
+msgid "Fill in all required details."
+msgstr "Täida kõik vajalikud andmed."
+
+#: includes/class-wc-sumup-gateway.php:340
+msgid "Fill out the form with the requested information, including the domain name and buyflow screenshots."
+msgstr "Täitke vorm nõutud teabega, sealhulgas domeeninimi ja ostuprotsessi kuvatõmmised."
+
+#: includes/class-wc-sumup-gateway.php:338
+msgid "Go to the Google Pay API tab in your Google Pay console."
+msgstr "Avage Google Pay konsoolis vahekaart Google Pay API."
+
+#: includes/class-wc-sumup-gateway.php:331
+msgid "Google Pay console"
+msgstr "Google Pay konsool"
+
+#: includes/class-wc-sumup-gateway.php:348 includes/class-wc-sumup-onboarding.php:121
+msgid "Google Pay domain registration requires a publicly accessible HTTPS store."
+msgstr "Google Pay domeeni registreerimiseks on vajalik avalikult ligipääsetav HTTPS-pood."
+
+#: includes/class-wc-sumup-settings.php:26
+msgid "Google Pay merchant ID"
+msgstr "Google Pay kaupmehe ID"
+
+#: includes/class-wc-sumup-gateway.php:317
+msgid "Google Pay setup"
+msgstr "Google Pay seadistamine"
+
+#: includes/class-wc-sumup-settings.php:109
+msgid "Installments"
+msgstr "Osamaksed"
+
+#: includes/api/handlers/class-sumup-store-payment-instructions.php:44 includes/api/handlers/class-sumup-validate-redirect.php:44 includes/class-wc-sumup-gateway.php:1400
+msgid "Invalid order ID."
+msgstr "Vigane tellimuse ID."
+
+#: includes/api/handlers/class-sumup-store-payment-instructions.php:49
+msgid "Invalid order key."
+msgstr "Vigane tellimuse võti."
+
+#: includes/api/class-sumup-api-handler.php:66
+msgid "Invalid request method."
+msgstr "Vigane päringumeetod."
+
+#: includes/api/handlers/class-sumup-store-payment-instructions.php:39 includes/api/handlers/class-sumup-validate-redirect.php:39
+msgid "Invalid request nonce."
+msgstr "Vigane päringu nonce."
+
+#: includes/api/handlers/class-sumup-store-payment-instructions.php:34 includes/api/handlers/class-sumup-validate-redirect.php:34
+msgid "Invalid request payload."
+msgstr "Vigane päringu payload."
+
+#: includes/class-wc-sumup-connection-diagnostics.php:95
+msgid "Last verified notification"
+msgstr "Viimane kinnitatud teavitus"
+
+#: includes/class-wc-sumup-settings.php:89
+msgid "Log debug messages"
+msgstr "Logi silumissõnumeid"
+
+#: templates/onboarding.php:37
+msgid "Log into your SumUp account, if you are not already logged in."
+msgstr "Logi sisse oma SumUpi kontole, kui te pole veel sisse logitud."
+
+#: includes/class-wc-sumup-settings.php:88
+msgid "Logging"
+msgstr "Logimine"
+
+#: includes/class-wc-sumup-settings.php:17
+msgid "Manage the SumUp account connected to this store."
+msgstr "Hallake selle poega ühendatud SumUpi kontot."
+
+#: includes/class-wc-sumup-gateway.php:235
+msgid "Merchant code"
+msgstr "Kaupmehe ID"
+
+#: includes/class-wc-sumup-credentials.php:130
+msgid "Missing scope: payments. Please contact support team."
+msgstr "Puuduv ulatus: maksed. Võtke ühendust tugimeeskonnaga."
+
+#: includes/class-wc-sumup-gateway.php:339
+msgid "Navigate to the Integrate with your website section and click Add website."
+msgstr "Minge jaotisse Integrate with your website ja klõpsake Add website."
+
+#: includes/class-wc-sumup-connection-diagnostics.php:95
+msgid "No verified notifications yet. Complete a test payment to check delivery."
+msgstr "Kinnitatud teavitusi pole veel. Kohaletoimetamise kontrollimiseks tehke testmakse."
+
+#: includes/class-wc-sumup-gateway.php:214 includes/class-wc-sumup-gateway.php:215
+msgid "Not available"
+msgstr "Pole saadaval"
+
+#: includes/class-wc-sumup-connection-diagnostics.php:92
+msgid "Not checked yet"
+msgstr "Pole veel kontrollitud"
+
+#: includes/class-wc-sumup-settings.php:118
+msgid "Number of Installments"
+msgstr "Osamaksete arv"
+
+#: includes/class-wc-sumup-settings.php:71
+msgid "Offer Apple Pay"
+msgstr "Paku Apple Payd"
+
+#: includes/class-wc-sumup-settings.php:60
+msgid "Offer Google Pay when eligible. Complete domain setup below before accepting payments."
+msgstr "Paku Google Payd, kui see on saadaval. Enne maksete vastuvõtmist lõpetage allpool domeeni seadistamine."
+
+#: includes/class-wc-sumup-settings.php:79
+msgid "Open Payment in modal?"
+msgstr "Kas avada makse modaalselt?"
+
+#: includes/class-wc-sumup-settings.php:82
+msgid "Open the Payment options inside a modal (popup)"
+msgstr "Ava maksevalikud modaalis (hüpikaknas)"
+
+#: includes/class-wc-sumup-settings.php:29
+msgid "Optional. Leave blank to use the SumUp widget defaults. To use your own Google Pay merchant ID, enter the ID issued by Google, separate from your SumUp merchant code. Your store name will then appear on the Google Pay payment sheet. Wallet domain onboarding is still required."
+msgstr "Valikuline. SumUpi vidina vaikesätete kasutamiseks jätke tühjaks. Oma Google Pay kaupmehe ID kasutamiseks sisestage Google’i väljastatud ID, mis erineb SumUpi kaupmehekoodist. Seejärel ilmub Google Pay makselehele teie poe nimi. Rahakoti domeeni registreerimine on endiselt vajalik."
+
+#: includes/class-wc-sumup-gateway.php:527 includes/class-wc-sumup-gateway.php:1754
+msgid "Order ID is not available to make the payment. Try again soon or contact the website support."
+msgstr "Tellimuse ID pole makse tegemiseks saadaval. Proovige peagi uuesti või võtke ühendust veebisaidi toega."
+
+#: includes/api/handlers/class-sumup-store-payment-instructions.php:54
+msgid "Order is not available."
+msgstr "Tellimus pole saadaval."
+
+#: includes/class-wc-sumup-gateway.php:1649
+msgid "Order is unavailable."
+msgstr "Tellimus pole saadaval."
+
+#: includes/class-wc-sumup-gateway.php:1416
+msgid "Order not found."
+msgstr "Tellimust ei leitud."
+
+#: includes/api/handlers/class-sumup-store-payment-instructions.php:59 includes/api/handlers/class-sumup-store-payment-instructions.php:68 includes/class-wc-sumup-gateway.php:780
+msgid "Order validation failed."
+msgstr "Tellimuse valideerimine ebaõnnestus."
+
+#: includes/class-wc-sumup-gateway.php:534 includes/class-wc-sumup-gateway.php:545 includes/class-wc-sumup-gateway.php:1359 includes/class-wc-sumup-widget-settings.php:52
+msgid "Order validation failed. Refresh checkout and try again."
+msgstr "Tellimuse valideerimine ebaõnnestus. Värskendage kassalehte ja proovige uuesti."
+
+#: includes/class-wc-sumup-block-gateway.php:69 includes/class-wc-sumup-settings.php:53
+msgid "Pay securely with your credit or debit card, or use other available payment methods."
+msgstr "Makske turvaliselt krediit- või deebetkaardiga või kasutage muid saadaolevaid makseviise."
+
+#: includes/class-wc-sumup-gateway.php:1975
+msgid "Payment Status: "
+msgstr "Makse olek: "
+
+#: includes/class-wc-sumup-gateway.php:1436
+msgid "Payment details are missing for this order."
+msgstr "Selle tellimuse makseandmed puuduvad."
+
+#: includes/class-wc-sumup-gateway.php:1500 includes/class-wc-sumup-gateway.php:1590 includes/class-wc-sumup-widget-settings.php:53
+msgid "Payment failed, please try again."
+msgstr "Makse ebaõnnestus, proovige uuesti."
+
+#: includes/class-wc-sumup-settings.php:104
+msgid "Payment options"
+msgstr "Maksevalikud"
+
+#: includes/class-wc-sumup-gateway.php:1442 includes/class-wc-sumup-gateway.php:1464
+msgid "Payment validation failed."
+msgstr "Makse valideerimine ebaõnnestus."
+
+#: includes/class-wc-sumup-widget-settings.php:55
+msgid "Payment was cancelled."
+msgstr "Makse tühistati."
+
+#: includes/class-wc-sumup-gateway.php:1729
+msgid "Please fill \"Merchant code\" on the plugin settings."
+msgstr "Täitke plugina seadetes väli „Kaupmehekood”."
+
+#: sumup-payment-gateway-for-woocommerce.php:615
+msgid "Please use the “Connect Account” button to start the configuration."
+msgstr "Palun kasutage seadistuse alustamiseks nuppu „Ühenda konto“."
+
+#: includes/class-wc-sumup-gateway.php:274 includes/class-wc-sumup-gateway.php:277
+msgid "Reconnect account"
+msgstr "Ühenda konto uuesti"
+
+#: includes/class-wc-sumup-gateway.php:367 includes/class-wc-sumup-gateway.php:370
+msgid "Register domain with SumUp"
+msgstr "Registreeri domeen SumUpis"
+
+#: sumup-payment-gateway-for-woocommerce.php:768
+msgid "Registered with SumUp"
+msgstr "SumUpis registreeritud"
+
+#: includes/class-wc-sumup-gateway.php:190
+msgid "Return to payments"
+msgstr "Tagasi maksete juurde"
+
+#: includes/class-wc-sumup-settings.php:91
+msgid "Save debug messages to the WooCommerce System Status log."
+msgstr "Salvesta silumissõnumid WooCommerce süsteemi oleku logisse."
+
+#: templates/onboarding.php:40
+msgid "Select the “Connect” button to begin."
+msgstr "Alustamiseks vali nupp \"Ühenda."
+
+#: sumup-payment-gateway-for-woocommerce.php:632
+msgid "Settings"
+msgstr "Seaded"
+
+#: templates/onboarding.php:29
+msgid "Setup takes 4 steps:"
+msgstr "Seadistamisel on 4 sammu:"
+
+#: includes/class-wc-sumup-apple-pay.php:187
+msgid "Skipping Apple Pay domain registration because merchant code is missing."
+msgstr "Apple Pay domeeni registreerimine jäetakse vahele, kuna kaupmehekood puudub."
+
+#: includes/class-wc-sumup-apple-pay.php:240
+msgid "Skipping Apple Pay domain registration because the access token could not be resolved."
+msgstr "Apple Pay domeeni registreerimine jäetakse vahele, kuna juurdepääsutõendit ei saanud hankida."
+
+#: includes/class-wc-sumup-apple-pay.php:217
+msgid "Skipping Apple Pay domain registration because the association file is missing."
+msgstr "Apple Pay domeeni registreerimine jäetakse vahele, kuna seostamisfail puudub."
+
+#: includes/class-wc-sumup-apple-pay.php:202
+msgid "Skipping Apple Pay domain registration because the store hostname is not public."
+msgstr "Apple Pay domeeni registreerimine jäetakse vahele, kuna poe hostinimi pole avalik."
+
+#: includes/class-wc-sumup-gateway.php:1730
+msgid "Sorry, SumUp is not available. Try again soon."
+msgstr "SumUp pole praegu saadaval. Proovige peagi uuesti."
+
+#: includes/class-wc-sumup-onboarding.php:85 includes/class-wc-sumup-onboarding.php:118
+msgid "Sorry, request not authorized."
+msgstr "Päring pole volitatud."
+
+#: includes/class-wc-sumup-onboarding.php:66 includes/class-wc-sumup-onboarding.php:111
+msgid "Sorry, you are not allowed to manage SumUp settings."
+msgstr "Teil pole õigust SumUpi seadeid hallata."
+
+#: templates/onboarding.php:34
+msgid "Start by connecting your account. Learn more"
+msgstr "Alustage oma konto ühendamisega. Lisateave"
+
+#: includes/class-wc-sumup-gateway.php:227
+msgid "Status"
+msgstr "Olek"
+
+#: sumup-payment-gateway-for-woocommerce.php:465
+msgid "Store"
+msgstr "Pood"
+
+#: includes/class-wc-sumup-gateway.php:1744
+msgid "Sum up is temporarily unavailable. Please contact site admin for more information."
+msgstr "SumUp on ajutiselt saadaval. Lisateabe saamiseks võtke ühendust saidi administraatoriga."
+
+#: includes/class-wc-sumup-gateway.php:93
+msgid "SumUp"
+msgstr "SumUp"
+
+#. translators: %s = admin.php?page=wc-settings&tab=checkout&section=sumup
+#: sumup-payment-gateway-for-woocommerce.php:593
+#, php-format
+msgid "SumUp Gateway is almost ready. To get started, <a href=\"%s\">set your SumUp account keys</a>."
+msgstr "SumUp Gateway on peaaegu valmis. Alustamiseks <a href=\"%s\">seadke oma SumUpi konto võtmed</a>."
+
+#. translators: %s = admin.php?page=wc-settings&tab=checkout&section=sumup
+#: sumup-payment-gateway-for-woocommerce.php:600
+#, php-format
+msgid "SumUp Gateway is not configured properly. You can fix this from <a href=\"%s\">here</a>."
+msgstr "SumUp Gateway ei ole õigesti konfigureeritud. Selle saate parandada <a href=\"%s\">siit</a>."
+
+#: sumup-payment-gateway-for-woocommerce.php:609
+msgid "SumUp Gateway needs your attention. Currency is different from WooCommerce currency (WooCommerce->Settings->General->Currency)."
+msgstr "SumUp Gateway vajab teie tähelepanu. Valuuta erineb WooCommerce'i valuutast (WooCommerce->Settings->General->Currency)."
+
+#. Plugin Name of the plugin
+msgid "SumUp Payment Gateway For WooCommerce"
+msgstr "SumUp Payment Gateway For WooCommerce"
+
+#: templates/onboarding-failed-message.php:15
+msgid "SumUp account not connected"
+msgstr "SumUpi konto pole ühendatud"
+
+#. translators: %s: transaction code.
+#: includes/class-wc-sumup-gateway.php:1079
+#, php-format
+msgid "SumUp charge complete. Transaction Code: %s"
+msgstr "SumUp laadimine lõpetatud. Tehingu kood: %s"
+
+#: includes/api/handlers/class-sumup-validate-redirect.php:54
+msgid "SumUp gateway is unavailable."
+msgstr "SumUp makselüüs pole saadaval."
+
+#: includes/class-wc-sumup-gateway.php:1451
+msgid "SumUp is temporarily unavailable. Please try again."
+msgstr "SumUp on ajutiselt kättesaamatu. Proovige uuesti."
+
+#: includes/class-wc-sumup-checkout-service.php:22
+msgid "SumUp is unavailable for this currency."
+msgstr "SumUp pole selle valuuta jaoks saadaval."
+
+#: includes/class-wc-sumup-gateway.php:1770
+msgid "SumUp is unavailable for this order currency."
+msgstr "SumUp pole selle tellimuse valuuta jaoks saadaval."
+
+#: includes/class-wc-sumup-gateway.php:1654
+msgid "SumUp is unavailable for this order."
+msgstr "SumUp pole selle tellimuse jaoks saadaval."
+
+#: includes/class-wc-sumup-widget-settings.php:45
+msgid "SumUp payment"
+msgstr "SumUpi makse"
+
+#: includes/class-wc-sumup-gateway.php:1064
+msgid "SumUp payment failed."
+msgstr "SumUp makse ebaõnnestus."
+
+#. translators: %s: WooCommerce download link.
+#: sumup-payment-gateway-for-woocommerce.php:550
+#, php-format
+msgid "SumUp requires WooCommerce to be installed and active. You can download %s here."
+msgstr "SumUp nõuab, et WooCommerce oleks installitud ja aktiivne. Siit saate alla laadida %s."
+
+#. Description of the plugin
+msgid "Take credit card payments on your store using SumUp."
+msgstr "Võtke oma poes krediitkaardimakseid vastu SumUpi abil."
+
+#: includes/class-wc-sumup-settings.php:52
+msgid "This controls the description the user sees during checkout."
+msgstr "See kontrollib kirjeldust, mida kasutaja näeb kassas."
+
+#: includes/class-wc-sumup-settings.php:45
+msgid "This controls the title the user sees during checkout."
+msgstr "See kontrollib pealkirja, mida kasutaja näeb kassas."
+
+#: includes/class-wc-sumup-checkout-service.php:16
+msgid "This order does not need another payment."
+msgstr "See tellimus ei vaja uut makset."
+
+#: includes/class-wc-sumup-settings.php:43
+msgid "Title"
+msgstr "Pealkiri"
+
+#: includes/class-wc-sumup-widget-settings.php:49
+msgid "Transaction was unsuccessful. Please check the minimum amount or use another valid card."
+msgstr "Tehing ebaõnnestus. Kontrollige minimaalset summat või kasutage teist kehtivat kaarti."
+
+#: sumup-payment-gateway-for-woocommerce.php:766
+msgid "Unable to continue with Google Pay. Please try again."
+msgstr "Google Payga ei saanud jätkata. Proovige uuesti."
+
+#: includes/class-wc-sumup-onboarding.php:133
+msgid "Unable to determine the merchant code or domain for Google Pay registration."
+msgstr "Google Pay registreerimiseks ei saanud tuvastada kaupmehekoodi või domeeni."
+
+#: sumup-payment-gateway-for-woocommerce.php:769
+msgid "Unable to disconnect the SumUp account."
+msgstr "SumUpi konto lahtiühendamine ei õnnestunud."
+
+#: includes/class-wc-sumup-widget-settings.php:56
+msgid "Unable to initialize SumUp checkout."
+msgstr "SumUp checkouti ei saanud initsialiseerida."
+
+#: includes/class-wc-sumup-checkout-service.php:142 includes/class-wc-sumup-gateway.php:1665 includes/class-wc-sumup-gateway.php:1786
+msgid "Unable to initialize SumUp payment. Please try again."
+msgstr "SumUpi makset ei saanud alustada. Proovige uuesti."
+
+#: includes/class-wc-sumup-onboarding.php:168
+msgid "Unable to register your domain with SumUp for Google Pay. Check domain setup in SumUp Dashboard > Settings > For developers > Payment wallets, then try again."
+msgstr "Domeeni ei saanud SumUpis Google Pay jaoks registreerida. Kontrollige domeeni seadistust jaotises SumUp Dashboard > Settings > For developers > Payment wallets ja proovige uuesti."
+
+#: sumup-payment-gateway-for-woocommerce.php:763
+msgid "Unable to start the SumUp connection."
+msgstr "SumUpi ühenduse loomist ei õnnestunud alustada."
+
+#: sumup-payment-gateway-for-woocommerce.php:765
+msgid "Unable to start the SumUp connection. Please try again."
+msgstr "SumUpi ühenduse loomist ei õnnestunud alustada. Proovige uuesti."
+
+#: sumup-payment-gateway-for-woocommerce.php:764
+msgid "Unable to validate this website."
+msgstr "Seda veebisaiti ei õnnestunud kinnitada."
+
+#: includes/class-wc-sumup-gateway.php:1427
+msgid "Unable to verify access to this order. Please sign in or reopen the original payment link. If you have already paid, do not pay again."
+msgstr "Selle tellimuse juurdepääsu ei saanud kinnitada. Logige sisse või avage algne makselink uuesti. Kui olete juba maksnud, ärge makske uuesti."
+
+#: includes/class-wc-sumup-gateway.php:1458 includes/class-wc-sumup-widget-settings.php:51
+msgid "Unable to verify payment status. Please try again."
+msgstr "Makse staatust ei saanud kontrollida. Proovige uuesti."
+
+#: sumup-payment-gateway-for-woocommerce.php:770
+msgid "Unknown error occurred."
+msgstr "Tekkis tundmatu viga."
+
+#: includes/class-wc-sumup-onboarding.php:114
+msgid "Use POST to register a Google Pay domain."
+msgstr "Google Pay domeeni registreerimiseks kasutage POST-meetodit."
+
+#: sumup-payment-gateway-for-woocommerce.php:288
+msgid "Use a publicly reachable HTTPS domain before connecting SumUp. If you are testing locally, use a tunnel such as ngrok or Cloudflare Tunnel and update WordPress Home and Site URL first."
+msgstr "Kasutage enne SumUpiga ühendamist avalikult ligipääsetavat HTTPS-domeeni. Kui testite kohapeal, kasutage tunnelit nagu ngrok või Cloudflare Tunnel ja värskendage esmalt WordPressi Home ja Site URL-i."
+
+#: includes/class-wc-sumup-connection-diagnostics.php:92
+msgid "Verified"
+msgstr "Kinnitatud"
+
+#: includes/class-wc-sumup-gateway.php:1481 includes/class-wc-sumup-gateway.php:1622 includes/class-wc-sumup-widget-settings.php:54
+msgid "We are still waiting for SumUp to confirm this payment. Please wait a moment and refresh the page if the order is not updated automatically."
+msgstr "Ootame endiselt, et SumUp kinnitaks selle makse. Oodake hetk ja värskendage lehte, kui tellimust automaatselt ei uuendata."
+
+#: sumup-payment-gateway-for-woocommerce.php:880
+msgid "When you choose SumUp, payment and billing details are sent to SumUp to process your payment and prevent fraud. The payment widget connects directly to SumUp and may process browser and network information. Card numbers and security codes are handled by SumUp, not stored by this plugin. Orders retain payment identifiers and, where applicable, pending payment instructions. When logging is enabled, WooCommerce logs include order, checkout and transaction identifiers. Review your WooCommerce retention settings and the SumUp Privacy Policy when preparing your store privacy notice."
+msgstr "Kui valite SumUpi, saadetakse makse- ja arveldusandmed SumUpile makse töötlemiseks ja pettuste vältimiseks. Maksevidin loob otseühenduse SumUpiga ning võib töödelda brauseri ja võrgu teavet. Kaardinumbreid ja turvakoode töötleb SumUp ning see plugin neid ei salvesta. Tellimused säilitavad maksete tunnused ja vajaduse korral ootel maksejuhised. Kui logimine on lubatud, sisaldavad WooCommerce’i logid tellimuste, maksete ja tehingute tunnuseid. Poe privaatsusteate koostamisel vaadake üle WooCommerce’i säilitamisseaded ja SumUpi privaatsuspoliitika."
+
+#: includes/class-wc-sumup-settings.php:80
+msgid "Yes"
+msgstr "Jah"
+
+#: includes/class-wc-sumup-connection-diagnostics.php:49
+msgid "You cannot manage payment settings."
+msgstr "Teil pole õigust makseseadeid hallata."
+
+#: includes/class-wc-sumup-onboarding.php:172
+msgid "Your SumUp account or store domain changed. Reload the settings and try again."
+msgstr "Teie SumUpi konto või poe domeen on muutunud. Laadige seaded uuesti ja proovige uuesti."
+
+#: includes/class-wc-sumup-gateway.php:356 includes/class-wc-sumup-onboarding.php:135 sumup-payment-gateway-for-woocommerce.php:767
+msgid "Your domain has been registered with SumUp for Google Pay."
+msgstr "Teie domeen on SumUpis Google Pay jaoks registreeritud."
+
+#: sumup-payment-gateway-for-woocommerce.php:296
+#, php-format
+msgid "Your store is currently using %1$s, which is not publicly reachable. Use a public HTTPS domain before connecting SumUp. If you are testing locally, use a tunnel such as ngrok or Cloudflare Tunnel and update WordPress Home and Site URL first."
+msgstr "Teie pood kasutab praegu aadressi %1$s, mis ei ole avalikult ligipääsetav. Kasutage enne SumUpiga ühendamist avalikku HTTPS-domeeni. Kui testite kohapeal, kasutage tunnelit nagu ngrok või Cloudflare Tunnel ja värskendage esmalt WordPressi Home ja Site URL-i."
+
+#. translators: 1: store currency, 2: connected merchant currency, 3: SumUp settings URL.
+#: sumup-payment-gateway-for-woocommerce.php:605
+#, php-format
+msgid "Your store uses %1$s, but the connected SumUp merchant uses %2$s. Change the store currency back or <a href=\"%3$s\">connect a matching SumUp account</a>."
+msgstr "Teie pood kasutab valuutat %1$s, kuid ühendatud SumUpi kaupmees kasutab valuutat %2$s. Taastage poe valuuta või <a href=\"%3$s\">ühendage sobiv SumUpi konto</a>."
+
+#. Author URI of the plugin
+msgid "https://sumup.com"
+msgstr "https://sumup.com"
+
+#. Plugin URI of the plugin
+msgid "https://wordpress.org/plugins/sumup-payment-gateway-for-woocommerce/"
+msgstr "https://wordpress.org/plugins/sumup-payment-gateway-for-woocommerce/"

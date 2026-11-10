@@ -1,16 +1,15 @@
 <?php
 
-if (!defined('ABSPATH')) {
+if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
 //TODO - Adicionar timeout na requisição.
-class Sumup_API_Validation_Website_Handler extends Sumup_Api_Handler
-{
+class Sumup_API_Validation_Website_Handler extends Sumup_Api_Handler {
 
-	public function __construct()
-	{
-		add_filter('sumup_api_handlers', array($this, 'add_handlers'));
+
+	public function __construct() {
+		add_filter( 'sumup_api_handlers', array( $this, 'add_handlers' ) );
 	}
 
 	/**
@@ -20,11 +19,10 @@ class Sumup_API_Validation_Website_Handler extends Sumup_Api_Handler
 	 * @throws Exception
 	 */
 
-	public function add_handlers($handlers)
-	{
+	public function add_handlers( $handlers ) {
 		$handlers['validate_website'] = array(
-			'callback' => array($this, 'handle'),
-			'method' => 'GET',
+			'callback' => array( $this, 'handle' ),
+			'method'   => 'GET',
 		);
 
 		return $handlers;
@@ -33,13 +31,10 @@ class Sumup_API_Validation_Website_Handler extends Sumup_Api_Handler
 	/**
 	 * Handle the request.
 	 */
-	public function handle()
-	{
-		WC_SUMUP_LOGGER::log( "Sending validate website handler");
-		$this->send_response(array('status' => 'valid website'));
-
+	public function handle() {
+		WC_SUMUP_LOGGER::log( 'Sending validate website handler' );
+		$this->send_response( array( 'status' => 'valid website' ) );
 	}
-
 }
 
 new Sumup_API_Validation_Website_Handler();

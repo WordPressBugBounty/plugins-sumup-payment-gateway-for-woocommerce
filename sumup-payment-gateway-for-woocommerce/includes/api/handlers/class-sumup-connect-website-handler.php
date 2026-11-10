@@ -1,15 +1,14 @@
 <?php
 
-if (!defined('ABSPATH')) {
+if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-class Sumup_API_Connection_Website_Handler extends Sumup_Api_Handler
-{
+class Sumup_API_Connection_Website_Handler extends Sumup_Api_Handler {
 
-	public function __construct()
-	{
-		add_filter('sumup_api_handlers', array($this, 'add_handlers'));
+
+	public function __construct() {
+		add_filter( 'sumup_api_handlers', array( $this, 'add_handlers' ) );
 	}
 
 	/**
@@ -19,11 +18,10 @@ class Sumup_API_Connection_Website_Handler extends Sumup_Api_Handler
 	 * @throws Exception
 	 */
 
-	public function add_handlers($handlers)
-	{
+	public function add_handlers( $handlers ) {
 		$handlers['connection_website'] = array(
-			'callback' => array($this, 'handle'),
-			'method' => 'POST',
+			'callback' => array( $this, 'handle' ),
+			'method'   => 'POST',
 		);
 
 		return $handlers;
@@ -32,63 +30,18 @@ class Sumup_API_Connection_Website_Handler extends Sumup_Api_Handler
 	/**
 	 * Handle the request.
 	 */
-	public function handle()
-	{
-		$json_data = file_get_contents('php://input');
-		$post_data = json_decode($json_data, true);
-		$connection_id = isset($post_data['id']) ? sanitize_text_field($post_data['id']) : '';
-
-		WC_SUMUP_LOGGER::log( "Receive connect data handler");
-
-		if ( empty( $connection_id ) ) {
-			WC_SUMUP_LOGGER::log( 'Rejecting legacy connect callback: missing connection ID' );
-			$reponse_body = array('status' => 'error', 'message' => 'Invalid connection ID');
-			$this->send_response($reponse_body['status'],$reponse_body['message'],array() ,400);
+	public function handle() {
+		$result = WC_Sumup_Connection::accept( $this->get_request_data() );
+		if ( is_wp_error( $result ) ) {
+			$this->send_response( 'error', $result->get_error_message(), array(), 400 );
 		}
-
-		if ( ! sumup_has_pending_connection_id( $connection_id ) ) {
-			WC_SUMUP_LOGGER::log( 'Rejecting legacy connect callback: unknown connection ID ' . $connection_id );
-			$reponse_body = array('status' => 'error', 'message' => 'Invalid connection ID');
-			$this->send_response($reponse_body['status'],$reponse_body['message'],array() ,400);
-		}
-
-		if (!isset($post_data['merchant']['email'])) {
-			$reponse_body = array('status' => 'error', 'message' => 'Invalid merchant email');
-			$this->send_response($reponse_body['status'],$reponse_body['message'],array() ,400);
-		}
-
-		if (!isset($post_data['merchant']['api_key'])) {
-			$reponse_body = array('status' => 'error', 'message' => 'Invalid API key');
-			$this->send_response($reponse_body['status'],$reponse_body['message'],array() ,400);
-		}
-
-		if (!isset($post_data['merchant']['merchant_code'])) {
-			$reponse_body = array('status' => 'error', 'message' => 'Invalid merchant code');
-			$this->send_response($reponse_body['status'],$reponse_body['message'],array() ,400);
-		}
-
-		$settings = get_option('woocommerce_sumup_settings');
-		if (!isset($settings)) {
-			set_transient('pay_to_email', $post_data['merchant']['email']);
-			set_transient('api_key', $post_data['merchant']['api_key']);
-			set_transient('merchant_id', $post_data['merchant']['merchant_code']);
-		}else{
-			$settings['pay_to_email'] = $post_data['merchant']['email'];
-			$settings['api_key'] = $post_data['merchant']['api_key'];
-			$settings['merchant_id'] = $post_data['merchant']['merchant_code'];
-			$settings['enabled'] = 'no';
-			update_option('woocommerce_sumup_settings', $settings);
-		}
-
-		update_option('sumup_connection_status', 'pending', false);
-
-		sumup_delete_pending_connection_id($connection_id);
-
-		$reponse_body = array('status' => 'connected');
-		$this->send_response($reponse_body);
-
+		// Preserve the legacy callback's response envelope.
+		$this->send_response( $result );
 	}
 
+	protected function get_request_data() {
+		return json_decode( file_get_contents( 'php://input' ), true );
+	}
 }
 
 new Sumup_API_Connection_Website_Handler();

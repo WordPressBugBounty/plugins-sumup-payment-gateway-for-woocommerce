@@ -1,563 +1,660 @@
-#
+# Translations for the SumUp WooCommerce plugin.
+# Edit this PO file, then run scripts/i18n.py update to rebuild its MO file.
 msgid ""
 msgstr ""
-"Project-Id-Version: SumUp Payment Gateway For WooCommerce 2.5.5\n"
-"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/sumup-plugin-for-"
-"woocommerce\n"
-"POT-Creation-Date: 2024-07-09T02:16:27+00:00\n"
-"PO-Revision-Date: 2024-10-21 16:51-0300\n"
-"Last-Translator: \n"
-"Language-Team: \n"
+"Project-Id-Version: SumUp Payment Gateway For WooCommerce\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/sumup-payment-gateway-for-woocommerce/\n"
 "Language: de_DE\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Domain: sumup-payment-gateway-for-woocommerce\n"
-"X-Generator: Poedit 3.5\n"
+
+#. translators: 1: plugin name, 2: minimum PHP version.
+#: sumup-payment-gateway-for-woocommerce.php:711
+#, php-format
+msgid "%1$s requires PHP version %2$s or greater."
+msgstr "%1$s erfordert PHP-Version %2$s oder höher."
+
+#. translators: 1: plugin name, 2: minimum WordPress version.
+#: sumup-payment-gateway-for-woocommerce.php:730
+#, php-format
+msgid "%1$s requires WordPress version %2$s or greater."
+msgstr "%1$s erfordert WordPress-Version %2$s oder höher."
+
+#: includes/class-wc-sumup-settings.php:144
+msgid "Accept PIX as your payment method."
+msgstr "Akzeptieren Sie PIX als Ihre Zahlungsmethode."
+
+#: includes/class-wc-sumup-gateway.php:95
+msgid "Accept credit and debit cards with SumUp, plus eligible payment methods such as Apple Pay, Google Pay, PayPal, Bancontact, and iDEAL."
+msgstr "Akzeptiere Kredit- und Debitkarten mit SumUp sowie verfügbare Zahlungsmethoden wie Apple Pay, Google Pay, PayPal, Bancontact und iDEAL."
+
+#: includes/class-wc-sumup-settings.php:112
+msgid "Accept installments in your card payment method."
+msgstr "Akzeptieren Sie Ratenzahlungen in Ihrer Karten-Zahlungsmethode."
+
+#: includes/api/class-sumup-disconnect.php:46
+msgid "Account already disconnected"
+msgstr "Konto ist bereits getrennt"
+
+#: includes/class-wc-sumup-connection-diagnostics.php:92
+msgid "Account check"
+msgstr "Kontoprüfung"
+
+#: includes/class-wc-sumup-gateway.php:221
+msgid "Account details"
+msgstr "Kontodaten"
+
+#: includes/class-wc-sumup-gateway.php:231
+msgid "Account email"
+msgstr "Konto-E-Mail"
+
+#: includes/class-wc-sumup-gateway.php:261
+msgid "Actions"
+msgstr "Aktionen"
+
+#: templates/onboarding.php:43
+msgid "After approval, we will return you to WooCommerce automatically."
+msgstr "Nach der Freigabe leiten wir dich automatisch zurück zu WooCommerce."
+
+#: includes/class-wc-sumup-settings.php:70
+msgid "Apple Pay"
+msgstr "Apple Pay"
+
+#: includes/class-wc-sumup-apple-pay.php:151
+msgid "Apple Pay association file is missing or unreadable."
+msgstr "Die Apple Pay-Zuordnungsdatei fehlt oder ist nicht lesbar."
+
+#: includes/class-wc-sumup-apple-pay.php:297
+msgid "Apple Pay domain registration completed."
+msgstr "Die Apple Pay-Domainregistrierung wurde abgeschlossen."
+
+#: includes/class-wc-sumup-gateway.php:1902
+msgid "Apple Pay domain registration could not be completed. Make sure your store is publicly accessible over HTTPS, check domain setup in SumUp Dashboard > Settings > For developers > Payment wallets, then save these settings to retry. Other SumUp payment settings have been saved."
+msgstr "Die Apple Pay-Domainregistrierung konnte nicht abgeschlossen werden. Stelle sicher, dass dein Shop öffentlich über HTTPS erreichbar ist, prüfe die Domain-Einrichtung unter SumUp Dashboard > Settings > For developers > Payment wallets und speichere diese Einstellungen für einen erneuten Versuch. Die anderen SumUp-Zahlungseinstellungen wurden gespeichert."
+
+#: includes/class-wc-sumup-apple-pay.php:288
+msgid "Apple Pay domain registration request failed."
+msgstr "Die Anfrage zur Apple Pay-Domainregistrierung ist fehlgeschlagen."
+
+#: includes/class-wc-sumup-apple-pay.php:305
+msgid "Apple Pay domain registration returned a non-success response."
+msgstr "Die Apple Pay-Domainregistrierung hat eine erfolglose Antwort zurückgegeben."
+
+#: includes/class-wc-sumup-gateway.php:341
+msgid "At the top of the page, click Submit for approval."
+msgstr "Klicke oben auf der Seite auf Submit for approval."
+
+#: includes/class-wc-sumup-connection-diagnostics.php:96 templates/onboarding.php:50
+msgid "Check connection"
+msgstr "Verbindung prüfen"
+
+#: includes/class-wc-sumup-connection-diagnostics.php:92
+msgid "Check connection and permissions"
+msgstr "Verbindung und Berechtigungen prüfen"
+
+#: includes/class-wc-sumup-settings.php:32
+msgid "Checkout"
+msgstr "Kasse"
+
+#: includes/class-wc-sumup-gateway.php:1710 includes/class-wc-sumup-gateway.php:1804 includes/class-wc-sumup-widget-settings.php:46
+msgid "Close payment modal"
+msgstr "Zahlungsfenster schließen"
+
+#: includes/class-wc-sumup-gateway.php:328
+#, php-format
+msgid "Complete Google approval in the %s, then register your domain with SumUp using the button below. Registration with SumUp does not submit your website to Google for approval."
+msgstr "Schließe die Genehmigung durch Google in der %s ab und registriere dann deine Domain über die Schaltfläche unten bei SumUp. Die Registrierung bei SumUp reicht deine Website nicht zur Genehmigung bei Google ein."
+
+#: templates/onboarding.php:58 templates/onboarding.php:61 templates/onboarding.php:68
+msgid "Complete setup"
+msgstr "Einrichtung abschließen"
+
+#: templates/onboarding.php:21
+msgid "Complete setup to accept payments with SumUp"
+msgstr "Einrichtung abschließen, um Zahlungen mit SumUp zu akzeptieren"
+
+#: includes/class-wc-sumup-gateway.php:345 includes/class-wc-sumup-onboarding.php:125
+msgid "Connect your SumUp account before continuing with Google Pay."
+msgstr "Verbinde dein SumUp-Konto, bevor du mit Google Pay fortfährst."
+
+#: templates/onboarding.php:25
+msgid "Connect your SumUp account to start accepting credit and debit card payments in WooCommerce."
+msgstr "Verbinde dein SumUp-Konto, um in WooCommerce Kredit- und Debitkartenzahlungen zu akzeptieren."
+
+#: includes/class-wc-sumup-gateway.php:212
+msgid "Connected"
+msgstr "Verbunden"
+
+#: includes/class-wc-sumup-settings.php:15
+msgid "Connection"
+msgstr "Verbindung"
+
+#: includes/class-wc-sumup-gateway.php:337
+msgid "Create an account in the Google Pay console."
+msgstr "Erstelle ein Konto in der Google Pay-Konsole."
+
+#: includes/class-wc-sumup-credentials.php:132
+msgid "Credentials are not valid. Please check the plugin log and try again."
+msgstr "Die Anmeldeinformationen sind ungültig. Bitte überprüfen Sie das Plugin-Protokoll und versuchen Sie es erneut."
+
+#: templates/onboarding-failed-message.php:18
+msgid "Credentials are not valid. Please try again."
+msgstr "Anmeldeinformationen sind ungültig. Bitte versuchen Sie es erneut."
+
+#: includes/class-wc-sumup-block-gateway.php:65 includes/class-wc-sumup-settings.php:46
+msgid "Credit / Debit Card"
+msgstr "Kredit- / Debitkarte"
+
+#: includes/class-wc-sumup-settings.php:120
+msgid "Define the number of installments you will accept."
+msgstr "Definieren Sie die Anzahl der Raten, die Sie akzeptieren werden."
+
+#: includes/class-wc-sumup-settings.php:50
+msgid "Description"
+msgstr "Beschreibung"
+
+#: includes/class-wc-sumup-settings.php:154
+msgid "Diagnostics"
+msgstr "Diagnose"
+
+#: includes/class-wc-sumup-gateway.php:285 includes/class-wc-sumup-gateway.php:288
+msgid "Disconnect account"
+msgstr "Konto trennen"
+
+#: sumup-payment-gateway-for-woocommerce.php:532
+msgid "Docs"
+msgstr "Dokumentation"
+
+#: includes/class-wc-sumup-settings.php:142
+msgid "Enable"
+msgstr "Aktivieren"
+
+#: includes/class-wc-sumup-settings.php:73
+msgid "Enable Apple Pay at checkout."
+msgstr "Apple Pay an der Kasse aktivieren."
+
+#: includes/class-wc-sumup-settings.php:57 includes/class-wc-sumup-settings.php:58
+msgid "Enable Google Pay"
+msgstr "Google Pay aktivieren"
+
+#: includes/class-wc-sumup-onboarding.php:128
+msgid "Enable Google Pay and save your changes before continuing."
+msgstr "Aktiviere Google Pay und speichere deine Änderungen, bevor du fortfährst."
+
+#: includes/class-wc-sumup-gateway.php:352
+msgid "Enable Google Pay and save your changes, then return here to register your domain with SumUp."
+msgstr "Aktiviere Google Pay und speichere deine Änderungen. Kehre anschließend hierher zurück, um deine Domain bei SumUp zu registrieren."
+
+#: includes/class-wc-sumup-settings.php:110
+msgid "Enable Installments?"
+msgstr "Raten aktivieren?"
+
+#: includes/class-wc-sumup-settings.php:141
+msgid "Enable PIX?"
+msgstr "PIX aktivieren?"
+
+#: includes/class-wc-sumup-settings.php:37
+msgid "Enable SumUp"
+msgstr "SumUp aktivieren"
+
+#: includes/class-wc-sumup-settings.php:36
+msgid "Enable/Disable"
+msgstr "Aktivieren/Deaktivieren"
+
+#: includes/class-wc-sumup-gateway.php:1699
+msgid "Error: Merchant account settings are incorrectly configured. Check the plugin settings page."
+msgstr "Fehler: Die Einstellungen des Händlerkontos sind falsch konfiguriert. Überprüfen Sie die Plugin-Einstellungsseite."
+
+#: includes/class-wc-sumup-widget-settings.php:50
+msgid "Fill in all required details."
+msgstr "Füllen Sie alle erforderlichen Angaben aus."
+
+#: includes/class-wc-sumup-gateway.php:340
+msgid "Fill out the form with the requested information, including the domain name and buyflow screenshots."
+msgstr "Fülle das Formular mit den erforderlichen Angaben aus, einschließlich Domainname und Screenshots des Kaufvorgangs."
+
+#: includes/class-wc-sumup-gateway.php:338
+msgid "Go to the Google Pay API tab in your Google Pay console."
+msgstr "Öffne in deiner Google Pay-Konsole den Tab Google Pay API."
+
+#: includes/class-wc-sumup-gateway.php:331
+msgid "Google Pay console"
+msgstr "Google Pay-Konsole"
+
+#: includes/class-wc-sumup-gateway.php:348 includes/class-wc-sumup-onboarding.php:121
+msgid "Google Pay domain registration requires a publicly accessible HTTPS store."
+msgstr "Die Google Pay-Domainregistrierung erfordert einen öffentlich erreichbaren HTTPS-Shop."
+
+#: includes/class-wc-sumup-settings.php:26
+msgid "Google Pay merchant ID"
+msgstr "Google Pay-Händler-ID"
+
+#: includes/class-wc-sumup-gateway.php:317
+msgid "Google Pay setup"
+msgstr "Google Pay-Einrichtung"
+
+#: includes/class-wc-sumup-settings.php:109
+msgid "Installments"
+msgstr "Raten"
+
+#: includes/api/handlers/class-sumup-store-payment-instructions.php:44 includes/api/handlers/class-sumup-validate-redirect.php:44 includes/class-wc-sumup-gateway.php:1400
+msgid "Invalid order ID."
+msgstr "Ungültige Bestellnummer."
+
+#: includes/api/handlers/class-sumup-store-payment-instructions.php:49
+msgid "Invalid order key."
+msgstr "Ungültiger Bestellschlüssel."
+
+#: includes/api/class-sumup-api-handler.php:66
+msgid "Invalid request method."
+msgstr "Ungültige Anfragemethode."
+
+#: includes/api/handlers/class-sumup-store-payment-instructions.php:39 includes/api/handlers/class-sumup-validate-redirect.php:39
+msgid "Invalid request nonce."
+msgstr "Ungültiges Anfrage-Nonce."
+
+#: includes/api/handlers/class-sumup-store-payment-instructions.php:34 includes/api/handlers/class-sumup-validate-redirect.php:34
+msgid "Invalid request payload."
+msgstr "Ungültige Anfragedaten."
+
+#: includes/class-wc-sumup-connection-diagnostics.php:95
+msgid "Last verified notification"
+msgstr "Letzte verifizierte Benachrichtigung"
+
+#: includes/class-wc-sumup-settings.php:89
+msgid "Log debug messages"
+msgstr "Fehlermeldungen protokollieren"
+
+#: templates/onboarding.php:37
+msgid "Log into your SumUp account, if you are not already logged in."
+msgstr "Melden Sie sich bei Ihrem SumUp-Konto an, wenn Sie noch nicht angemeldet sind."
+
+#: includes/class-wc-sumup-settings.php:88
+msgid "Logging"
+msgstr "Protokollierung"
+
+#: includes/class-wc-sumup-settings.php:17
+msgid "Manage the SumUp account connected to this store."
+msgstr "Verwalte das mit diesem Shop verbundene SumUp-Konto."
+
+#: includes/class-wc-sumup-gateway.php:235
+msgid "Merchant code"
+msgstr "Händler-ID"
+
+#: includes/class-wc-sumup-credentials.php:130
+msgid "Missing scope: payments. Please contact support team."
+msgstr "Fehlender Umfang: Zahlungen. Bitte kontaktieren Sie das Support-Team."
+
+#: includes/class-wc-sumup-gateway.php:339
+msgid "Navigate to the Integrate with your website section and click Add website."
+msgstr "Gehe zum Abschnitt Integrate with your website und klicke auf Add website."
+
+#: includes/class-wc-sumup-connection-diagnostics.php:95
+msgid "No verified notifications yet. Complete a test payment to check delivery."
+msgstr "Noch keine verifizierten Benachrichtigungen. Führe eine Testzahlung aus, um die Zustellung zu prüfen."
+
+#: includes/class-wc-sumup-gateway.php:214 includes/class-wc-sumup-gateway.php:215
+msgid "Not available"
+msgstr "Nicht verfügbar"
+
+#: includes/class-wc-sumup-connection-diagnostics.php:92
+msgid "Not checked yet"
+msgstr "Noch nicht geprüft"
+
+#: includes/class-wc-sumup-settings.php:118
+msgid "Number of Installments"
+msgstr "Anzahl der Raten"
+
+#: includes/class-wc-sumup-settings.php:71
+msgid "Offer Apple Pay"
+msgstr "Apple Pay anbieten"
+
+#: includes/class-wc-sumup-settings.php:60
+msgid "Offer Google Pay when eligible. Complete domain setup below before accepting payments."
+msgstr "Google Pay anbieten, wenn verfügbar. Schließe vor dem Empfang von Zahlungen die unten beschriebene Domain-Einrichtung ab."
+
+#: includes/class-wc-sumup-settings.php:79
+msgid "Open Payment in modal?"
+msgstr "Zahlung im Modal öffnen?"
+
+#: includes/class-wc-sumup-settings.php:82
+msgid "Open the Payment options inside a modal (popup)"
+msgstr "Öffnen Sie die Zahlungsoptionen in einem Modal (Popup)"
+
+#: includes/class-wc-sumup-settings.php:29
+msgid "Optional. Leave blank to use the SumUp widget defaults. To use your own Google Pay merchant ID, enter the ID issued by Google, separate from your SumUp merchant code. Your store name will then appear on the Google Pay payment sheet. Wallet domain onboarding is still required."
+msgstr "Optional. Für die Standardeinstellungen des SumUp-Widgets leer lassen. Gib für eine eigene Google Pay-Händler-ID die von Google ausgestellte ID ein, nicht deinen SumUp-Händlercode. Dein Shopname erscheint dann im Google Pay-Zahlungsformular. Die Registrierung der Wallet-Domain ist weiterhin erforderlich."
+
+#: includes/class-wc-sumup-gateway.php:527 includes/class-wc-sumup-gateway.php:1754
+msgid "Order ID is not available to make the payment. Try again soon or contact the website support."
+msgstr "Die Bestell-ID ist nicht verfügbar, um die Zahlung durchzuführen. Versuchen Sie es bald erneut oder wenden Sie sich an den Website-Support."
+
+#: includes/api/handlers/class-sumup-store-payment-instructions.php:54
+msgid "Order is not available."
+msgstr "Die Bestellung ist nicht verfügbar."
+
+#: includes/class-wc-sumup-gateway.php:1649
+msgid "Order is unavailable."
+msgstr "Die Bestellung ist nicht verfügbar."
+
+#: includes/class-wc-sumup-gateway.php:1416
+msgid "Order not found."
+msgstr "Bestellung nicht gefunden."
+
+#: includes/api/handlers/class-sumup-store-payment-instructions.php:59 includes/api/handlers/class-sumup-store-payment-instructions.php:68 includes/class-wc-sumup-gateway.php:780
+msgid "Order validation failed."
+msgstr "Die Bestellprüfung ist fehlgeschlagen."
+
+#: includes/class-wc-sumup-gateway.php:534 includes/class-wc-sumup-gateway.php:545 includes/class-wc-sumup-gateway.php:1359 includes/class-wc-sumup-widget-settings.php:52
+msgid "Order validation failed. Refresh checkout and try again."
+msgstr "Die Bestellprüfung ist fehlgeschlagen. Lade die Kasse neu und versuche es erneut."
+
+#: includes/class-wc-sumup-block-gateway.php:69 includes/class-wc-sumup-settings.php:53
+msgid "Pay securely with your credit or debit card, or use other available payment methods."
+msgstr "Bezahle sicher mit deiner Kredit- oder Debitkarte oder nutze andere verfügbare Zahlungsmethoden."
+
+#: includes/class-wc-sumup-gateway.php:1975
+msgid "Payment Status: "
+msgstr "Zahlungsstatus: "
+
+#: includes/class-wc-sumup-gateway.php:1436
+msgid "Payment details are missing for this order."
+msgstr "Für diese Bestellung fehlen Zahlungsdetails."
+
+#: includes/class-wc-sumup-gateway.php:1500 includes/class-wc-sumup-gateway.php:1590 includes/class-wc-sumup-widget-settings.php:53
+msgid "Payment failed, please try again."
+msgstr "Zahlung fehlgeschlagen, bitte versuchen Sie es erneut."
+
+#: includes/class-wc-sumup-settings.php:104
+msgid "Payment options"
+msgstr "Zahlungsoptionen"
+
+#: includes/class-wc-sumup-gateway.php:1442 includes/class-wc-sumup-gateway.php:1464
+msgid "Payment validation failed."
+msgstr "Zahlungsvalidierung fehlgeschlagen."
+
+#: includes/class-wc-sumup-widget-settings.php:55
+msgid "Payment was cancelled."
+msgstr "Die Zahlung wurde abgebrochen."
+
+#: includes/class-wc-sumup-gateway.php:1729
+msgid "Please fill \"Merchant code\" on the plugin settings."
+msgstr "Bitte fülle „Händlercode“ in den Plugin-Einstellungen aus."
+
+#: sumup-payment-gateway-for-woocommerce.php:615
+msgid "Please use the “Connect Account” button to start the configuration."
+msgstr "Bitte verwenden Sie die Schaltfläche „Konto verbinden“, um die Konfiguration zu starten."
+
+#: includes/class-wc-sumup-gateway.php:274 includes/class-wc-sumup-gateway.php:277
+msgid "Reconnect account"
+msgstr "Konto erneut verbinden"
+
+#: includes/class-wc-sumup-gateway.php:367 includes/class-wc-sumup-gateway.php:370
+msgid "Register domain with SumUp"
+msgstr "Domain bei SumUp registrieren"
+
+#: sumup-payment-gateway-for-woocommerce.php:768
+msgid "Registered with SumUp"
+msgstr "Bei SumUp registriert"
+
+#: includes/class-wc-sumup-gateway.php:190
+msgid "Return to payments"
+msgstr "Zurück zu Zahlungen"
+
+#: includes/class-wc-sumup-settings.php:91
+msgid "Save debug messages to the WooCommerce System Status log."
+msgstr "Fehlermeldungen im WooCommerce-Systemstatusprotokoll speichern."
+
+#: templates/onboarding.php:40
+msgid "Select the “Connect” button to begin."
+msgstr "Wählen Sie die Schaltfläche „Verbinden“, um zu beginnen."
+
+#: sumup-payment-gateway-for-woocommerce.php:632
+msgid "Settings"
+msgstr "Einstellungen"
+
+#: templates/onboarding.php:29
+msgid "Setup takes 4 steps:"
+msgstr "Die Einrichtung umfasst 4 Schritte:"
+
+#: includes/class-wc-sumup-apple-pay.php:187
+msgid "Skipping Apple Pay domain registration because merchant code is missing."
+msgstr "Die Apple Pay-Domainregistrierung wird übersprungen, da der Händlercode fehlt."
+
+#: includes/class-wc-sumup-apple-pay.php:240
+msgid "Skipping Apple Pay domain registration because the access token could not be resolved."
+msgstr "Die Apple Pay-Domainregistrierung wird übersprungen, da das Zugriffstoken nicht ermittelt werden konnte."
+
+#: includes/class-wc-sumup-apple-pay.php:217
+msgid "Skipping Apple Pay domain registration because the association file is missing."
+msgstr "Die Apple Pay-Domainregistrierung wird übersprungen, da die Zuordnungsdatei fehlt."
+
+#: includes/class-wc-sumup-apple-pay.php:202
+msgid "Skipping Apple Pay domain registration because the store hostname is not public."
+msgstr "Die Apple Pay-Domainregistrierung wird übersprungen, da der Shop-Hostname nicht öffentlich ist."
+
+#: includes/class-wc-sumup-gateway.php:1730
+msgid "Sorry, SumUp is not available. Try again soon."
+msgstr "SumUp ist leider nicht verfügbar. Bitte versuche es in Kürze erneut."
+
+#: includes/class-wc-sumup-onboarding.php:85 includes/class-wc-sumup-onboarding.php:118
+msgid "Sorry, request not authorized."
+msgstr "Die Anfrage ist nicht autorisiert."
+
+#: includes/class-wc-sumup-onboarding.php:66 includes/class-wc-sumup-onboarding.php:111
+msgid "Sorry, you are not allowed to manage SumUp settings."
+msgstr "Du bist nicht berechtigt, die SumUp-Einstellungen zu verwalten."
+
+#: templates/onboarding.php:34
+msgid "Start by connecting your account. Learn more"
+msgstr "Beginnen Sie mit der Verbindung Ihres Kontos. Erfahren Sie mehr"
+
+#: includes/class-wc-sumup-gateway.php:227
+msgid "Status"
+msgstr "Status"
+
+#: sumup-payment-gateway-for-woocommerce.php:465
+msgid "Store"
+msgstr "Shop"
+
+#: includes/class-wc-sumup-gateway.php:1744
+msgid "Sum up is temporarily unavailable. Please contact site admin for more information."
+msgstr "SumUp ist vorübergehend nicht verfügbar. Bitte wenden Sie sich an den Site-Administrator für weitere Informationen."
+
+#: includes/class-wc-sumup-gateway.php:93
+msgid "SumUp"
+msgstr "SumUp"
+
+#. translators: %s = admin.php?page=wc-settings&tab=checkout&section=sumup
+#: sumup-payment-gateway-for-woocommerce.php:593
+#, php-format
+msgid "SumUp Gateway is almost ready. To get started, <a href=\"%s\">set your SumUp account keys</a>."
+msgstr "SumUp Gateway ist fast bereit. Um zu beginnen, <a href=\"%s\">stellen Sie Ihre SumUp-Kontonummern ein</a>."
+
+#. translators: %s = admin.php?page=wc-settings&tab=checkout&section=sumup
+#: sumup-payment-gateway-for-woocommerce.php:600
+#, php-format
+msgid "SumUp Gateway is not configured properly. You can fix this from <a href=\"%s\">here</a>."
+msgstr "SumUp Gateway ist nicht richtig konfiguriert. Sie können dies von <a href=\"%s\">hier</a> beheben."
+
+#: sumup-payment-gateway-for-woocommerce.php:609
+msgid "SumUp Gateway needs your attention. Currency is different from WooCommerce currency (WooCommerce->Settings->General->Currency)."
+msgstr "SumUp Gateway benötigt Ihre Aufmerksamkeit. Die Währung unterscheidet sich von der WooCommerce-Währung (WooCommerce->Einstellungen->Allgemein->Währung)."
 
 #. Plugin Name of the plugin
 msgid "SumUp Payment Gateway For WooCommerce"
 msgstr "SumUp Payment Gateway For WooCommerce"
 
-#. Plugin URI of the plugin
-msgid "https://wordpress.org/plugins/sumup-payment-gateway-for-woocommerce/"
-msgstr "https://wordpress.org/plugins/sumup-payment-gateway-for-woocommerce/"
+#: templates/onboarding-failed-message.php:15
+msgid "SumUp account not connected"
+msgstr "SumUp-Konto nicht verbunden"
+
+#. translators: %s: transaction code.
+#: includes/class-wc-sumup-gateway.php:1079
+#, php-format
+msgid "SumUp charge complete. Transaction Code: %s"
+msgstr "SumUp-Zahlung abgeschlossen. Transaktionscode: %s"
+
+#: includes/api/handlers/class-sumup-validate-redirect.php:54
+msgid "SumUp gateway is unavailable."
+msgstr "SumUp-Zahlungsgateway ist nicht verfügbar."
+
+#: includes/class-wc-sumup-gateway.php:1451
+msgid "SumUp is temporarily unavailable. Please try again."
+msgstr "SumUp ist vorübergehend nicht verfügbar. Bitte versuchen Sie es erneut."
+
+#: includes/class-wc-sumup-checkout-service.php:22
+msgid "SumUp is unavailable for this currency."
+msgstr "SumUp ist für diese Währung nicht verfügbar."
+
+#: includes/class-wc-sumup-gateway.php:1770
+msgid "SumUp is unavailable for this order currency."
+msgstr "SumUp ist für die Währung dieser Bestellung nicht verfügbar."
+
+#: includes/class-wc-sumup-gateway.php:1654
+msgid "SumUp is unavailable for this order."
+msgstr "SumUp ist für diese Bestellung nicht verfügbar."
+
+#: includes/class-wc-sumup-widget-settings.php:45
+msgid "SumUp payment"
+msgstr "SumUp-Zahlung"
+
+#: includes/class-wc-sumup-gateway.php:1064
+msgid "SumUp payment failed."
+msgstr "SumUp-Zahlung fehlgeschlagen."
+
+#. translators: %s: WooCommerce download link.
+#: sumup-payment-gateway-for-woocommerce.php:550
+#, php-format
+msgid "SumUp requires WooCommerce to be installed and active. You can download %s here."
+msgstr "SumUp erfordert, dass WooCommerce installiert und aktiv ist. Sie können %s hier herunterladen."
 
 #. Description of the plugin
 msgid "Take credit card payments on your store using SumUp."
 msgstr "Akzeptieren Sie Kreditkartenzahlungen in Ihrem Geschäft mit SumUp."
 
-#. Author of the plugin
-#: includes/class-wc-sumup-gateway.php:115
-msgid "SumUp"
-msgstr "SumUp"
+#: includes/class-wc-sumup-settings.php:52
+msgid "This controls the description the user sees during checkout."
+msgstr "Dies steuert die Beschreibung, die der Benutzer während des Bezahlvorgangs sieht."
+
+#: includes/class-wc-sumup-settings.php:45
+msgid "This controls the title the user sees during checkout."
+msgstr "Dies steuert den Titel, den der Benutzer während des Bezahlvorgangs sieht."
+
+#: includes/class-wc-sumup-checkout-service.php:16
+msgid "This order does not need another payment."
+msgstr "Für diese Bestellung ist keine weitere Zahlung erforderlich."
+
+#: includes/class-wc-sumup-settings.php:43
+msgid "Title"
+msgstr "Titel"
+
+#: includes/class-wc-sumup-widget-settings.php:49
+msgid "Transaction was unsuccessful. Please check the minimum amount or use another valid card."
+msgstr "Die Transaktion war nicht erfolgreich. Bitte überprüfen Sie den Mindestbetrag oder verwenden Sie eine andere gültige Karte."
+
+#: sumup-payment-gateway-for-woocommerce.php:766
+msgid "Unable to continue with Google Pay. Please try again."
+msgstr "Google Pay konnte nicht fortgesetzt werden. Bitte versuche es erneut."
+
+#: includes/class-wc-sumup-onboarding.php:133
+msgid "Unable to determine the merchant code or domain for Google Pay registration."
+msgstr "Der Händlercode oder die Domain für die Google Pay-Registrierung konnte nicht ermittelt werden."
+
+#: sumup-payment-gateway-for-woocommerce.php:769
+msgid "Unable to disconnect the SumUp account."
+msgstr "Das SumUp-Konto konnte nicht getrennt werden."
+
+#: includes/class-wc-sumup-widget-settings.php:56
+msgid "Unable to initialize SumUp checkout."
+msgstr "SumUp-Checkout konnte nicht initialisiert werden."
+
+#: includes/class-wc-sumup-checkout-service.php:142 includes/class-wc-sumup-gateway.php:1665 includes/class-wc-sumup-gateway.php:1786
+msgid "Unable to initialize SumUp payment. Please try again."
+msgstr "Die SumUp-Zahlung konnte nicht gestartet werden. Bitte versuche es erneut."
+
+#: includes/class-wc-sumup-onboarding.php:168
+msgid "Unable to register your domain with SumUp for Google Pay. Check domain setup in SumUp Dashboard > Settings > For developers > Payment wallets, then try again."
+msgstr "Deine Domain konnte bei SumUp nicht für Google Pay registriert werden. Prüfe die Domain-Einrichtung unter SumUp Dashboard > Settings > For developers > Payment wallets und versuche es erneut."
+
+#: sumup-payment-gateway-for-woocommerce.php:763
+msgid "Unable to start the SumUp connection."
+msgstr "Die SumUp-Verbindung konnte nicht gestartet werden."
+
+#: sumup-payment-gateway-for-woocommerce.php:765
+msgid "Unable to start the SumUp connection. Please try again."
+msgstr "Die SumUp-Verbindung konnte nicht gestartet werden. Bitte versuche es erneut."
+
+#: sumup-payment-gateway-for-woocommerce.php:764
+msgid "Unable to validate this website."
+msgstr "Diese Website konnte nicht validiert werden."
+
+#: includes/class-wc-sumup-gateway.php:1427
+msgid "Unable to verify access to this order. Please sign in or reopen the original payment link. If you have already paid, do not pay again."
+msgstr "Der Zugriff auf diese Bestellung konnte nicht überprüft werden. Melde dich an oder öffne den ursprünglichen Zahlungslink erneut. Wenn du bereits bezahlt hast, zahle nicht erneut."
+
+#: includes/class-wc-sumup-gateway.php:1458 includes/class-wc-sumup-widget-settings.php:51
+msgid "Unable to verify payment status. Please try again."
+msgstr "Der Zahlungsstatus konnte nicht überprüft werden. Bitte versuchen Sie es erneut."
+
+#: sumup-payment-gateway-for-woocommerce.php:770
+msgid "Unknown error occurred."
+msgstr "Ein unbekannter Fehler ist aufgetreten."
+
+#: includes/class-wc-sumup-onboarding.php:114
+msgid "Use POST to register a Google Pay domain."
+msgstr "Verwende POST, um eine Google Pay-Domain zu registrieren."
+
+#: sumup-payment-gateway-for-woocommerce.php:288
+msgid "Use a publicly reachable HTTPS domain before connecting SumUp. If you are testing locally, use a tunnel such as ngrok or Cloudflare Tunnel and update WordPress Home and Site URL first."
+msgstr "Verwende vor der Verbindung mit SumUp eine öffentlich erreichbare HTTPS-Domain. Wenn du lokal testest, nutze einen Tunnel wie ngrok oder Cloudflare Tunnel und aktualisiere zuerst WordPress Home und Site URL."
+
+#: includes/class-wc-sumup-connection-diagnostics.php:92
+msgid "Verified"
+msgstr "Verifiziert"
+
+#: includes/class-wc-sumup-gateway.php:1481 includes/class-wc-sumup-gateway.php:1622 includes/class-wc-sumup-widget-settings.php:54
+msgid "We are still waiting for SumUp to confirm this payment. Please wait a moment and refresh the page if the order is not updated automatically."
+msgstr "Wir warten noch darauf, dass SumUp diese Zahlung bestätigt. Bitte warten Sie einen Moment und aktualisieren Sie die Seite, falls die Bestellung nicht automatisch aktualisiert wird."
+
+#: sumup-payment-gateway-for-woocommerce.php:880
+msgid "When you choose SumUp, payment and billing details are sent to SumUp to process your payment and prevent fraud. The payment widget connects directly to SumUp and may process browser and network information. Card numbers and security codes are handled by SumUp, not stored by this plugin. Orders retain payment identifiers and, where applicable, pending payment instructions. When logging is enabled, WooCommerce logs include order, checkout and transaction identifiers. Review your WooCommerce retention settings and the SumUp Privacy Policy when preparing your store privacy notice."
+msgstr "Wenn du SumUp wählst, werden Zahlungs- und Rechnungsdaten an SumUp übermittelt, um deine Zahlung zu verarbeiten und Betrug zu verhindern. Das Zahlungs-Widget verbindet sich direkt mit SumUp und kann Browser- und Netzwerkinformationen verarbeiten. Kartennummern und Sicherheitscodes werden von SumUp verarbeitet und nicht von diesem Plugin gespeichert. Bestellungen enthalten Zahlungskennungen und gegebenenfalls ausstehende Zahlungsanweisungen. Bei aktivierter Protokollierung enthalten WooCommerce-Protokolle Bestell-, Checkout- und Transaktionskennungen. Berücksichtige beim Erstellen des Datenschutzhinweises deines Shops deine WooCommerce-Aufbewahrungseinstellungen und die SumUp-Datenschutzerklärung."
+
+#: includes/class-wc-sumup-settings.php:80
+msgid "Yes"
+msgstr "Ja"
+
+#: includes/class-wc-sumup-connection-diagnostics.php:49
+msgid "You cannot manage payment settings."
+msgstr "Du kannst die Zahlungseinstellungen nicht verwalten."
+
+#: includes/class-wc-sumup-onboarding.php:172
+msgid "Your SumUp account or store domain changed. Reload the settings and try again."
+msgstr "Dein SumUp-Konto oder deine Shop-Domain hat sich geändert. Lade die Einstellungen neu und versuche es erneut."
+
+#: includes/class-wc-sumup-gateway.php:356 includes/class-wc-sumup-onboarding.php:135 sumup-payment-gateway-for-woocommerce.php:767
+msgid "Your domain has been registered with SumUp for Google Pay."
+msgstr "Deine Domain wurde bei SumUp für Google Pay registriert."
+
+#: sumup-payment-gateway-for-woocommerce.php:296
+#, php-format
+msgid "Your store is currently using %1$s, which is not publicly reachable. Use a public HTTPS domain before connecting SumUp. If you are testing locally, use a tunnel such as ngrok or Cloudflare Tunnel and update WordPress Home and Site URL first."
+msgstr "Dein Shop verwendet derzeit %1$s, das nicht öffentlich erreichbar ist. Verwende vor der Verbindung mit SumUp eine öffentliche HTTPS-Domain. Wenn du lokal testest, nutze einen Tunnel wie ngrok oder Cloudflare Tunnel und aktualisiere zuerst WordPress Home und Site URL."
+
+#. translators: 1: store currency, 2: connected merchant currency, 3: SumUp settings URL.
+#: sumup-payment-gateway-for-woocommerce.php:605
+#, php-format
+msgid "Your store uses %1$s, but the connected SumUp merchant uses %2$s. Change the store currency back or <a href=\"%3$s\">connect a matching SumUp account</a>."
+msgstr "Dein Shop verwendet %1$s, das verbundene SumUp-Händlerkonto jedoch %2$s. Stelle die Shop-Währung zurück oder <a href=\"%3$s\">verbinde ein passendes SumUp-Konto</a>."
 
 #. Author URI of the plugin
 msgid "https://sumup.com"
 msgstr "https://sumup.com"
 
-#: includes/api/handlers/class-sumup-create-checkout.php:57
-msgid ""
-"Merchant account settings are incorrectly configured. Check the plugin "
-"settings page."
-msgstr ""
-"Die Einstellungen des Händlerkontos sind falsch konfiguriert. Überprüfen Sie "
-"die Plugin-Einstellungsseite."
-
-#: includes/api/handlers/class-sumup-create-checkout.php:67
-msgid ""
-"Sumup is temporarily unavailable. Please contact site admin for more "
-"information."
-msgstr ""
-"SumUp ist vorübergehend nicht verfügbar. Bitte wenden Sie sich an den Site-"
-"Administrator für weitere Informationen."
-
-#: includes/api/handlers/class-sumup-create-checkout.php:107
-#: includes/class-wc-sumup-gateway.php:533
-msgid ""
-"Order ID is not available to make the payment. Try again soon or contact the "
-"website support."
-msgstr ""
-"Die Bestell-ID ist nicht verfügbar, um die Zahlung durchzuführen. Versuchen "
-"Sie es bald erneut oder wenden Sie sich an den Website-Support."
-
-#: includes/class-wc-sumup-block-gateway.php:138
-#: includes/class-wc-sumup-gateway.php:740
-msgid ""
-"Transaction was unsuccessful. Please check the minimum amount or use another "
-"valid card."
-msgstr ""
-"Die Transaktion war nicht erfolgreich. Bitte überprüfen Sie den "
-"Mindestbetrag oder verwenden Sie eine andere gültige Karte."
-
-#: includes/class-wc-sumup-block-gateway.php:139
-#: includes/class-wc-sumup-gateway.php:741
-msgid "Fill in all required details."
-msgstr "Füllen Sie alle erforderlichen Angaben aus."
-
-#: includes/api/handlers/class-sumup-create-checkout.php:100
-#: includes/class-wc-sumup-gateway.php:2211
-msgid "Please fill \"Merchant code\" on the plugin settings."
-msgstr ""
-
-#: includes/api/handlers/class-sumup-create-checkout.php:101
-#: includes/class-wc-sumup-gateway.php:2212
-msgid "Sorry, SumUp is not available. Try again soon."
-msgstr ""
-
-#: includes/class-wc-sumup-credentials.php:52
-msgid "Invalid Client ID, Client Secret or API Key."
-msgstr "Ungültige Client-ID, Client Secret oder API Key."
-
-#: includes/class-wc-sumup-credentials.php:75
-msgid "Missing scope: payments. Please contact support team."
-msgstr "Fehlender Umfang: Zahlungen. Bitte kontaktieren Sie das Support-Team."
-
-#: includes/class-wc-sumup-credentials.php:77
-msgid "Credentials are not valid. Please check the plugin log and try again."
-msgstr ""
-"Die Anmeldeinformationen sind ungültig. Bitte überprüfen Sie das Plugin-"
-"Protokoll und versuchen Sie es erneut."
-
-#: includes/class-wc-sumup-credentials.php:92
-msgid "Credentials are not valid. Please check and try again."
-msgstr ""
-"Die Anmeldeinformationen sind ungültig. Bitte überprüfen Sie sie und "
-"versuchen Sie es erneut."
-
-#: includes/class-wc-sumup-credentials.php:98
-msgid "Your credentials are valid and you are ready to use the plugin."
-msgstr ""
-"Ihre Anmeldeinformationen sind gültig und Sie können das Plugin verwenden."
-
-#. translators: %1$s = https://me.sumup.com/, %2$s = https://me.sumup.com/developers
-#: includes/class-wc-sumup-gateway.php:203
-msgid ""
-"Accept credit and debit cards with SumUp, plus eligible payment methods such "
-"as Apple Pay, PayPal, Bancontact, and iDEAL."
-msgstr ""
-"Akzeptieren Sie Kredit- und Debitkarten mit SumUp sowie unterstützte "
-"Zahlungsmethoden wie Apple Pay, PayPal, Bancontact und iDEAL."
-
-#: includes/class-wc-sumup-gateway.php:222
-msgid "SumUp charge complete. Transaction Code: %s"
-msgstr "SumUp-Zahlung abgeschlossen. Transaktionscode: %s"
-
-#: includes/class-wc-sumup-gateway.php:235
-msgid "SumUp payment failed."
-msgstr "SumUp-Zahlung fehlgeschlagen."
-
-#: includes/class-wc-sumup-gateway.php:314
-msgid "Payment failed, please try again."
-msgstr "Zahlung fehlgeschlagen, bitte versuchen Sie es erneut."
-
-#: includes/class-wc-sumup-gateway.php:469
-msgid ""
-"Error: Merchant account settings are incorrectly configured. Check the "
-"plugin settings page."
-msgstr ""
-"Fehler: Die Einstellungen des Händlerkontos sind falsch konfiguriert. "
-"Überprüfen Sie die Plugin-Einstellungsseite."
-
-#: includes/class-wc-sumup-gateway.php:511
-msgid ""
-"Sum up is temporarily unavailable. Please contact site admin for more "
-"information."
-msgstr ""
-"SumUp ist vorübergehend nicht verfügbar. Bitte wenden Sie sich an den Site-"
-"Administrator für weitere Informationen."
-
-#: includes/class-wc-sumup-gateway.php:825
-msgid "Payment Status: "
-msgstr "Zahlungsstatus: "
-
-#: includes/class-wc-sumup-gateway.php:849
-#: includes/class-wc-sumup-gateway.php:865
-#: includes/class-wc-sumup-gateway.php:890
-#: includes/class-wc-sumup-gateway.php:902
-msgid "Payment instructions"
-msgstr "Zahlungsanweisungen"
-
-#: includes/class-wc-sumup-gateway.php:850
-#: includes/class-wc-sumup-gateway.php:891
-msgid "PIX code: "
-msgstr "PIX code: "
-
-#: includes/class-wc-sumup-gateway.php:867
-#: includes/class-wc-sumup-gateway.php:904
-msgid "Download Boleto"
-msgstr "Download Boleto"
-
-#: includes/class-wc-sumup-gateway.php:871
-#: includes/class-wc-sumup-gateway.php:903
-msgid "Code to pay: "
-msgstr "Zahlungscode: "
-
-#: includes/class-wc-sumup-settings.php:15
-msgid "Enable/Disable"
-msgstr "Aktivieren/Deaktivieren"
-
-#: includes/class-wc-sumup-settings.php:16
-msgid "Enable SumUp"
-msgstr "SumUp aktivieren"
-
-#: includes/class-wc-sumup-settings.php:22
-msgid "Title"
-msgstr "Titel"
-
-#: includes/class-wc-sumup-settings.php:24
-msgid "This controls the title the user sees during checkout."
-msgstr ""
-"Dies steuert den Titel, den der Benutzer während des Bezahlvorgangs sieht."
-
-#: includes/class-wc-sumup-settings.php:25
-msgid "Credit / Debit Card"
-msgstr "Kredit- / Debitkarte"
-
-#: includes/class-wc-sumup-settings.php:29
-msgid "Description"
-msgstr "Beschreibung"
-
-#: includes/class-wc-sumup-settings.php:31
-msgid "This controls the description the user sees during checkout."
-msgstr ""
-"Dies steuert die Beschreibung, die der Benutzer während des Bezahlvorgangs "
-"sieht."
-
-#: includes/class-wc-sumup-settings.php:32
-msgid ""
-"Pay securely with your credit or debit card, or use other available payment "
-"methods."
-msgstr ""
-"Pay securely with your credit or debit card, or use other available payment "
-"methods."
-
-#: includes/class-wc-sumup-settings.php:36
-msgid "Merchant code"
-msgstr "Händler-ID"
-
-#: includes/class-wc-sumup-settings.php:38
-msgid "Get your Merchant code from your SumUp account:"
-msgstr "Erhalten Sie Ihre Händler-ID von Ihrem SumUp-Konto:"
-
-#: includes/class-wc-sumup-settings.php:42
-msgid "API Key"
-msgstr "API-Schlüssel"
-
-#: includes/class-wc-sumup-settings.php:44
-msgid "Create and get your API Key:"
-msgstr "Erstellen und erhalten Sie Ihren API-Schlüssel:"
-
-#: includes/class-wc-sumup-settings.php:44
-#: includes/class-wc-sumup-settings.php:51
-#: includes/class-wc-sumup-settings.php:58
-msgid "developer settings"
-msgstr "Entwicklereinstellungen"
-
-#: includes/class-wc-sumup-settings.php:49
-msgid "Client ID"
-msgstr "Client-ID"
-
-#: includes/class-wc-sumup-settings.php:51
-msgid "Create and get your Client ID:"
-msgstr "Erstellen und erhalten Sie Ihre Client-ID:"
-
-#: includes/class-wc-sumup-settings.php:56
-msgid "Client Secret"
-msgstr "Client Secret"
-
-#: includes/class-wc-sumup-settings.php:58
-msgid "Create and get your Client Secret:"
-msgstr "Erstellen und erhalten Sie Ihr Client Secret:"
-
-#: includes/class-wc-sumup-settings.php:63
-msgid "SumUp Profile Email"
-msgstr "SumUp Profil-E-Mail"
-
-#: includes/class-wc-sumup-settings.php:65
-msgid "Get your Email from your SumUp account."
-msgstr "Erhalten Sie Ihre E-Mail von Ihrem SumUp-Konto."
-
-#: includes/class-wc-sumup-settings.php:70
-msgid "Logging"
-msgstr "Protokollierung"
-
-#: includes/class-wc-sumup-settings.php:71
-msgid "Log debug messages"
-msgstr "Fehlermeldungen protokollieren"
-
-#: includes/class-wc-sumup-settings.php:73
-msgid "Save debug messages to the WooCommerce System Status log."
-msgstr "Fehlermeldungen im WooCommerce-Systemstatusprotokoll speichern."
-
-#: includes/class-wc-sumup-settings.php:97
-msgid "Installments"
-msgstr "Raten"
-
-#: includes/class-wc-sumup-settings.php:98
-msgid "Enable Installments?"
-msgstr "Raten aktivieren?"
-
-#: includes/class-wc-sumup-settings.php:100
-msgid "Accept installments in your card payment method."
-msgstr "Akzeptieren Sie Ratenzahlungen in Ihrer Karten-Zahlungsmethode."
-
-#: includes/class-wc-sumup-settings.php:106
-msgid "Number of Installments"
-msgstr "Anzahl der Raten"
-
-#: includes/class-wc-sumup-settings.php:108
-msgid "Define the number of installments you will accept."
-msgstr "Definieren Sie die Anzahl der Raten, die Sie akzeptieren werden."
-
-#: includes/class-wc-sumup-settings.php:129
-msgid "Enable PIX?"
-msgstr "PIX aktivieren?"
-
-#: includes/class-wc-sumup-settings.php:130
-msgid "Enable"
-msgstr "Aktivieren"
-
-#: includes/class-wc-sumup-settings.php:132
-msgid "Accept PIX as your payment method."
-msgstr "Akzeptieren Sie PIX als Ihre Zahlungsmethode."
-
-#: includes/class-wc-sumup-settings.php:139
-msgid "Open Payment in modal?"
-msgstr "Zahlung im Modal öffnen?"
-
-#: includes/class-wc-sumup-settings.php:140
-msgid "Yes"
-msgstr "Ja"
-
-#: includes/class-wc-sumup-settings.php:142
-msgid "Open the Payment options inside a modal (popup)"
-msgstr "Öffnen Sie die Zahlungsoptionen in einem Modal (Popup)"
-
-#: sumup-payment-gateway-for-woocommerce.php:60
-msgid "Docs"
-msgstr "Dokumentation"
-
-#: sumup-payment-gateway-for-woocommerce.php:77
-msgid ""
-"SumUp requires WooCommerce to be installed and active. You can download %s "
-"here."
-msgstr ""
-"SumUp erfordert, dass WooCommerce installiert und aktiv ist. Sie können %s "
-"hier herunterladen."
-
-#. translators: %s = admin.php?page=wc-settings&tab=checkout&section=sumup
-#: sumup-payment-gateway-for-woocommerce.php:109
-msgid ""
-"SumUp Gateway is almost ready. To get started, <a href=\"%s\">set your SumUp "
-"account keys</a>."
-msgstr ""
-"SumUp Gateway ist fast bereit. Um zu beginnen, <a href=\\\"%s\\\">stellen "
-"Sie Ihre SumUp-Kontonummern ein</a>."
-
-#. translators: %s = admin.php?page=wc-settings&tab=checkout&section=sumup
-#: sumup-payment-gateway-for-woocommerce.php:116
-msgid ""
-"SumUp Gateway is not configured properly. You can fix this from <a "
-"href=\"%s\">here</a>."
-msgstr ""
-"SumUp Gateway ist nicht richtig konfiguriert. Sie können dies von <a href=\\"
-"\"%s\\\">hier</a> beheben."
-
-#: sumup-payment-gateway-for-woocommerce.php:120
-msgid ""
-"SumUp Gateway needs your attention. Currency is different from WooCommerce "
-"currency (WooCommerce->Settings->General->Currency)."
-msgstr ""
-"SumUp Gateway benötigt Ihre Aufmerksamkeit. Die Währung unterscheidet sich "
-"von der WooCommerce-Währung (WooCommerce->Einstellungen->Allgemein->Währung)."
-
-#: sumup-payment-gateway-for-woocommerce.php:126
-#, fuzzy
-msgid ""
-"SumUp Gateway is not configured properly. Please fill the field Merchant "
-"code."
-msgstr ""
-"SumUp Gateway ist nicht richtig konfiguriert. Sie können dies von <a href=\\"
-"\"%s\\\">hier</a> beheben."
-
-#: sumup-payment-gateway-for-woocommerce.php:145
-msgid "Settings"
-msgstr "Einstellungen"
-
-#: sumup-payment-gateway-for-woocommerce.php:187
-msgid "%1$s requires PHP version %2$s or greater."
-msgstr "%1$s erfordert PHP-Version %2$s oder höher."
-
-#: sumup-payment-gateway-for-woocommerce.php:205
-msgid "%1$s requires WordPress version %2$s or greater."
-msgstr "%1$s erfordert WordPress-Version %2$s oder höher."
-
-#: templates/onboarding-failed-message.php:19
-msgid "SumUp account not connected"
-msgstr "SumUp-Konto nicht verbunden"
-
-#: templates/onboarding-failed-message.php:22
-msgid "Credentials are not valid. Please try again."
-msgstr "Anmeldeinformationen sind ungültig. Bitte versuchen Sie es erneut."
-
-#: templates/onboarding-success-message.php:17
-msgid "SumUp account connected"
-msgstr "SumUp-Konto verbunden"
-
-#: templates/onboarding-success-message.php:20
-msgid "WooCommerce can now accept payments via SumUp"
-msgstr "WooCommerce kann jetzt Zahlungen über SumUp akzeptieren"
-
-#: templates/onboarding.php:28
-msgid ""
-"Accept payments through your SumUp account in WooCommerce. Take all payments "
-"in your online store with an easy and quick integration. No coding required."
-msgstr ""
-"Akzeptieren Sie Zahlungen über Ihr SumUp-Konto in WooCommerce. Nehmen Sie "
-"alle Zahlungen in Ihrem Online-Shop mit einer einfachen und schnellen "
-"Integration an. Keine Programmierung erforderlich."
-
-#: templates/onboarding.php:32
-msgid "Connect in 4 steps:"
-msgstr "Verbinden Sie sich in 4 Schritten:"
-
-#: templates/onboarding.php:37
-msgid "Start by connecting your account. Learn more"
-msgstr "Beginnen Sie mit der Verbindung Ihres Kontos. Erfahren Sie mehr"
-
-#: templates/onboarding.php:40
-msgid "Log into your SumUp account, if you are not already logged in."
-msgstr ""
-"Melden Sie sich bei Ihrem SumUp-Konto an, wenn Sie noch nicht angemeldet "
-"sind."
-
-#: templates/onboarding.php:43
-msgid "Select the “Connect” button to begin."
-msgstr "Wählen Sie die Schaltfläche „Verbinden“, um zu beginnen."
-
-#: templates/onboarding.php:46
-msgid "Return to WooCommerce by selecting the “View plugin” button."
-msgstr ""
-"Kehren Sie zu WooCommerce zurück, indem Sie die Schaltfläche „Plugin "
-"anzeigen“ auswählen."
-
-#: templates/onboarding.php:52
-msgid "Advanced Version"
-msgstr "Erweiterte Version"
-
-#: templates/onboarding.php:55 templates/onboarding.php:56
-msgid "Connect Account"
-msgstr "Konto verbinden"
-
-#: /Users/matousdzivjak/code/github.com/sumup/sumup-plugin-woocommerce/sumup-payment-gateway-for-woocommerce.php:130
-msgid ""
-"Use a publicly reachable HTTPS domain before connecting SumUp. If you are "
-"testing locally, use a tunnel such as ngrok or Cloudflare Tunnel and update "
-"WordPress Home and Site URL first."
-msgstr ""
-"Verwende vor der Verbindung mit SumUp eine öffentlich erreichbare HTTPS-"
-"Domain. Wenn du lokal testest, nutze einen Tunnel wie ngrok oder Cloudflare "
-"Tunnel und aktualisiere zuerst WordPress Home und Site URL."
-
-#: /Users/matousdzivjak/code/github.com/sumup/sumup-plugin-woocommerce/sumup-payment-gateway-for-woocommerce.php:138
-#, php-format
-msgid ""
-"Your store is currently using %1$s, which is not publicly reachable. Use a "
-"public HTTPS domain before connecting SumUp. If you are testing locally, use "
-"a tunnel such as ngrok or Cloudflare Tunnel and update WordPress Home and "
-"Site URL first."
-msgstr ""
-"Dein Shop verwendet derzeit %1$s, das nicht öffentlich erreichbar ist. "
-"Verwende vor der Verbindung mit SumUp eine öffentliche HTTPS-Domain. Wenn du "
-"lokal testest, nutze einen Tunnel wie ngrok oder Cloudflare Tunnel und "
-"aktualisiere zuerst WordPress Home und Site URL."
-
-#: /Users/matousdzivjak/code/github.com/sumup/sumup-plugin-woocommerce/sumup-payment-gateway-for-woocommerce.php:421
-msgid "Please use the “Connect Account” button to start the configuration."
-msgstr ""
-"Bitte verwenden Sie die Schaltfläche „Konto verbinden“, um die Konfiguration "
-"zu starten."
-
-#: /Users/matousdzivjak/code/github.com/sumup/sumup-plugin-woocommerce/sumup-payment-gateway-for-woocommerce.php:539
-msgid "Unable to start the SumUp connection."
-msgstr "Die SumUp-Verbindung konnte nicht gestartet werden."
-
-#: /Users/matousdzivjak/code/github.com/sumup/sumup-plugin-woocommerce/sumup-payment-gateway-for-woocommerce.php:540
-msgid "Unable to validate this website."
-msgstr "Diese Website konnte nicht validiert werden."
-
-#: /Users/matousdzivjak/code/github.com/sumup/sumup-plugin-woocommerce/sumup-payment-gateway-for-woocommerce.php:541
-msgid "Unable to start the SumUp connection. Please try again."
-msgstr ""
-"Die SumUp-Verbindung konnte nicht gestartet werden. Bitte versuche es erneut."
-
-#: /Users/matousdzivjak/code/github.com/sumup/sumup-plugin-woocommerce/sumup-payment-gateway-for-woocommerce.php:542
-msgid "Unable to disconnect the SumUp account."
-msgstr "Das SumUp-Konto konnte nicht getrennt werden."
-
-#: /Users/matousdzivjak/code/github.com/sumup/sumup-plugin-woocommerce/sumup-payment-gateway-for-woocommerce.php:543
-msgid "Unknown error occurred."
-msgstr "Ein unbekannter Fehler ist aufgetreten."
-
-#: /Users/matousdzivjak/code/github.com/sumup/sumup-plugin-woocommerce/includes/api/class-sumup-disconnect.php:44
-msgid "Account already disconnected"
-msgstr "Konto ist bereits getrennt"
-
-#: /Users/matousdzivjak/code/github.com/sumup/sumup-plugin-woocommerce/templates/onboarding.php:21
-msgid "Complete setup to accept payments with SumUp"
-msgstr "Einrichtung abschließen, um Zahlungen mit SumUp zu akzeptieren"
-
-#: /Users/matousdzivjak/code/github.com/sumup/sumup-plugin-woocommerce/templates/onboarding.php:25
-msgid ""
-"Connect your SumUp account to start accepting credit and debit card payments "
-"in WooCommerce."
-msgstr ""
-"Verbinde dein SumUp-Konto, um in WooCommerce Kredit- und "
-"Debitkartenzahlungen zu akzeptieren."
-
-#: /Users/matousdzivjak/code/github.com/sumup/sumup-plugin-woocommerce/templates/onboarding.php:29
-msgid "Setup takes 4 steps:"
-msgstr "Die Einrichtung umfasst 4 Schritte:"
-
-#: /Users/matousdzivjak/code/github.com/sumup/sumup-plugin-woocommerce/templates/onboarding.php:43
-msgid "After approval, we will return you to WooCommerce automatically."
-msgstr "Nach der Freigabe leiten wir dich automatisch zurück zu WooCommerce."
-
-#: /Users/matousdzivjak/code/github.com/sumup/sumup-plugin-woocommerce/templates/onboarding.php:53
-#: /Users/matousdzivjak/code/github.com/sumup/sumup-plugin-woocommerce/templates/onboarding.php:56
-#: /Users/matousdzivjak/code/github.com/sumup/sumup-plugin-woocommerce/templates/onboarding.php:63
-msgid "Complete setup"
-msgstr "Einrichtung abschließen"
-
-#: includes/api/handlers/class-sumup-validate-redirect.php:37
-msgid "Invalid request payload."
-msgstr "Ungültige Anfragedaten."
-
-#: includes/api/handlers/class-sumup-validate-redirect.php:42
-msgid "Invalid request nonce."
-msgstr "Ungültiges Anfrage-Nonce."
-
-#: includes/api/handlers/class-sumup-validate-redirect.php:47
-#: includes/class-wc-sumup-gateway.php:1826
-msgid "Invalid order ID."
-msgstr "Ungültige Bestellnummer."
-
-#: includes/class-wc-sumup-gateway.php:1842
-msgid "Order not found."
-msgstr "Bestellung nicht gefunden."
-
-#: includes/class-wc-sumup-gateway.php:1851
-msgid "Payment details are missing for this order."
-msgstr "Für diese Bestellung fehlen Zahlungsdetails."
-
-#: includes/class-wc-sumup-gateway.php:1862
-msgid "SumUp is temporarily unavailable. Please try again."
-msgstr "SumUp ist vorübergehend nicht verfügbar. Bitte versuchen Sie es erneut."
-
-#: includes/class-wc-sumup-gateway.php:1869
-msgid "Unable to verify payment status. Please try again."
-msgstr "Der Zahlungsstatus konnte nicht überprüft werden. Bitte versuchen Sie es erneut."
-
-#: includes/class-wc-sumup-gateway.php:1880
-msgid "Payment validation failed."
-msgstr "Zahlungsvalidierung fehlgeschlagen."
-
-#: includes/api/handlers/class-sumup-validate-redirect.php:56
-msgid "SumUp gateway is unavailable."
-msgstr "SumUp-Zahlungsgateway ist nicht verfügbar."
-
-#: includes/class-wc-sumup-block-gateway.php:162
-#: includes/class-wc-sumup-gateway.php:1888
-#: includes/class-wc-sumup-gateway.php:1934
-#: includes/class-wc-sumup-gateway.php:2069
-msgid "We are still waiting for SumUp to confirm this payment. Please wait a moment and refresh the page if the order is not updated automatically."
-msgstr "Wir warten noch darauf, dass SumUp diese Zahlung bestätigt. Bitte warten Sie einen Moment und aktualisieren Sie die Seite, falls die Bestellung nicht automatisch aktualisiert wird."
-
-#: includes/class-wc-sumup-block-gateway.php:163
-msgid "Payment was cancelled."
-msgstr "Die Zahlung wurde abgebrochen."
-
-#: includes/class-wc-sumup-block-gateway.php:164
-msgid "Unable to initialize SumUp checkout."
-msgstr "SumUp-Checkout konnte nicht initialisiert werden."
+#. Plugin URI of the plugin
+msgid "https://wordpress.org/plugins/sumup-payment-gateway-for-woocommerce/"
+msgstr "https://wordpress.org/plugins/sumup-payment-gateway-for-woocommerce/"

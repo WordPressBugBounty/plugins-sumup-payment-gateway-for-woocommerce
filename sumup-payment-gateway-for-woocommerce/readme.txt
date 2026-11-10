@@ -2,13 +2,13 @@
 Contributors: sumup
 Tags: sumup, payment gateway, woocommerce, payments, ecommerce
 Requires at least: 6.9
-Tested up to: 7.0
+Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 2.17.1
+Stable tag: 2.18.0
 License: Apache-2.0
 License URI: https://www.apache.org/licenses/LICENSE-2.0
 
-The SumUp plugin for WooCommerce allows businesses to securely process payments online. Accept payments from customers using a range of payment methods.
+Accept online payments in WooCommerce with SumUp, including cards and eligible alternative payment methods.
 
 == Description ==
 
@@ -22,6 +22,9 @@ This plugin adds SumUp as a payment gateway for WooCommerce stores. It supports 
 * Compatible with WooCommerce Cart and Checkout Blocks
 * Compatible with High-Performance Order Storage (HPOS)
 * Update WooCommerce orders based on SumUp checkout status and webhooks
+
+= Subscriptions =
+Automatic recurring subscription payments are not supported. Use a gateway with an implemented WooCommerce Subscriptions integration for automatic renewals.
 
 = Supported payment methods =
 * Cards: Visa, VPay, Mastercard, American Express, Diners Club, Discover
@@ -38,11 +41,31 @@ Bulgarian, Czech, Danish, Dutch, English, Estonian, Finnish, French, German, Gre
 = Documentation =
 Setup guide: https://developer.sumup.com/online-payments/plugins/woocommerce/
 
+== External service and privacy ==
+
+This plugin relies on SumUp to accept and verify payments. It sends checkout amounts, currencies, merchant identifiers, order references and return URLs to api.sumup.com. The payment widget is loaded from gateway.sumup.com and sends payment and billing details directly to SumUp. Connection setup also sends the store URL and business name to SumUp. These requests occur when connecting an account, validating settings, displaying the payment widget, processing payments and checking payment updates.
+
+The plugin stores payment identifiers with WooCommerce orders. Older orders may retain historical payment instructions. Pending PIX/Boleto instructions are displayed inside the SumUp widget; historical and browser-supplied codes are not displayed on order pages. Optional WooCommerce logs contain order and payment identifiers and technical error information. Review WooCommerce retention and logging settings for your store. The plugin does not store card numbers or security codes.
+
+Service: https://www.sumup.com/
+Privacy policy: https://www.sumup.com/en-gb/privacy/
+Terms: https://www.sumup.com/en-gb/terms/
+
+== Development ==
+
+Human-readable JavaScript source, locked dependency manifests and build tools are included in this plugin package. See src/BUILDING.md for instructions. Install the locked npm dependencies with `npm ci`, then rebuild the distributed JavaScript and CSS using `npm run build`. Contributor and testing instructions are included in CONTRIBUTING.md.
+
 == Screenshots ==
 
 1. The settings panel used to configure the gateway
 2. The new simplified connection workflow with "Connect Account"
 3. A checkout with SumUp
+
+== Apple Pay and Google Pay ==
+
+Apple Pay and Google Pay are available inside the SumUp payment widget when enabled and supported by the merchant account and browser. Customers enter billing and shipping details in WooCommerce before confirming payment in the widget. Complete wallet domain onboarding in SumUp Dashboard > Settings > For developers > Payment wallets and serve checkout over HTTPS.
+
+The Google Pay merchant ID setting is optional. Leave it blank to use the SumUp widget defaults. To use your own Google Pay merchant identity, enter the ID issued by Google (different from your SumUp merchant code); your store name will then appear on the payment sheet. Wallet domain onboarding is required in either case.
 
 == Installation ==
 
@@ -87,14 +110,26 @@ You can find setup documentation here: https://developer.sumup.com/online-paymen
 
 = Where can I get support if needed? =
 
-If you need help with setup or testing, contact SumUp support through the official support channels for your merchant account.
+For plugin bug reports and feature requests, use the public support forum: https://wordpress.org/support/plugin/sumup-payment-gateway-for-woocommerce/
+
+For account-specific help with setup or testing, contact SumUp support through the official support channels for your merchant account.
 
 = Does this support both production mode and sandbox mode for testing? =
 
 Yes. Test the integration fully before enabling live payments.
 
 == Changelog ==
-= 2.17.1 =
+= 2.18.0 - 2026-11-02 =
+* Security: Require verified order access before payment returns can expose order details or redirect to an order page.
+* Security: Stop automatic connection changes when browsing settings and ignore payment instructions supplied in thank-you-page URLs.
+* Fixed: Preserve existing public setup helpers and the WooCommerce Blocks callback for integrations.
+* Security: Keep pending PIX/Boleto instructions inside the SumUp widget and stop accepting browser-supplied or historical payment codes.
+* Fixed: Reject stale payment widgets without closing a replacement checkout, including existing order-pay links.
+* Fixed: Verify payment and merchant details before updating an order, and prevent overlapping payment updates.
+* Improved: Share classic and block checkout handling, improve wallet setup and bundled translations, and require explicit opt-in for debug logging.
+* Improved: Include readable build sources and validate the exact distribution ZIP with automated release and submission checks.
+
+= 2.17.1 - 2026-07-06 =
 * Fixed: Restored payment failure and pending messaging after redirect flows in both classic checkout and Checkout Blocks.
 * Fixed: Prevented classic checkout redirect validation from being misclassified as Blocks checkout.
 * Fixed: Checkout Blocks now uses localized payment error messages from plugin translations.
@@ -343,6 +378,9 @@ Yes. Test the integration fully before enabling live payments.
 * Initial release.
 
 == Upgrade Notice ==
+= 2.18.0 =
+* Security release protecting order information. Pending PIX/Boleto instructions now stay in the SumUp payment widget; historical copies are no longer displayed.
+
 
 = 2.17.1 =
 * Patch release that fixes redirect payment messaging and checkout failure handling for classic and Blocks checkout.

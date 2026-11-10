@@ -1,0 +1,19 @@
+*** SumUp Payment Gateway For WooCommerce Changelog ***
+
+2026-11-02 - version 2.18.0
+
+* Security: Require verified order access before payment returns can expose order details or redirect to an order page.
+* Security: Stop automatic connection changes when browsing settings and ignore payment instructions supplied in thank-you-page URLs.
+* Fixed - Preserve existing public setup helpers and the WooCommerce Blocks callback for integrations.
+* Security: Keep pending PIX/Boleto instructions inside the SumUp widget and stop accepting browser-supplied or historical payment codes.
+* Fixed - Reject stale payment widgets without closing a replacement checkout, including existing order-pay links.
+* Fixed - Verify payment and merchant details before updating an order, and prevent overlapping payment updates.
+* Changed - Share classic and block checkout handling, improve wallet setup and bundled translations, and require explicit opt-in for debug logging.
+* Changed - Include readable build sources and validate the exact distribution ZIP with automated release and submission checks.
+
+2026-07-06 - version 2.17.1
+
+* Fixed - Restored payment failure and pending messaging after redirect flows in both classic checkout and Checkout Blocks.
+* Fixed - Prevented classic checkout redirect validation from being misclassified as Blocks checkout.
+* Fixed - Checkout Blocks now uses localized payment error messages from plugin translations.
+* Fixed - Improved SumUp widget handling for invalid, failed, and error payment responses.

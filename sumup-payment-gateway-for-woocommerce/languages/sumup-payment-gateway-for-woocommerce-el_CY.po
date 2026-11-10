@@ -1,564 +1,660 @@
-#
+# Translations for the SumUp WooCommerce plugin.
+# Edit this PO file, then run scripts/i18n.py update to rebuild its MO file.
 msgid ""
 msgstr ""
-"Project-Id-Version: SumUp Payment Gateway For WooCommerce 2.5.5\n"
-"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/sumup-plugin-for-"
-"woocommerce\n"
-"POT-Creation-Date: 2024-07-09T02:16:27+00:00\n"
-"PO-Revision-Date: 2024-10-21 16:51-0300\n"
-"Last-Translator: \n"
-"Language-Team: \n"
-"Language: el\n"
+"Project-Id-Version: SumUp Payment Gateway For WooCommerce\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/sumup-payment-gateway-for-woocommerce/\n"
+"Language: el_CY\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Domain: sumup-payment-gateway-for-woocommerce\n"
-"X-Generator: Poedit 3.5\n"
+
+#. translators: 1: plugin name, 2: minimum PHP version.
+#: sumup-payment-gateway-for-woocommerce.php:711
+#, php-format
+msgid "%1$s requires PHP version %2$s or greater."
+msgstr "Το %1$s απαιτεί έκδοση PHP %2$s ή μεγαλύτερη."
+
+#. translators: 1: plugin name, 2: minimum WordPress version.
+#: sumup-payment-gateway-for-woocommerce.php:730
+#, php-format
+msgid "%1$s requires WordPress version %2$s or greater."
+msgstr "Το %1$s απαιτεί έκδοση WordPress %2$s ή μεγαλύτερη."
+
+#: includes/class-wc-sumup-settings.php:144
+msgid "Accept PIX as your payment method."
+msgstr "Αποδοχή PIX ως μέθοδο πληρωμής."
+
+#: includes/class-wc-sumup-gateway.php:95
+msgid "Accept credit and debit cards with SumUp, plus eligible payment methods such as Apple Pay, Google Pay, PayPal, Bancontact, and iDEAL."
+msgstr "Αποδεχτείτε πιστωτικές και χρεωστικές κάρτες με το SumUp και διαθέσιμους τρόπους πληρωμής, όπως Apple Pay, Google Pay, PayPal, Bancontact και iDEAL."
+
+#: includes/class-wc-sumup-settings.php:112
+msgid "Accept installments in your card payment method."
+msgstr "Αποδοχή δόσεων στη μέθοδο πληρωμής σας με κάρτα."
+
+#: includes/api/class-sumup-disconnect.php:46
+msgid "Account already disconnected"
+msgstr "Ο λογαριασμός έχει ήδη αποσυνδεθεί"
+
+#: includes/class-wc-sumup-connection-diagnostics.php:92
+msgid "Account check"
+msgstr "Έλεγχος λογαριασμού"
+
+#: includes/class-wc-sumup-gateway.php:221
+msgid "Account details"
+msgstr "Στοιχεία λογαριασμού"
+
+#: includes/class-wc-sumup-gateway.php:231
+msgid "Account email"
+msgstr "Email λογαριασμού"
+
+#: includes/class-wc-sumup-gateway.php:261
+msgid "Actions"
+msgstr "Ενέργειες"
+
+#: templates/onboarding.php:43
+msgid "After approval, we will return you to WooCommerce automatically."
+msgstr "Μετά την έγκριση, θα επιστρέψουμε αυτόματα στο WooCommerce."
+
+#: includes/class-wc-sumup-settings.php:70
+msgid "Apple Pay"
+msgstr "Apple Pay"
+
+#: includes/class-wc-sumup-apple-pay.php:151
+msgid "Apple Pay association file is missing or unreadable."
+msgstr "Το αρχείο συσχέτισης Apple Pay λείπει ή δεν είναι αναγνώσιμο."
+
+#: includes/class-wc-sumup-apple-pay.php:297
+msgid "Apple Pay domain registration completed."
+msgstr "Η εγγραφή τομέα Apple Pay ολοκληρώθηκε."
+
+#: includes/class-wc-sumup-gateway.php:1902
+msgid "Apple Pay domain registration could not be completed. Make sure your store is publicly accessible over HTTPS, check domain setup in SumUp Dashboard > Settings > For developers > Payment wallets, then save these settings to retry. Other SumUp payment settings have been saved."
+msgstr "Δεν ήταν δυνατή η ολοκλήρωση της εγγραφής τομέα Apple Pay. Βεβαιωθείτε ότι το κατάστημα είναι δημόσια προσβάσιμο μέσω HTTPS, ελέγξτε τη ρύθμιση τομέα στο SumUp Dashboard > Settings > For developers > Payment wallets και αποθηκεύστε αυτές τις ρυθμίσεις για να δοκιμάσετε ξανά. Οι άλλες ρυθμίσεις πληρωμών SumUp αποθηκεύτηκαν."
+
+#: includes/class-wc-sumup-apple-pay.php:288
+msgid "Apple Pay domain registration request failed."
+msgstr "Το αίτημα εγγραφής τομέα Apple Pay απέτυχε."
+
+#: includes/class-wc-sumup-apple-pay.php:305
+msgid "Apple Pay domain registration returned a non-success response."
+msgstr "Η εγγραφή τομέα Apple Pay επέστρεψε ανεπιτυχή απόκριση."
+
+#: includes/class-wc-sumup-gateway.php:341
+msgid "At the top of the page, click Submit for approval."
+msgstr "Στο επάνω μέρος της σελίδας, πατήστε Submit for approval."
+
+#: includes/class-wc-sumup-connection-diagnostics.php:96 templates/onboarding.php:50
+msgid "Check connection"
+msgstr "Έλεγχος σύνδεσης"
+
+#: includes/class-wc-sumup-connection-diagnostics.php:92
+msgid "Check connection and permissions"
+msgstr "Έλεγχος σύνδεσης και δικαιωμάτων"
+
+#: includes/class-wc-sumup-settings.php:32
+msgid "Checkout"
+msgstr "Ταμείο"
+
+#: includes/class-wc-sumup-gateway.php:1710 includes/class-wc-sumup-gateway.php:1804 includes/class-wc-sumup-widget-settings.php:46
+msgid "Close payment modal"
+msgstr "Κλείσιμο παραθύρου πληρωμής"
+
+#: includes/class-wc-sumup-gateway.php:328
+#, php-format
+msgid "Complete Google approval in the %s, then register your domain with SumUp using the button below. Registration with SumUp does not submit your website to Google for approval."
+msgstr "Ολοκληρώστε την έγκριση της Google στο %s και μετά εγγράψτε τον τομέα σας στο SumUp με το παρακάτω κουμπί. Η εγγραφή στο SumUp δεν υποβάλλει τον ιστότοπό σας στην Google για έγκριση."
+
+#: templates/onboarding.php:58 templates/onboarding.php:61 templates/onboarding.php:68
+msgid "Complete setup"
+msgstr "Ολοκλήρωση ρύθμισης"
+
+#: templates/onboarding.php:21
+msgid "Complete setup to accept payments with SumUp"
+msgstr "Ολοκληρώστε τη ρύθμιση για να δέχεστε πληρωμές με το SumUp"
+
+#: includes/class-wc-sumup-gateway.php:345 includes/class-wc-sumup-onboarding.php:125
+msgid "Connect your SumUp account before continuing with Google Pay."
+msgstr "Συνδέστε τον λογαριασμό SumUp πριν συνεχίσετε με το Google Pay."
+
+#: templates/onboarding.php:25
+msgid "Connect your SumUp account to start accepting credit and debit card payments in WooCommerce."
+msgstr "Συνδέστε τον λογαριασμό SumUp για να αρχίσετε να δέχεστε πληρωμές με πιστωτική και χρεωστική κάρτα στο WooCommerce."
+
+#: includes/class-wc-sumup-gateway.php:212
+msgid "Connected"
+msgstr "Συνδεδεμένος"
+
+#: includes/class-wc-sumup-settings.php:15
+msgid "Connection"
+msgstr "Σύνδεση"
+
+#: includes/class-wc-sumup-gateway.php:337
+msgid "Create an account in the Google Pay console."
+msgstr "Δημιουργήστε λογαριασμό στην κονσόλα Google Pay."
+
+#: includes/class-wc-sumup-credentials.php:132
+msgid "Credentials are not valid. Please check the plugin log and try again."
+msgstr "Τα διαπιστευτήρια δεν είναι έγκυρα. Παρακαλώ ελέγξτε το ημερολόγιο του πρόσθετου και δοκιμάστε ξανά."
+
+#: templates/onboarding-failed-message.php:18
+msgid "Credentials are not valid. Please try again."
+msgstr "Τα διαπιστευτήρια δεν είναι έγκυρα. Παρακαλώ δοκιμάστε ξανά."
+
+#: includes/class-wc-sumup-block-gateway.php:65 includes/class-wc-sumup-settings.php:46
+msgid "Credit / Debit Card"
+msgstr "Πιστωτική / Χρεωστική κάρτα"
+
+#: includes/class-wc-sumup-settings.php:120
+msgid "Define the number of installments you will accept."
+msgstr "Ορίστε τον αριθμό των δόσεων που θα αποδεχτείτε."
+
+#: includes/class-wc-sumup-settings.php:50
+msgid "Description"
+msgstr "Περιγραφή"
+
+#: includes/class-wc-sumup-settings.php:154
+msgid "Diagnostics"
+msgstr "Διαγνωστικά"
+
+#: includes/class-wc-sumup-gateway.php:285 includes/class-wc-sumup-gateway.php:288
+msgid "Disconnect account"
+msgstr "Αποσύνδεση λογαριασμού"
+
+#: sumup-payment-gateway-for-woocommerce.php:532
+msgid "Docs"
+msgstr "Έγγραφα"
+
+#: includes/class-wc-sumup-settings.php:142
+msgid "Enable"
+msgstr "Ενεργοποίηση Boleto"
+
+#: includes/class-wc-sumup-settings.php:73
+msgid "Enable Apple Pay at checkout."
+msgstr "Ενεργοποίηση Apple Pay στο ταμείο."
+
+#: includes/class-wc-sumup-settings.php:57 includes/class-wc-sumup-settings.php:58
+msgid "Enable Google Pay"
+msgstr "Ενεργοποίηση Google Pay"
+
+#: includes/class-wc-sumup-onboarding.php:128
+msgid "Enable Google Pay and save your changes before continuing."
+msgstr "Ενεργοποιήστε το Google Pay και αποθηκεύστε τις αλλαγές πριν συνεχίσετε."
+
+#: includes/class-wc-sumup-gateway.php:352
+msgid "Enable Google Pay and save your changes, then return here to register your domain with SumUp."
+msgstr "Ενεργοποιήστε το Google Pay και αποθηκεύστε τις αλλαγές. Έπειτα επιστρέψτε εδώ για να εγγράψετε τον τομέα στο SumUp."
+
+#: includes/class-wc-sumup-settings.php:110
+msgid "Enable Installments?"
+msgstr "Ενεργοποίηση δόσεων;"
+
+#: includes/class-wc-sumup-settings.php:141
+msgid "Enable PIX?"
+msgstr "Ενεργοποίηση PIX;"
+
+#: includes/class-wc-sumup-settings.php:37
+msgid "Enable SumUp"
+msgstr "Ενεργοποίηση SumUp"
+
+#: includes/class-wc-sumup-settings.php:36
+msgid "Enable/Disable"
+msgstr "Ενεργοποίηση/Απενεργοποίηση"
+
+#: includes/class-wc-sumup-gateway.php:1699
+msgid "Error: Merchant account settings are incorrectly configured. Check the plugin settings page."
+msgstr "Σφάλμα: Οι ρυθμίσεις λογαριασμού εμπόρου δεν έχουν ρυθμιστεί σωστά. Ελέγξτε τη σελίδα ρυθμίσεων του πρόσθετου."
+
+#: includes/class-wc-sumup-widget-settings.php:50
+msgid "Fill in all required details."
+msgstr "Συμπληρώστε όλα τα απαιτούμενα στοιχεία."
+
+#: includes/class-wc-sumup-gateway.php:340
+msgid "Fill out the form with the requested information, including the domain name and buyflow screenshots."
+msgstr "Συμπληρώστε τη φόρμα με τα απαιτούμενα στοιχεία, μαζί με το όνομα τομέα και στιγμιότυπα της διαδικασίας αγοράς."
+
+#: includes/class-wc-sumup-gateway.php:338
+msgid "Go to the Google Pay API tab in your Google Pay console."
+msgstr "Μεταβείτε στην καρτέλα Google Pay API της κονσόλας Google Pay."
+
+#: includes/class-wc-sumup-gateway.php:331
+msgid "Google Pay console"
+msgstr "Κονσόλα Google Pay"
+
+#: includes/class-wc-sumup-gateway.php:348 includes/class-wc-sumup-onboarding.php:121
+msgid "Google Pay domain registration requires a publicly accessible HTTPS store."
+msgstr "Η εγγραφή τομέα Google Pay απαιτεί δημόσια προσβάσιμο κατάστημα HTTPS."
+
+#: includes/class-wc-sumup-settings.php:26
+msgid "Google Pay merchant ID"
+msgstr "Αναγνωριστικό εμπόρου Google Pay"
+
+#: includes/class-wc-sumup-gateway.php:317
+msgid "Google Pay setup"
+msgstr "Ρύθμιση Google Pay"
+
+#: includes/class-wc-sumup-settings.php:109
+msgid "Installments"
+msgstr "Δόσεις"
+
+#: includes/api/handlers/class-sumup-store-payment-instructions.php:44 includes/api/handlers/class-sumup-validate-redirect.php:44 includes/class-wc-sumup-gateway.php:1400
+msgid "Invalid order ID."
+msgstr "Μη έγκυρο ID παραγγελίας."
+
+#: includes/api/handlers/class-sumup-store-payment-instructions.php:49
+msgid "Invalid order key."
+msgstr "Μη έγκυρο κλειδί παραγγελίας."
+
+#: includes/api/class-sumup-api-handler.php:66
+msgid "Invalid request method."
+msgstr "Μη έγκυρη μέθοδος αιτήματος."
+
+#: includes/api/handlers/class-sumup-store-payment-instructions.php:39 includes/api/handlers/class-sumup-validate-redirect.php:39
+msgid "Invalid request nonce."
+msgstr "Μη έγκυρο nonce αιτήματος."
+
+#: includes/api/handlers/class-sumup-store-payment-instructions.php:34 includes/api/handlers/class-sumup-validate-redirect.php:34
+msgid "Invalid request payload."
+msgstr "Μη έγκυρο περιεχόμενο αιτήματος."
+
+#: includes/class-wc-sumup-connection-diagnostics.php:95
+msgid "Last verified notification"
+msgstr "Τελευταία επαληθευμένη ειδοποίηση"
+
+#: includes/class-wc-sumup-settings.php:89
+msgid "Log debug messages"
+msgstr "Καταγραφή μηνυμάτων αποσφαλμάτωσης"
+
+#: templates/onboarding.php:37
+msgid "Log into your SumUp account, if you are not already logged in."
+msgstr "Συνδεθείτε στον λογαριασμό σας SumUp, αν δεν είστε ήδη συνδεδεμένοι."
+
+#: includes/class-wc-sumup-settings.php:88
+msgid "Logging"
+msgstr "Καταγραφή"
+
+#: includes/class-wc-sumup-settings.php:17
+msgid "Manage the SumUp account connected to this store."
+msgstr "Διαχειριστείτε τον λογαριασμό SumUp που είναι συνδεδεμένος με αυτό το κατάστημα."
+
+#: includes/class-wc-sumup-gateway.php:235
+msgid "Merchant code"
+msgstr "Αναγνωριστικό Εμπόρου"
+
+#: includes/class-wc-sumup-credentials.php:130
+msgid "Missing scope: payments. Please contact support team."
+msgstr "Λείπει το πεδίο: πληρωμές. Παρακαλώ επικοινωνήστε με την ομάδα υποστήριξης."
+
+#: includes/class-wc-sumup-gateway.php:339
+msgid "Navigate to the Integrate with your website section and click Add website."
+msgstr "Μεταβείτε στην ενότητα Integrate with your website και πατήστε Add website."
+
+#: includes/class-wc-sumup-connection-diagnostics.php:95
+msgid "No verified notifications yet. Complete a test payment to check delivery."
+msgstr "Δεν υπάρχουν ακόμα επαληθευμένες ειδοποιήσεις. Κάντε μια δοκιμαστική πληρωμή για να ελέγξετε την παράδοση."
+
+#: includes/class-wc-sumup-gateway.php:214 includes/class-wc-sumup-gateway.php:215
+msgid "Not available"
+msgstr "Μη διαθέσιμο"
+
+#: includes/class-wc-sumup-connection-diagnostics.php:92
+msgid "Not checked yet"
+msgstr "Δεν έχει ελεγχθεί ακόμα"
+
+#: includes/class-wc-sumup-settings.php:118
+msgid "Number of Installments"
+msgstr "Αριθμός δόσεων"
+
+#: includes/class-wc-sumup-settings.php:71
+msgid "Offer Apple Pay"
+msgstr "Προσφορά Apple Pay"
+
+#: includes/class-wc-sumup-settings.php:60
+msgid "Offer Google Pay when eligible. Complete domain setup below before accepting payments."
+msgstr "Προσφορά Google Pay όταν είναι διαθέσιμο. Ολοκληρώστε την παρακάτω ρύθμιση τομέα πριν αποδεχτείτε πληρωμές."
+
+#: includes/class-wc-sumup-settings.php:79
+msgid "Open Payment in modal?"
+msgstr "Άνοιγμα πληρωμής σε modal;"
+
+#: includes/class-wc-sumup-settings.php:82
+msgid "Open the Payment options inside a modal (popup)"
+msgstr "Άνοιγμα των επιλογών πληρωμής σε modal (popup)"
+
+#: includes/class-wc-sumup-settings.php:29
+msgid "Optional. Leave blank to use the SumUp widget defaults. To use your own Google Pay merchant ID, enter the ID issued by Google, separate from your SumUp merchant code. Your store name will then appear on the Google Pay payment sheet. Wallet domain onboarding is still required."
+msgstr "Προαιρετικό. Αφήστε το κενό για τις προεπιλογές του widget SumUp. Για να χρησιμοποιήσετε το δικό σας αναγνωριστικό εμπόρου Google Pay, εισαγάγετε το αναγνωριστικό που εξέδωσε η Google, διαφορετικό από τον κωδικό εμπόρου SumUp. Το όνομα του καταστήματός σας θα εμφανίζεται στη φόρμα πληρωμής Google Pay. Η εγγραφή τομέα για πορτοφόλια εξακολουθεί να απαιτείται."
+
+#: includes/class-wc-sumup-gateway.php:527 includes/class-wc-sumup-gateway.php:1754
+msgid "Order ID is not available to make the payment. Try again soon or contact the website support."
+msgstr "Το ID παραγγελίας δεν είναι διαθέσιμο για την πληρωμή. Δοκιμάστε ξανά σύντομα ή επικοινωνήστε με την υποστήριξη του ιστότοπου."
+
+#: includes/api/handlers/class-sumup-store-payment-instructions.php:54
+msgid "Order is not available."
+msgstr "Η παραγγελία δεν είναι διαθέσιμη."
+
+#: includes/class-wc-sumup-gateway.php:1649
+msgid "Order is unavailable."
+msgstr "Η παραγγελία δεν είναι διαθέσιμη."
+
+#: includes/class-wc-sumup-gateway.php:1416
+msgid "Order not found."
+msgstr "Η παραγγελία δεν βρέθηκε."
+
+#: includes/api/handlers/class-sumup-store-payment-instructions.php:59 includes/api/handlers/class-sumup-store-payment-instructions.php:68 includes/class-wc-sumup-gateway.php:780
+msgid "Order validation failed."
+msgstr "Η επικύρωση της παραγγελίας απέτυχε."
+
+#: includes/class-wc-sumup-gateway.php:534 includes/class-wc-sumup-gateway.php:545 includes/class-wc-sumup-gateway.php:1359 includes/class-wc-sumup-widget-settings.php:52
+msgid "Order validation failed. Refresh checkout and try again."
+msgstr "Η επικύρωση της παραγγελίας απέτυχε. Ανανεώστε το ταμείο και δοκιμάστε ξανά."
+
+#: includes/class-wc-sumup-block-gateway.php:69 includes/class-wc-sumup-settings.php:53
+msgid "Pay securely with your credit or debit card, or use other available payment methods."
+msgstr "Πληρώστε με ασφάλεια με πιστωτική ή χρεωστική κάρτα ή χρησιμοποιήστε άλλους διαθέσιμους τρόπους πληρωμής."
+
+#: includes/class-wc-sumup-gateway.php:1975
+msgid "Payment Status: "
+msgstr "Κατάσταση Πληρωμής: "
+
+#: includes/class-wc-sumup-gateway.php:1436
+msgid "Payment details are missing for this order."
+msgstr "Λείπουν τα στοιχεία πληρωμής για αυτήν την παραγγελία."
+
+#: includes/class-wc-sumup-gateway.php:1500 includes/class-wc-sumup-gateway.php:1590 includes/class-wc-sumup-widget-settings.php:53
+msgid "Payment failed, please try again."
+msgstr "Η πληρωμή απέτυχε, παρακαλώ δοκιμάστε ξανά."
+
+#: includes/class-wc-sumup-settings.php:104
+msgid "Payment options"
+msgstr "Επιλογές πληρωμής"
+
+#: includes/class-wc-sumup-gateway.php:1442 includes/class-wc-sumup-gateway.php:1464
+msgid "Payment validation failed."
+msgstr "Η επικύρωση της πληρωμής απέτυχε."
+
+#: includes/class-wc-sumup-widget-settings.php:55
+msgid "Payment was cancelled."
+msgstr "Η πληρωμή ακυρώθηκε."
+
+#: includes/class-wc-sumup-gateway.php:1729
+msgid "Please fill \"Merchant code\" on the plugin settings."
+msgstr "Συμπληρώστε τον «Κωδικό εμπόρου» στις ρυθμίσεις του πρόσθετου."
+
+#: sumup-payment-gateway-for-woocommerce.php:615
+msgid "Please use the “Connect Account” button to start the configuration."
+msgstr "Παρακαλώ χρησιμοποιήστε το κουμπί «Σύνδεση λογαριασμού» για να ξεκινήσετε τη διαμόρφωση."
+
+#: includes/class-wc-sumup-gateway.php:274 includes/class-wc-sumup-gateway.php:277
+msgid "Reconnect account"
+msgstr "Επανασύνδεση λογαριασμού"
+
+#: includes/class-wc-sumup-gateway.php:367 includes/class-wc-sumup-gateway.php:370
+msgid "Register domain with SumUp"
+msgstr "Εγγραφή τομέα στο SumUp"
+
+#: sumup-payment-gateway-for-woocommerce.php:768
+msgid "Registered with SumUp"
+msgstr "Εγγεγραμμένο στο SumUp"
+
+#: includes/class-wc-sumup-gateway.php:190
+msgid "Return to payments"
+msgstr "Επιστροφή στις πληρωμές"
+
+#: includes/class-wc-sumup-settings.php:91
+msgid "Save debug messages to the WooCommerce System Status log."
+msgstr "Αποθήκευση μηνυμάτων αποσφαλμάτωσης στο ημερολόγιο κατάστασης συστήματος του WooCommerce."
+
+#: templates/onboarding.php:40
+msgid "Select the “Connect” button to begin."
+msgstr "Επιλέξτε το κουμπί “Σύνδεση” για να ξεκινήσετε."
+
+#: sumup-payment-gateway-for-woocommerce.php:632
+msgid "Settings"
+msgstr "Ρυθμίσεις"
+
+#: templates/onboarding.php:29
+msgid "Setup takes 4 steps:"
+msgstr "Η ρύθμιση έχει 4 βήματα:"
+
+#: includes/class-wc-sumup-apple-pay.php:187
+msgid "Skipping Apple Pay domain registration because merchant code is missing."
+msgstr "Παράλειψη εγγραφής τομέα Apple Pay επειδή λείπει ο κωδικός εμπόρου."
+
+#: includes/class-wc-sumup-apple-pay.php:240
+msgid "Skipping Apple Pay domain registration because the access token could not be resolved."
+msgstr "Παράλειψη εγγραφής τομέα Apple Pay επειδή δεν ήταν δυνατή η ανάκτηση του διακριτικού πρόσβασης."
+
+#: includes/class-wc-sumup-apple-pay.php:217
+msgid "Skipping Apple Pay domain registration because the association file is missing."
+msgstr "Παράλειψη εγγραφής τομέα Apple Pay επειδή λείπει το αρχείο συσχέτισης."
+
+#: includes/class-wc-sumup-apple-pay.php:202
+msgid "Skipping Apple Pay domain registration because the store hostname is not public."
+msgstr "Παράλειψη εγγραφής τομέα Apple Pay επειδή το όνομα κεντρικού υπολογιστή του καταστήματος δεν είναι δημόσιο."
+
+#: includes/class-wc-sumup-gateway.php:1730
+msgid "Sorry, SumUp is not available. Try again soon."
+msgstr "Το SumUp δεν είναι διαθέσιμο αυτήν τη στιγμή. Δοκιμάστε ξανά σύντομα."
+
+#: includes/class-wc-sumup-onboarding.php:85 includes/class-wc-sumup-onboarding.php:118
+msgid "Sorry, request not authorized."
+msgstr "Το αίτημα δεν είναι εξουσιοδοτημένο."
+
+#: includes/class-wc-sumup-onboarding.php:66 includes/class-wc-sumup-onboarding.php:111
+msgid "Sorry, you are not allowed to manage SumUp settings."
+msgstr "Δεν έχετε άδεια διαχείρισης των ρυθμίσεων SumUp."
+
+#: templates/onboarding.php:34
+msgid "Start by connecting your account. Learn more"
+msgstr "Ξεκινήστε συνδέοντας τον λογαριασμό σας. Μάθετε περισσότερα"
+
+#: includes/class-wc-sumup-gateway.php:227
+msgid "Status"
+msgstr "Κατάσταση"
+
+#: sumup-payment-gateway-for-woocommerce.php:465
+msgid "Store"
+msgstr "Κατάστημα"
+
+#: includes/class-wc-sumup-gateway.php:1744
+msgid "Sum up is temporarily unavailable. Please contact site admin for more information."
+msgstr "Το SumUp είναι προσωρινά μη διαθέσιμο. Παρακαλώ επικοινωνήστε με τον διαχειριστή του ιστότοπου για περισσότερες πληροφορίες."
+
+#: includes/class-wc-sumup-gateway.php:93
+msgid "SumUp"
+msgstr "SumUp"
+
+#. translators: %s = admin.php?page=wc-settings&tab=checkout&section=sumup
+#: sumup-payment-gateway-for-woocommerce.php:593
+#, php-format
+msgid "SumUp Gateway is almost ready. To get started, <a href=\"%s\">set your SumUp account keys</a>."
+msgstr "Η Πύλη SumUp είναι σχεδόν έτοιμη. Για να ξεκινήσετε, <a href=\"%s\">ρυθμίστε τα κλειδιά του λογαριασμού SumUp σας</a>."
+
+#. translators: %s = admin.php?page=wc-settings&tab=checkout&section=sumup
+#: sumup-payment-gateway-for-woocommerce.php:600
+#, php-format
+msgid "SumUp Gateway is not configured properly. You can fix this from <a href=\"%s\">here</a>."
+msgstr "Η Πύλη SumUp δεν έχει ρυθμιστεί σωστά. Μπορείτε να το διορθώσετε από <a href=\"%s\">εδώ</a>."
+
+#: sumup-payment-gateway-for-woocommerce.php:609
+msgid "SumUp Gateway needs your attention. Currency is different from WooCommerce currency (WooCommerce->Settings->General->Currency)."
+msgstr "Η Πύλη SumUp χρειάζεται την προσοχή σας. Το νόμισμα είναι διαφορετικό από το νόμισμα του WooCommerce (WooCommerce->Ρυθμίσεις->Γενικά->Νόμισμα)."
 
 #. Plugin Name of the plugin
 msgid "SumUp Payment Gateway For WooCommerce"
 msgstr "SumUp Payment Gateway For WooCommerce"
 
-#. Plugin URI of the plugin
-msgid "https://wordpress.org/plugins/sumup-payment-gateway-for-woocommerce/"
-msgstr "https://wordpress.org/plugins/sumup-payment-gateway-for-woocommerce/"
+#: templates/onboarding-failed-message.php:15
+msgid "SumUp account not connected"
+msgstr "Ο λογαριασμός SumUp δεν είναι συνδεδεμένος"
+
+#. translators: %s: transaction code.
+#: includes/class-wc-sumup-gateway.php:1079
+#, php-format
+msgid "SumUp charge complete. Transaction Code: %s"
+msgstr "Η χρέωση SumUp ολοκληρώθηκε. Κωδικός συναλλαγής: %s"
+
+#: includes/api/handlers/class-sumup-validate-redirect.php:54
+msgid "SumUp gateway is unavailable."
+msgstr "Η πύλη πληρωμών SumUp δεν είναι διαθέσιμη."
+
+#: includes/class-wc-sumup-gateway.php:1451
+msgid "SumUp is temporarily unavailable. Please try again."
+msgstr "Η SumUp δεν είναι προσωρινά διαθέσιμη. Παρακαλώ δοκιμάστε ξανά."
+
+#: includes/class-wc-sumup-checkout-service.php:22
+msgid "SumUp is unavailable for this currency."
+msgstr "Το SumUp δεν είναι διαθέσιμο για αυτό το νόμισμα."
+
+#: includes/class-wc-sumup-gateway.php:1770
+msgid "SumUp is unavailable for this order currency."
+msgstr "Το SumUp δεν είναι διαθέσιμο για το νόμισμα αυτής της παραγγελίας."
+
+#: includes/class-wc-sumup-gateway.php:1654
+msgid "SumUp is unavailable for this order."
+msgstr "Το SumUp δεν είναι διαθέσιμο για αυτήν την παραγγελία."
+
+#: includes/class-wc-sumup-widget-settings.php:45
+msgid "SumUp payment"
+msgstr "Πληρωμή SumUp"
+
+#: includes/class-wc-sumup-gateway.php:1064
+msgid "SumUp payment failed."
+msgstr "Η πληρωμή μέσω SumUp απέτυχε."
+
+#. translators: %s: WooCommerce download link.
+#: sumup-payment-gateway-for-woocommerce.php:550
+#, php-format
+msgid "SumUp requires WooCommerce to be installed and active. You can download %s here."
+msgstr "Το SumUp απαιτεί να είναι εγκατεστημένο και ενεργό το WooCommerce. Μπορείτε να το κατεβάσετε %s εδώ."
 
 #. Description of the plugin
 msgid "Take credit card payments on your store using SumUp."
-msgstr ""
-"Δεχτείτε πληρωμές με πιστωτική κάρτα στο κατάστημά σας χρησιμοποιώντας το "
-"SumUp."
+msgstr "Δεχτείτε πληρωμές με πιστωτική κάρτα στο κατάστημά σας χρησιμοποιώντας το SumUp."
 
-#. Author of the plugin
-#: includes/class-wc-sumup-gateway.php:115
-msgid "SumUp"
-msgstr "SumUp"
+#: includes/class-wc-sumup-settings.php:52
+msgid "This controls the description the user sees during checkout."
+msgstr "Αυτό ελέγχει την περιγραφή που βλέπει ο χρήστης κατά την ολοκλήρωση της παραγγελίας."
+
+#: includes/class-wc-sumup-settings.php:45
+msgid "This controls the title the user sees during checkout."
+msgstr "Αυτό ελέγχει τον τίτλο που βλέπει ο χρήστης κατά την ολοκλήρωση της παραγγελίας."
+
+#: includes/class-wc-sumup-checkout-service.php:16
+msgid "This order does not need another payment."
+msgstr "Αυτή η παραγγελία δεν χρειάζεται άλλη πληρωμή."
+
+#: includes/class-wc-sumup-settings.php:43
+msgid "Title"
+msgstr "Τίτλος"
+
+#: includes/class-wc-sumup-widget-settings.php:49
+msgid "Transaction was unsuccessful. Please check the minimum amount or use another valid card."
+msgstr "Η συναλλαγή δεν ήταν επιτυχής. Παρακαλώ ελέγξτε το ελάχιστο ποσό ή χρησιμοποιήστε άλλη έγκυρη κάρτα."
+
+#: sumup-payment-gateway-for-woocommerce.php:766
+msgid "Unable to continue with Google Pay. Please try again."
+msgstr "Δεν ήταν δυνατή η συνέχεια με το Google Pay. Δοκιμάστε ξανά."
+
+#: includes/class-wc-sumup-onboarding.php:133
+msgid "Unable to determine the merchant code or domain for Google Pay registration."
+msgstr "Δεν ήταν δυνατός ο προσδιορισμός του κωδικού εμπόρου ή του τομέα για την εγγραφή Google Pay."
+
+#: sumup-payment-gateway-for-woocommerce.php:769
+msgid "Unable to disconnect the SumUp account."
+msgstr "Δεν ήταν δυνατή η αποσύνδεση του λογαριασμού SumUp."
+
+#: includes/class-wc-sumup-widget-settings.php:56
+msgid "Unable to initialize SumUp checkout."
+msgstr "Δεν ήταν δυνατή η αρχικοποίηση του checkout SumUp."
+
+#: includes/class-wc-sumup-checkout-service.php:142 includes/class-wc-sumup-gateway.php:1665 includes/class-wc-sumup-gateway.php:1786
+msgid "Unable to initialize SumUp payment. Please try again."
+msgstr "Δεν ήταν δυνατή η έναρξη της πληρωμής SumUp. Δοκιμάστε ξανά."
+
+#: includes/class-wc-sumup-onboarding.php:168
+msgid "Unable to register your domain with SumUp for Google Pay. Check domain setup in SumUp Dashboard > Settings > For developers > Payment wallets, then try again."
+msgstr "Δεν ήταν δυνατή η εγγραφή του τομέα σας στο SumUp για το Google Pay. Ελέγξτε τη ρύθμιση τομέα στο SumUp Dashboard > Settings > For developers > Payment wallets και δοκιμάστε ξανά."
+
+#: sumup-payment-gateway-for-woocommerce.php:763
+msgid "Unable to start the SumUp connection."
+msgstr "Δεν ήταν δυνατή η έναρξη της σύνδεσης με το SumUp."
+
+#: sumup-payment-gateway-for-woocommerce.php:765
+msgid "Unable to start the SumUp connection. Please try again."
+msgstr "Δεν ήταν δυνατή η έναρξη της σύνδεσης με το SumUp. Δοκιμάστε ξανά."
+
+#: sumup-payment-gateway-for-woocommerce.php:764
+msgid "Unable to validate this website."
+msgstr "Δεν ήταν δυνατή η επαλήθευση αυτού του ιστότοπου."
+
+#: includes/class-wc-sumup-gateway.php:1427
+msgid "Unable to verify access to this order. Please sign in or reopen the original payment link. If you have already paid, do not pay again."
+msgstr "Δεν ήταν δυνατή η επαλήθευση πρόσβασης σε αυτήν την παραγγελία. Συνδεθείτε ή ανοίξτε ξανά τον αρχικό σύνδεσμο πληρωμής. Αν έχετε ήδη πληρώσει, μην πληρώσετε ξανά."
+
+#: includes/class-wc-sumup-gateway.php:1458 includes/class-wc-sumup-widget-settings.php:51
+msgid "Unable to verify payment status. Please try again."
+msgstr "Δεν ήταν δυνατή η επαλήθευση της κατάστασης πληρωμής. Παρακαλώ δοκιμάστε ξανά."
+
+#: sumup-payment-gateway-for-woocommerce.php:770
+msgid "Unknown error occurred."
+msgstr "Παρουσιάστηκε άγνωστο σφάλμα."
+
+#: includes/class-wc-sumup-onboarding.php:114
+msgid "Use POST to register a Google Pay domain."
+msgstr "Χρησιμοποιήστε POST για την εγγραφή τομέα Google Pay."
+
+#: sumup-payment-gateway-for-woocommerce.php:288
+msgid "Use a publicly reachable HTTPS domain before connecting SumUp. If you are testing locally, use a tunnel such as ngrok or Cloudflare Tunnel and update WordPress Home and Site URL first."
+msgstr "Χρησιμοποιήστε έναν δημόσια προσβάσιμο HTTPS τομέα πριν συνδέσετε το SumUp. Αν δοκιμάζετε τοπικά, χρησιμοποιήστε ένα tunnel όπως το ngrok ή το Cloudflare Tunnel και ενημερώστε πρώτα τα WordPress Home και Site URL."
+
+#: includes/class-wc-sumup-connection-diagnostics.php:92
+msgid "Verified"
+msgstr "Επαληθευμένο"
+
+#: includes/class-wc-sumup-gateway.php:1481 includes/class-wc-sumup-gateway.php:1622 includes/class-wc-sumup-widget-settings.php:54
+msgid "We are still waiting for SumUp to confirm this payment. Please wait a moment and refresh the page if the order is not updated automatically."
+msgstr "Εξακολουθούμε να περιμένουμε την SumUp να επιβεβαιώσει αυτήν την πληρωμή. Περιμένετε λίγο και ανανεώστε τη σελίδα αν η παραγγελία δεν ενημερωθεί αυτόματα."
+
+#: sumup-payment-gateway-for-woocommerce.php:880
+msgid "When you choose SumUp, payment and billing details are sent to SumUp to process your payment and prevent fraud. The payment widget connects directly to SumUp and may process browser and network information. Card numbers and security codes are handled by SumUp, not stored by this plugin. Orders retain payment identifiers and, where applicable, pending payment instructions. When logging is enabled, WooCommerce logs include order, checkout and transaction identifiers. Review your WooCommerce retention settings and the SumUp Privacy Policy when preparing your store privacy notice."
+msgstr "Όταν επιλέγετε SumUp, τα στοιχεία πληρωμής και χρέωσης αποστέλλονται στο SumUp για την επεξεργασία της πληρωμής και την αποτροπή απάτης. Το widget πληρωμών συνδέεται απευθείας με το SumUp και μπορεί να επεξεργάζεται πληροφορίες προγράμματος περιήγησης και δικτύου. Οι αριθμοί καρτών και οι κωδικοί ασφαλείας διαχειρίζονται από το SumUp και δεν αποθηκεύονται από αυτό το πρόσθετο. Οι παραγγελίες διατηρούν αναγνωριστικά πληρωμής και, όπου ισχύει, οδηγίες εκκρεμών πληρωμών. Όταν η καταγραφή είναι ενεργή, τα αρχεία WooCommerce περιλαμβάνουν αναγνωριστικά παραγγελίας, πληρωμής και συναλλαγής. Ελέγξτε τις ρυθμίσεις διατήρησης WooCommerce και την πολιτική απορρήτου SumUp κατά τη σύνταξη της ειδοποίησης απορρήτου του καταστήματός σας."
+
+#: includes/class-wc-sumup-settings.php:80
+msgid "Yes"
+msgstr "Ναι"
+
+#: includes/class-wc-sumup-connection-diagnostics.php:49
+msgid "You cannot manage payment settings."
+msgstr "Δεν μπορείτε να διαχειριστείτε τις ρυθμίσεις πληρωμών."
+
+#: includes/class-wc-sumup-onboarding.php:172
+msgid "Your SumUp account or store domain changed. Reload the settings and try again."
+msgstr "Ο λογαριασμός SumUp ή ο τομέας του καταστήματός σας άλλαξε. Φορτώστε ξανά τις ρυθμίσεις και δοκιμάστε ξανά."
+
+#: includes/class-wc-sumup-gateway.php:356 includes/class-wc-sumup-onboarding.php:135 sumup-payment-gateway-for-woocommerce.php:767
+msgid "Your domain has been registered with SumUp for Google Pay."
+msgstr "Ο τομέας σας εγγράφηκε στο SumUp για το Google Pay."
+
+#: sumup-payment-gateway-for-woocommerce.php:296
+#, php-format
+msgid "Your store is currently using %1$s, which is not publicly reachable. Use a public HTTPS domain before connecting SumUp. If you are testing locally, use a tunnel such as ngrok or Cloudflare Tunnel and update WordPress Home and Site URL first."
+msgstr "Το κατάστημά σας χρησιμοποιεί αυτή τη στιγμή το %1$s, το οποίο δεν είναι δημόσια προσβάσιμο. Χρησιμοποιήστε έναν δημόσιο HTTPS τομέα πριν συνδέσετε το SumUp. Αν δοκιμάζετε τοπικά, χρησιμοποιήστε ένα tunnel όπως το ngrok ή το Cloudflare Tunnel και ενημερώστε πρώτα τα WordPress Home και Site URL."
+
+#. translators: 1: store currency, 2: connected merchant currency, 3: SumUp settings URL.
+#: sumup-payment-gateway-for-woocommerce.php:605
+#, php-format
+msgid "Your store uses %1$s, but the connected SumUp merchant uses %2$s. Change the store currency back or <a href=\"%3$s\">connect a matching SumUp account</a>."
+msgstr "Το κατάστημά σας χρησιμοποιεί %1$s, αλλά ο συνδεδεμένος έμπορος SumUp χρησιμοποιεί %2$s. Επαναφέρετε το νόμισμα του καταστήματος ή <a href=\"%3$s\">συνδέστε έναν αντίστοιχο λογαριασμό SumUp</a>."
 
 #. Author URI of the plugin
 msgid "https://sumup.com"
 msgstr "https://sumup.com"
 
-#: includes/api/handlers/class-sumup-create-checkout.php:57
-msgid ""
-"Merchant account settings are incorrectly configured. Check the plugin "
-"settings page."
-msgstr ""
-"Οι ρυθμίσεις λογαριασμού εμπόρου δεν έχουν ρυθμιστεί σωστά. Ελέγξτε τη "
-"σελίδα ρυθμίσεων του πρόσθετου."
-
-#: includes/api/handlers/class-sumup-create-checkout.php:67
-msgid ""
-"Sumup is temporarily unavailable. Please contact site admin for more "
-"information."
-msgstr ""
-"Το SumUp είναι προσωρινά μη διαθέσιμο. Παρακαλώ επικοινωνήστε με τον "
-"διαχειριστή του ιστότοπου για περισσότερες πληροφορίες."
-
-#: includes/api/handlers/class-sumup-create-checkout.php:107
-#: includes/class-wc-sumup-gateway.php:533
-msgid ""
-"Order ID is not available to make the payment. Try again soon or contact the "
-"website support."
-msgstr ""
-"Το ID παραγγελίας δεν είναι διαθέσιμο για την πληρωμή. Δοκιμάστε ξανά "
-"σύντομα ή επικοινωνήστε με την υποστήριξη του ιστότοπου."
-
-#: includes/class-wc-sumup-block-gateway.php:138
-#: includes/class-wc-sumup-gateway.php:740
-msgid ""
-"Transaction was unsuccessful. Please check the minimum amount or use another "
-"valid card."
-msgstr ""
-"Η συναλλαγή δεν ήταν επιτυχής. Παρακαλώ ελέγξτε το ελάχιστο ποσό ή "
-"χρησιμοποιήστε άλλη έγκυρη κάρτα."
-
-#: includes/class-wc-sumup-block-gateway.php:139
-#: includes/class-wc-sumup-gateway.php:741
-msgid "Fill in all required details."
-msgstr "Συμπληρώστε όλα τα απαιτούμενα στοιχεία."
-
-#: includes/api/handlers/class-sumup-create-checkout.php:100
-#: includes/class-wc-sumup-gateway.php:2211
-msgid "Please fill \"Merchant code\" on the plugin settings."
-msgstr ""
-
-#: includes/api/handlers/class-sumup-create-checkout.php:101
-#: includes/class-wc-sumup-gateway.php:2212
-msgid "Sorry, SumUp is not available. Try again soon."
-msgstr ""
-
-#: includes/class-wc-sumup-credentials.php:52
-msgid "Invalid Client ID, Client Secret or API Key."
-msgstr "Μη έγκυρο αναγνωριστικό πελάτη (Client ID), Client Secret ή API Key."
-
-#: includes/class-wc-sumup-credentials.php:75
-msgid "Missing scope: payments. Please contact support team."
-msgstr ""
-"Λείπει το πεδίο: πληρωμές. Παρακαλώ επικοινωνήστε με την ομάδα υποστήριξης."
-
-#: includes/class-wc-sumup-credentials.php:77
-msgid "Credentials are not valid. Please check the plugin log and try again."
-msgstr ""
-"Τα διαπιστευτήρια δεν είναι έγκυρα. Παρακαλώ ελέγξτε το ημερολόγιο του "
-"πρόσθετου και δοκιμάστε ξανά."
-
-#: includes/class-wc-sumup-credentials.php:92
-msgid "Credentials are not valid. Please check and try again."
-msgstr ""
-"Τα διαπιστευτήρια δεν είναι έγκυρα. Παρακαλώ ελέγξτε τα και δοκιμάστε ξανά."
-
-#: includes/class-wc-sumup-credentials.php:98
-msgid "Your credentials are valid and you are ready to use the plugin."
-msgstr ""
-"Τα διαπιστευτήριά σας είναι έγκυρα και είστε έτοιμοι να χρησιμοποιήσετε το "
-"πρόσθετο."
-
-#. translators: %1$s = https://me.sumup.com/, %2$s = https://me.sumup.com/developers
-#: includes/class-wc-sumup-gateway.php:203
-msgid ""
-"Accept credit and debit cards with SumUp, plus eligible payment methods such "
-"as Apple Pay, PayPal, Bancontact, and iDEAL."
-msgstr ""
-"Δεχτείτε πιστωτικές και χρεωστικές κάρτες με το SumUp, καθώς και διαθέσιμες "
-"μεθόδους πληρωμής όπως Apple Pay, PayPal, Bancontact και iDEAL."
-
-#: includes/class-wc-sumup-gateway.php:222
-msgid "SumUp charge complete. Transaction Code: %s"
-msgstr "Η χρέωση SumUp ολοκληρώθηκε. Κωδικός συναλλαγής: %s"
-
-#: includes/class-wc-sumup-gateway.php:235
-msgid "SumUp payment failed."
-msgstr "Η πληρωμή μέσω SumUp απέτυχε."
-
-#: includes/class-wc-sumup-gateway.php:314
-msgid "Payment failed, please try again."
-msgstr "Η πληρωμή απέτυχε, παρακαλώ δοκιμάστε ξανά."
-
-#: includes/class-wc-sumup-gateway.php:469
-msgid ""
-"Error: Merchant account settings are incorrectly configured. Check the "
-"plugin settings page."
-msgstr ""
-"Σφάλμα: Οι ρυθμίσεις λογαριασμού εμπόρου δεν έχουν ρυθμιστεί σωστά. Ελέγξτε "
-"τη σελίδα ρυθμίσεων του πρόσθετου."
-
-#: includes/class-wc-sumup-gateway.php:511
-msgid ""
-"Sum up is temporarily unavailable. Please contact site admin for more "
-"information."
-msgstr ""
-"Το SumUp είναι προσωρινά μη διαθέσιμο. Παρακαλώ επικοινωνήστε με τον "
-"διαχειριστή του ιστότοπου για περισσότερες πληροφορίες."
-
-#: includes/class-wc-sumup-gateway.php:825
-msgid "Payment Status: "
-msgstr "Κατάσταση Πληρωμής: "
-
-#: includes/class-wc-sumup-gateway.php:849
-#: includes/class-wc-sumup-gateway.php:865
-#: includes/class-wc-sumup-gateway.php:890
-#: includes/class-wc-sumup-gateway.php:902
-msgid "Payment instructions"
-msgstr "Οδηγίες πληρωμής"
-
-#: includes/class-wc-sumup-gateway.php:850
-#: includes/class-wc-sumup-gateway.php:891
-msgid "PIX code: "
-msgstr "PIX code: "
-
-#: includes/class-wc-sumup-gateway.php:867
-#: includes/class-wc-sumup-gateway.php:904
-msgid "Download Boleto"
-msgstr "Κατεβάστε το Boleto"
-
-#: includes/class-wc-sumup-gateway.php:871
-#: includes/class-wc-sumup-gateway.php:903
-msgid "Code to pay: "
-msgstr "Κωδικός πληρωμής: "
-
-#: includes/class-wc-sumup-settings.php:15
-msgid "Enable/Disable"
-msgstr "Ενεργοποίηση/Απενεργοποίηση"
-
-#: includes/class-wc-sumup-settings.php:16
-msgid "Enable SumUp"
-msgstr "Ενεργοποίηση SumUp"
-
-#: includes/class-wc-sumup-settings.php:22
-msgid "Title"
-msgstr "Τίτλος"
-
-#: includes/class-wc-sumup-settings.php:24
-msgid "This controls the title the user sees during checkout."
-msgstr ""
-"Αυτό ελέγχει τον τίτλο που βλέπει ο χρήστης κατά την ολοκλήρωση της "
-"παραγγελίας."
-
-#: includes/class-wc-sumup-settings.php:25
-msgid "Credit / Debit Card"
-msgstr "Πιστωτική / Χρεωστική κάρτα"
-
-#: includes/class-wc-sumup-settings.php:29
-msgid "Description"
-msgstr "Περιγραφή"
-
-#: includes/class-wc-sumup-settings.php:31
-msgid "This controls the description the user sees during checkout."
-msgstr ""
-"Αυτό ελέγχει την περιγραφή που βλέπει ο χρήστης κατά την ολοκλήρωση της "
-"παραγγελίας."
-
-#: includes/class-wc-sumup-settings.php:32
-msgid ""
-"Pay securely with your credit or debit card, or use other available payment "
-"methods."
-msgstr ""
-"Pay securely with your credit or debit card, or use other available payment "
-"methods."
-
-#: includes/class-wc-sumup-settings.php:36
-msgid "Merchant code"
-msgstr "Αναγνωριστικό Εμπόρου"
-
-#: includes/class-wc-sumup-settings.php:38
-msgid "Get your Merchant code from your SumUp account:"
-msgstr "Λάβετε το αναγνωριστικό εμπόρου από τον λογαριασμό σας στο SumUp:"
-
-#: includes/class-wc-sumup-settings.php:42
-msgid "API Key"
-msgstr "Κλειδί API"
-
-#: includes/class-wc-sumup-settings.php:44
-msgid "Create and get your API Key:"
-msgstr "Δημιουργήστε και λάβετε το κλειδί API σας:"
-
-#: includes/class-wc-sumup-settings.php:44
-#: includes/class-wc-sumup-settings.php:51
-#: includes/class-wc-sumup-settings.php:58
-msgid "developer settings"
-msgstr "ρυθμίσεις προγραμματιστή"
-
-#: includes/class-wc-sumup-settings.php:49
-msgid "Client ID"
-msgstr "Αναγνωριστικό Πελάτη (Client ID)"
-
-#: includes/class-wc-sumup-settings.php:51
-msgid "Create and get your Client ID:"
-msgstr "Δημιουργήστε και λάβετε το Αναγνωριστικό Πελάτη (Client ID) σας:"
-
-#: includes/class-wc-sumup-settings.php:56
-msgid "Client Secret"
-msgstr "Μυστικό Πελάτη (Client Secret)"
-
-#: includes/class-wc-sumup-settings.php:58
-msgid "Create and get your Client Secret:"
-msgstr "Δημιουργήστε και λάβετε το Μυστικό Πελάτη (Client Secret) σας:"
-
-#: includes/class-wc-sumup-settings.php:63
-msgid "SumUp Profile Email"
-msgstr "Email Προφίλ SumUp"
-
-#: includes/class-wc-sumup-settings.php:65
-msgid "Get your Email from your SumUp account."
-msgstr "Λάβετε το Email σας από τον λογαριασμό σας στο SumUp."
-
-#: includes/class-wc-sumup-settings.php:70
-msgid "Logging"
-msgstr "Καταγραφή"
-
-#: includes/class-wc-sumup-settings.php:71
-msgid "Log debug messages"
-msgstr "Καταγραφή μηνυμάτων αποσφαλμάτωσης"
-
-#: includes/class-wc-sumup-settings.php:73
-msgid "Save debug messages to the WooCommerce System Status log."
-msgstr ""
-"Αποθήκευση μηνυμάτων αποσφαλμάτωσης στο ημερολόγιο κατάστασης συστήματος του "
-"WooCommerce."
-
-#: includes/class-wc-sumup-settings.php:97
-msgid "Installments"
-msgstr "Δόσεις"
-
-#: includes/class-wc-sumup-settings.php:98
-msgid "Enable Installments?"
-msgstr "Ενεργοποίηση δόσεων;"
-
-#: includes/class-wc-sumup-settings.php:100
-msgid "Accept installments in your card payment method."
-msgstr "Αποδοχή δόσεων στη μέθοδο πληρωμής σας με κάρτα."
-
-#: includes/class-wc-sumup-settings.php:106
-msgid "Number of Installments"
-msgstr "Αριθμός δόσεων"
-
-#: includes/class-wc-sumup-settings.php:108
-msgid "Define the number of installments you will accept."
-msgstr "Ορίστε τον αριθμό των δόσεων που θα αποδεχτείτε."
-
-#: includes/class-wc-sumup-settings.php:129
-msgid "Enable PIX?"
-msgstr "Ενεργοποίηση PIX;"
-
-#: includes/class-wc-sumup-settings.php:130
-msgid "Enable"
-msgstr "Ενεργοποίηση Boleto"
-
-#: includes/class-wc-sumup-settings.php:132
-msgid "Accept PIX as your payment method."
-msgstr "Αποδοχή PIX ως μέθοδο πληρωμής."
-
-#: includes/class-wc-sumup-settings.php:139
-msgid "Open Payment in modal?"
-msgstr "Άνοιγμα πληρωμής σε modal;"
-
-#: includes/class-wc-sumup-settings.php:140
-msgid "Yes"
-msgstr "Ναι"
-
-#: includes/class-wc-sumup-settings.php:142
-msgid "Open the Payment options inside a modal (popup)"
-msgstr "Άνοιγμα των επιλογών πληρωμής σε modal (popup)"
-
-#: sumup-payment-gateway-for-woocommerce.php:60
-msgid "Docs"
-msgstr "Έγγραφα"
-
-#: sumup-payment-gateway-for-woocommerce.php:77
-msgid ""
-"SumUp requires WooCommerce to be installed and active. You can download %s "
-"here."
-msgstr ""
-"Το SumUp απαιτεί να είναι εγκατεστημένο και ενεργό το WooCommerce. Μπορείτε "
-"να το κατεβάσετε %s εδώ."
-
-#. translators: %s = admin.php?page=wc-settings&tab=checkout&section=sumup
-#: sumup-payment-gateway-for-woocommerce.php:109
-msgid ""
-"SumUp Gateway is almost ready. To get started, <a href=\"%s\">set your SumUp "
-"account keys</a>."
-msgstr ""
-"Η Πύλη SumUp είναι σχεδόν έτοιμη. Για να ξεκινήσετε, <a href=\\\"%s\\"
-"\">ρυθμίστε τα κλειδιά του λογαριασμού SumUp σας</a>."
-
-#. translators: %s = admin.php?page=wc-settings&tab=checkout&section=sumup
-#: sumup-payment-gateway-for-woocommerce.php:116
-msgid ""
-"SumUp Gateway is not configured properly. You can fix this from <a "
-"href=\"%s\">here</a>."
-msgstr ""
-"Η Πύλη SumUp δεν έχει ρυθμιστεί σωστά. Μπορείτε να το διορθώσετε από <a "
-"href=\\\"%s\\\">εδώ</a>."
-
-#: sumup-payment-gateway-for-woocommerce.php:120
-msgid ""
-"SumUp Gateway needs your attention. Currency is different from WooCommerce "
-"currency (WooCommerce->Settings->General->Currency)."
-msgstr ""
-"Η Πύλη SumUp χρειάζεται την προσοχή σας. Το νόμισμα είναι διαφορετικό από το "
-"νόμισμα του WooCommerce (WooCommerce->Ρυθμίσεις->Γενικά->Νόμισμα)."
-
-#: sumup-payment-gateway-for-woocommerce.php:126
-#, fuzzy
-msgid ""
-"SumUp Gateway is not configured properly. Please fill the field Merchant "
-"code."
-msgstr ""
-"Η Πύλη SumUp δεν έχει ρυθμιστεί σωστά. Μπορείτε να το διορθώσετε από <a "
-"href=\\\"%s\\\">εδώ</a>."
-
-#: sumup-payment-gateway-for-woocommerce.php:145
-msgid "Settings"
-msgstr "Ρυθμίσεις"
-
-#: sumup-payment-gateway-for-woocommerce.php:187
-msgid "%1$s requires PHP version %2$s or greater."
-msgstr "Το %1$s απαιτεί έκδοση PHP %2$s ή μεγαλύτερη."
-
-#: sumup-payment-gateway-for-woocommerce.php:205
-msgid "%1$s requires WordPress version %2$s or greater."
-msgstr "Το %1$s απαιτεί έκδοση WordPress %2$s ή μεγαλύτερη."
-
-#: templates/onboarding-failed-message.php:19
-msgid "SumUp account not connected"
-msgstr "Ο λογαριασμός SumUp δεν είναι συνδεδεμένος"
-
-#: templates/onboarding-failed-message.php:22
-msgid "Credentials are not valid. Please try again."
-msgstr "Τα διαπιστευτήρια δεν είναι έγκυρα. Παρακαλώ δοκιμάστε ξανά."
-
-#: templates/onboarding-success-message.php:17
-msgid "SumUp account connected"
-msgstr "Ο λογαριασμός SumUp είναι συνδεδεμένος"
-
-#: templates/onboarding-success-message.php:20
-msgid "WooCommerce can now accept payments via SumUp"
-msgstr "Το WooCommerce μπορεί τώρα να δέχεται πληρωμές μέσω SumUp"
-
-#: templates/onboarding.php:28
-msgid ""
-"Accept payments through your SumUp account in WooCommerce. Take all payments "
-"in your online store with an easy and quick integration. No coding required."
-msgstr ""
-"Αποδεχτείτε πληρωμές μέσω του λογαριασμού σας SumUp στο WooCommerce. Πάρτε "
-"όλες τις πληρωμές στο ηλεκτρονικό σας κατάστημα με μια εύκολη και γρήγορη "
-"ενσωμάτωση. Δεν απαιτείται κωδικοποίηση."
-
-#: templates/onboarding.php:32
-msgid "Connect in 4 steps:"
-msgstr "Συνδεθείτε σε 4 βήματα:"
-
-#: templates/onboarding.php:37
-msgid "Start by connecting your account. Learn more"
-msgstr "Ξεκινήστε συνδέοντας τον λογαριασμό σας. Μάθετε περισσότερα"
-
-#: templates/onboarding.php:40
-msgid "Log into your SumUp account, if you are not already logged in."
-msgstr "Συνδεθείτε στον λογαριασμό σας SumUp, αν δεν είστε ήδη συνδεδεμένοι."
-
-#: templates/onboarding.php:43
-msgid "Select the “Connect” button to begin."
-msgstr "Επιλέξτε το κουμπί “Σύνδεση” για να ξεκινήσετε."
-
-#: templates/onboarding.php:46
-msgid "Return to WooCommerce by selecting the “View plugin” button."
-msgstr "Επιστρέψτε στο WooCommerce επιλέγοντας το κουμπί “Προβολή plugin”."
-
-#: templates/onboarding.php:52
-msgid "Advanced Version"
-msgstr "Προηγμένη έκδοση"
-
-#: templates/onboarding.php:55 templates/onboarding.php:56
-msgid "Connect Account"
-msgstr "Connect Account"
-
-#: /Users/matousdzivjak/code/github.com/sumup/sumup-plugin-woocommerce/sumup-payment-gateway-for-woocommerce.php:130
-msgid ""
-"Use a publicly reachable HTTPS domain before connecting SumUp. If you are "
-"testing locally, use a tunnel such as ngrok or Cloudflare Tunnel and update "
-"WordPress Home and Site URL first."
-msgstr ""
-"Χρησιμοποιήστε έναν δημόσια προσβάσιμο HTTPS τομέα πριν συνδέσετε το SumUp. "
-"Αν δοκιμάζετε τοπικά, χρησιμοποιήστε ένα tunnel όπως το ngrok ή το "
-"Cloudflare Tunnel και ενημερώστε πρώτα τα WordPress Home και Site URL."
-
-#: /Users/matousdzivjak/code/github.com/sumup/sumup-plugin-woocommerce/sumup-payment-gateway-for-woocommerce.php:138
-#, php-format
-msgid ""
-"Your store is currently using %1$s, which is not publicly reachable. Use a "
-"public HTTPS domain before connecting SumUp. If you are testing locally, use "
-"a tunnel such as ngrok or Cloudflare Tunnel and update WordPress Home and "
-"Site URL first."
-msgstr ""
-"Το κατάστημά σας χρησιμοποιεί αυτή τη στιγμή το %1$s, το οποίο δεν είναι "
-"δημόσια προσβάσιμο. Χρησιμοποιήστε έναν δημόσιο HTTPS τομέα πριν συνδέσετε "
-"το SumUp. Αν δοκιμάζετε τοπικά, χρησιμοποιήστε ένα tunnel όπως το ngrok ή το "
-"Cloudflare Tunnel και ενημερώστε πρώτα τα WordPress Home και Site URL."
-
-#: /Users/matousdzivjak/code/github.com/sumup/sumup-plugin-woocommerce/sumup-payment-gateway-for-woocommerce.php:421
-msgid "Please use the “Connect Account” button to start the configuration."
-msgstr ""
-"Παρακαλώ χρησιμοποιήστε το κουμπί «Σύνδεση λογαριασμού» για να ξεκινήσετε τη "
-"διαμόρφωση."
-
-#: /Users/matousdzivjak/code/github.com/sumup/sumup-plugin-woocommerce/sumup-payment-gateway-for-woocommerce.php:539
-msgid "Unable to start the SumUp connection."
-msgstr "Δεν ήταν δυνατή η έναρξη της σύνδεσης με το SumUp."
-
-#: /Users/matousdzivjak/code/github.com/sumup/sumup-plugin-woocommerce/sumup-payment-gateway-for-woocommerce.php:540
-msgid "Unable to validate this website."
-msgstr "Δεν ήταν δυνατή η επαλήθευση αυτού του ιστότοπου."
-
-#: /Users/matousdzivjak/code/github.com/sumup/sumup-plugin-woocommerce/sumup-payment-gateway-for-woocommerce.php:541
-msgid "Unable to start the SumUp connection. Please try again."
-msgstr "Δεν ήταν δυνατή η έναρξη της σύνδεσης με το SumUp. Δοκιμάστε ξανά."
-
-#: /Users/matousdzivjak/code/github.com/sumup/sumup-plugin-woocommerce/sumup-payment-gateway-for-woocommerce.php:542
-msgid "Unable to disconnect the SumUp account."
-msgstr "Δεν ήταν δυνατή η αποσύνδεση του λογαριασμού SumUp."
-
-#: /Users/matousdzivjak/code/github.com/sumup/sumup-plugin-woocommerce/sumup-payment-gateway-for-woocommerce.php:543
-msgid "Unknown error occurred."
-msgstr "Παρουσιάστηκε άγνωστο σφάλμα."
-
-#: /Users/matousdzivjak/code/github.com/sumup/sumup-plugin-woocommerce/includes/api/class-sumup-disconnect.php:44
-msgid "Account already disconnected"
-msgstr "Ο λογαριασμός έχει ήδη αποσυνδεθεί"
-
-#: /Users/matousdzivjak/code/github.com/sumup/sumup-plugin-woocommerce/templates/onboarding.php:21
-msgid "Complete setup to accept payments with SumUp"
-msgstr "Ολοκληρώστε τη ρύθμιση για να δέχεστε πληρωμές με το SumUp"
-
-#: /Users/matousdzivjak/code/github.com/sumup/sumup-plugin-woocommerce/templates/onboarding.php:25
-msgid ""
-"Connect your SumUp account to start accepting credit and debit card payments "
-"in WooCommerce."
-msgstr ""
-"Συνδέστε τον λογαριασμό SumUp για να αρχίσετε να δέχεστε πληρωμές με "
-"πιστωτική και χρεωστική κάρτα στο WooCommerce."
-
-#: /Users/matousdzivjak/code/github.com/sumup/sumup-plugin-woocommerce/templates/onboarding.php:29
-msgid "Setup takes 4 steps:"
-msgstr "Η ρύθμιση έχει 4 βήματα:"
-
-#: /Users/matousdzivjak/code/github.com/sumup/sumup-plugin-woocommerce/templates/onboarding.php:43
-msgid "After approval, we will return you to WooCommerce automatically."
-msgstr "Μετά την έγκριση, θα επιστρέψουμε αυτόματα στο WooCommerce."
-
-#: /Users/matousdzivjak/code/github.com/sumup/sumup-plugin-woocommerce/templates/onboarding.php:53
-#: /Users/matousdzivjak/code/github.com/sumup/sumup-plugin-woocommerce/templates/onboarding.php:56
-#: /Users/matousdzivjak/code/github.com/sumup/sumup-plugin-woocommerce/templates/onboarding.php:63
-msgid "Complete setup"
-msgstr "Ολοκλήρωση ρύθμισης"
-
-#: includes/api/handlers/class-sumup-validate-redirect.php:37
-msgid "Invalid request payload."
-msgstr "Μη έγκυρο περιεχόμενο αιτήματος."
-
-#: includes/api/handlers/class-sumup-validate-redirect.php:42
-msgid "Invalid request nonce."
-msgstr "Μη έγκυρο nonce αιτήματος."
-
-#: includes/api/handlers/class-sumup-validate-redirect.php:47
-#: includes/class-wc-sumup-gateway.php:1826
-msgid "Invalid order ID."
-msgstr "Μη έγκυρο ID παραγγελίας."
-
-#: includes/class-wc-sumup-gateway.php:1842
-msgid "Order not found."
-msgstr "Η παραγγελία δεν βρέθηκε."
-
-#: includes/class-wc-sumup-gateway.php:1851
-msgid "Payment details are missing for this order."
-msgstr "Λείπουν τα στοιχεία πληρωμής για αυτήν την παραγγελία."
-
-#: includes/class-wc-sumup-gateway.php:1862
-msgid "SumUp is temporarily unavailable. Please try again."
-msgstr "Η SumUp δεν είναι προσωρινά διαθέσιμη. Παρακαλώ δοκιμάστε ξανά."
-
-#: includes/class-wc-sumup-gateway.php:1869
-msgid "Unable to verify payment status. Please try again."
-msgstr "Δεν ήταν δυνατή η επαλήθευση της κατάστασης πληρωμής. Παρακαλώ δοκιμάστε ξανά."
-
-#: includes/class-wc-sumup-gateway.php:1880
-msgid "Payment validation failed."
-msgstr "Η επικύρωση της πληρωμής απέτυχε."
-
-#: includes/api/handlers/class-sumup-validate-redirect.php:56
-msgid "SumUp gateway is unavailable."
-msgstr "Η πύλη πληρωμών SumUp δεν είναι διαθέσιμη."
-
-#: includes/class-wc-sumup-block-gateway.php:162
-#: includes/class-wc-sumup-gateway.php:1888
-#: includes/class-wc-sumup-gateway.php:1934
-#: includes/class-wc-sumup-gateway.php:2069
-msgid "We are still waiting for SumUp to confirm this payment. Please wait a moment and refresh the page if the order is not updated automatically."
-msgstr "Εξακολουθούμε να περιμένουμε την SumUp να επιβεβαιώσει αυτήν την πληρωμή. Περιμένετε λίγο και ανανεώστε τη σελίδα αν η παραγγελία δεν ενημερωθεί αυτόματα."
-
-#: includes/class-wc-sumup-block-gateway.php:163
-msgid "Payment was cancelled."
-msgstr "Η πληρωμή ακυρώθηκε."
-
-#: includes/class-wc-sumup-block-gateway.php:164
-msgid "Unable to initialize SumUp checkout."
-msgstr "Δεν ήταν δυνατή η αρχικοποίηση του checkout SumUp."
+#. Plugin URI of the plugin
+msgid "https://wordpress.org/plugins/sumup-payment-gateway-for-woocommerce/"
+msgstr "https://wordpress.org/plugins/sumup-payment-gateway-for-woocommerce/"

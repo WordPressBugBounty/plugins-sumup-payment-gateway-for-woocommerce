@@ -24,14 +24,14 @@ class WC_SUMUP_LOGGER {
 		}
 
 		$options = get_option( 'woocommerce_sumup_settings' );
-		if ( empty( $options ) || ( isset( $options['logging'] ) && 'yes' !== $options['logging'] ) ) {
+		if ( ! is_array( $options ) || 'yes' !== ( $options['logging'] ?? 'no' ) ) {
 			return;
 		}
 
-		$logger = wc_get_logger();
+		$logger         = wc_get_logger();
 		$logger_context = array( 'source' => WC_SUMUP_PLUGIN_SLUG );
-		$record = self::build_record( $message, $context, $level, $options );
-		$log_message = wp_json_encode( $record, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE );
+		$record         = self::build_record( $message, $context, $level, $options );
+		$log_message    = wp_json_encode( $record, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE );
 
 		if ( false === $log_message ) {
 			$log_message = (string) $message;
@@ -57,12 +57,12 @@ class WC_SUMUP_LOGGER {
 		}
 
 		return array(
-			'timestamp' => gmdate( 'c' ),
-			'level' => (string) $level,
-			'message' => (string) $message,
-			'plugin' => WC_SUMUP_PLUGIN_SLUG,
+			'timestamp'      => gmdate( 'c' ),
+			'level'          => (string) $level,
+			'message'        => (string) $message,
+			'plugin'         => WC_SUMUP_PLUGIN_SLUG,
 			'plugin_version' => WC_SUMUP_VERSION,
-			'context' => $record_context,
+			'context'        => $record_context,
 		);
 	}
 }
